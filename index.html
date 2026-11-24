@@ -1,0 +1,1469 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2D5B8C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="عمالة ME">
+<script>window.ME_API="https://script.google.com/macros/s/AKfycbxXYg6cvhmDWdT2aq4hz6Z52_QQF2BXmSJP5BKvwqHcN1Fr44-klQjGntC9A_sP0AGx/exec";</script>
+</head><body>
+<title>عمالة Middle East</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: تطبيق موبايل — شاشة دخول لوحدها، وبعدها شريط علوي ثابت (رجوع + عنوان) ومحتوى وتابات تحت.
+   اللون الأساسي هو أزرق شيت الإكسيل بتاع الشركة. شيت الإكسيل نفسه أبيض دايماً زي الأصل. */
+:root{
+  --bg:#ECEFF3; --surface:#FFFFFF; --surface2:#F4F6F8; --ink:#16202B; --muted:#5A6776; --line:#D8DEE5; --line2:#E6EAEE;
+  --accent:#2D5B8C; --accent-ink:#FFFFFF; --accent-soft:#E2EBF5;
+  --ok:#1B7A47; --ok-soft:#DFF2E7; --warn:#8F5A00; --warn-soft:#FFF0D2; --bad:#B42318; --bad-soft:#FDE6E3; --fri:#FFF6E2;
+  --shell:#2D5B8C; --shell-ink:#FFFFFF; --shell-sub:#C9DAEC;
+  --f:"Readex Pro","Segoe UI",Tahoma,sans-serif;
+  --bar:58px; --tabs:64px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1319; --surface:#161E28; --surface2:#1C2631; --ink:#E6EBF1; --muted:#9AA6B5; --line:#2A3644; --line2:#222C38;
+  --accent:#86B2DE; --accent-ink:#0E1319; --accent-soft:#1C3047;
+  --ok:#67C892; --ok-soft:#14301F; --warn:#EDBA5E; --warn-soft:#352812; --bad:#F2918A; --bad-soft:#3A1B18; --fri:#272111; --shell:#1A3350; --shell-ink:#EAF1F8; --shell-sub:#9FB6CE; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1319; --surface:#161E28; --surface2:#1C2631; --ink:#E6EBF1; --muted:#9AA6B5; --line:#2A3644; --line2:#222C38;
+  --accent:#86B2DE; --accent-ink:#0E1319; --accent-soft:#1C3047;
+  --ok:#67C892; --ok-soft:#14301F; --warn:#EDBA5E; --warn-soft:#352812; --bad:#F2918A; --bad-soft:#3A1B18; --fri:#272111; --shell:#1A3350; --shell-ink:#EAF1F8; --shell-sub:#9FB6CE; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+input,select{scroll-margin-top:calc(var(--bar) + 20px);scroll-margin-bottom:calc(var(--tabs) + 100px)}
+h1,h2,h3{text-wrap:balance}
+bdi{unicode-bidi:isolate}
+.en{direction:ltr;unicode-bidi:isolate}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 16px;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;font-weight:500}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--bad);border-color:var(--bad-soft);background:var(--surface)}
+.btn.small{padding:5px 12px;font-size:14px}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+input[type=text],input[type=password],input[type=date],input[type=number],select{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.err{color:var(--bad);font-size:14px;margin:6px 0 0}
+#dbBanner{margin:10px max(16px,env(safe-area-inset-left,0px)) 0;border-radius:10px;padding:10px 14px;font-size:14px}
+#dbBanner.warn{background:var(--warn-soft);color:var(--warn)}
+#dbBanner.bad{background:var(--bad-soft);color:var(--bad)}
+
+/* شاشة الدخول */
+.lock{min-height:100vh;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.lock-in{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.mark{width:44px;height:44px;border-radius:12px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;letter-spacing:.5px;flex:none;font-family:"Segoe UI",Tahoma,sans-serif}
+.mark.big{width:72px;height:72px;border-radius:18px;font-size:24px;margin-bottom:10px}
+.lock h1{font-size:28px;margin:0;font-weight:700;line-height:1.25}
+.lock-sub{margin:0 0 22px;color:var(--muted);font-size:15px}
+.pin{width:100%;display:flex;flex-direction:column;gap:10px;text-align:right}
+.pin label{font-weight:600}
+.pin input{font-size:26px;letter-spacing:10px;text-align:center;padding:12px;border-radius:12px;width:100%}
+.pin .btn{padding:13px;font-size:17px;border-radius:12px}
+
+/* الشريط العلوي */
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--shell);color:var(--shell-ink)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--shell)}
+.appbar .iconbtn{color:var(--shell-ink)}
+.appbar .iconbtn:hover{background:rgba(255,255,255,.12)}
+.appbar #backBtn{background:rgba(255,255,255,.16);color:var(--shell-ink)}
+.appbar .mark{background:rgba(255,255,255,.16);color:var(--shell-ink)}
+.appbar .bar-title p{color:var(--shell-sub)}
+.bar-in{max-width:1180px;margin:0 auto;min-height:var(--bar);display:flex;align-items:center;gap:6px;padding:6px max(10px,env(safe-area-inset-left,0px)) 6px max(10px,env(safe-area-inset-right,0px))}
+.iconbtn{width:44px;height:44px;border:0;background:transparent;border-radius:12px;display:grid;place-items:center;color:var(--ink);flex:none}
+.iconbtn:hover{background:var(--surface2)}
+#backBtn{background:var(--accent-soft);color:var(--accent)}
+.bar-title{flex:1;min-width:0}
+.bar-title h1{margin:0;font-size:18px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-title p{margin:0;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-in .mark{width:36px;height:36px;border-radius:10px;font-size:13px}
+
+/* المحتوى */
+.page{max-width:760px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-right,0px)) calc(var(--tabs) + 96px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+body.wide .page{max-width:1180px}
+.loading,.empty{color:var(--muted);padding:28px 16px;text-align:center;border:1px dashed var(--line);border-radius:14px;background:var(--surface)}
+.hint{color:var(--muted);font-size:14px;margin:0}
+
+/* تابات تحت */
+.tabbar{position:fixed;inset:auto 0 0;z-index:20;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding:0 max(8px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(8px,env(safe-area-inset-left,0px))}
+.tabbar button{flex:1;max-width:200px;height:var(--tabs);border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:13px;font-weight:500;position:relative}
+.tabbar button svg{width:24px;height:24px}
+.tabbar button[aria-current="page"]{color:var(--accent)}
+.tabbar button[aria-current="page"]::before{content:"";position:absolute;top:0;inset-inline:28%;height:3px;border-radius:0 0 3px 3px;background:var(--accent)}
+.fab{position:fixed;z-index:19;inset-inline-start:max(16px,env(safe-area-inset-right,0px));bottom:calc(var(--tabs) + 14px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--accent-ink);border:0;border-radius:16px;padding:14px 20px;font-weight:600;font-size:16px;box-shadow:0 6px 18px rgba(20,40,70,.25);display:flex;align-items:center;gap:8px}
+
+/* اختيار اليوم */
+.daynav{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px}
+.daynav .iconbtn{background:var(--surface2)}
+.datepick{flex:1;position:relative;text-align:center;border-radius:12px;padding:6px 4px;cursor:pointer}
+.datepick:hover{background:var(--surface2)}
+.datepick b{display:block;font-size:20px;font-weight:600;line-height:1.3}
+.datepick span{font-size:14px;color:var(--muted)}
+.datepick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.today-pill{display:inline-block;margin-inline-start:6px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 8px;font-size:12px;font-weight:600;vertical-align:middle}
+.tally{display:flex;align-items:center;gap:12px}
+/* كارت الحضور: خانة صغيرة لكل عامل بلون حالته */
+.strip{flex:1;display:flex;gap:3px;min-width:0}
+.strip i{flex:1;height:12px;border-radius:3px;background:var(--line2)}
+.strip i.ok{background:var(--ok)}
+.strip i.bad{background:var(--bad)}
+.strip i.todo{background:var(--warn);opacity:.45}
+.tally span{font-size:14px;color:var(--muted);white-space:nowrap}
+.search{width:100%}
+
+/* صف عامل في يوم */
+.roster{display:flex;flex-direction:column;gap:10px}
+.wrow{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.wrow.fri{background:var(--fri)}
+.wtop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.who{min-width:0}
+.who b{display:block;font-size:17px;font-weight:600;line-height:1.3}
+.who span{font-size:13px;color:var(--muted)}
+.stat{flex:none;border-radius:999px;padding:3px 11px;font-size:13px;font-weight:500;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat.ok{background:var(--ok-soft);color:var(--ok)}
+.stat.bad{background:var(--bad-soft);color:var(--bad)}
+.stat.todo{background:var(--warn-soft);color:var(--warn)}
+.stat.off{background:var(--surface2);color:var(--muted)}
+.wtimes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld > span{font-size:13px;color:var(--muted)}
+.tm{display:flex;align-items:center;direction:ltr;gap:2px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:4px 8px;height:48px}
+.tm:focus-within{border-color:var(--accent);background:var(--surface)}
+.tm.bad{border-color:var(--bad)}
+.tm input{width:34px;border:0;background:transparent;text-align:center;padding:6px 0;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.tm input:focus{outline:none}
+.tm input::placeholder{color:var(--muted);opacity:.55;font-weight:400}
+.tm b{font-weight:600;color:var(--muted)}
+.tm .ap{margin-left:auto;font-size:13px;color:var(--muted);direction:rtl}
+.note{width:100%}
+.quick{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:500}
+.chip.go{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+
+/* العمال */
+.halfnav{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px}
+.monthrow{display:flex;align-items:center;gap:8px}
+.monthrow b{flex:1;text-align:center;font-size:18px;font-weight:600}
+.monthrow .iconbtn{background:var(--surface2)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface2);border-radius:12px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:9px;padding:9px 6px;font-weight:500;color:var(--muted);line-height:1.3}
+.seg button small{display:block;font-size:12px;font-weight:400}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.plist{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.prow{width:100%;display:flex;align-items:center;gap:12px;padding:13px 14px;border:0;border-bottom:1px solid var(--line2);background:transparent;text-align:right}
+.prow:last-child{border-bottom:0}
+.prow:hover{background:var(--surface2)}
+.prow .who{flex:1}
+.prow .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.prow .who > span{display:block}
+.prow .chev{color:var(--muted);flex:none}
+.tag{border-radius:999px;padding:1px 9px;font-size:12px;background:var(--surface2);color:var(--muted)}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}.tag.todo{background:var(--warn-soft);color:var(--warn)}.tag.bad{background:var(--bad-soft);color:var(--bad)}
+
+/* صفحة عامل */
+.phead{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+.phead .who b{font-size:20px}
+.days{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.dr{display:grid;grid-template-columns:92px 1fr 1fr;grid-template-areas:"dl f t" "dl n s";gap:8px 10px;padding:12px;border-bottom:1px solid var(--line2);align-items:center}
+.dr:last-child{border-bottom:0}
+.dr.fri{background:var(--fri)}
+.dr.today{box-shadow:inset 3px 0 0 var(--accent)}
+.dr .dl{grid-area:dl;display:flex;flex-direction:column;line-height:1.3}
+.dr .dl b{font-weight:600}
+.dr .dl span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.dr .tf{grid-area:f}.dr .tt{grid-area:t}.dr .note{grid-area:n}.dr .stat{grid-area:s;justify-self:start;max-width:100%}
+.dr .tm{height:44px}
+.dr .fld > span{font-size:12px}
+.dr .tm input{font-size:18px}
+@media (max-width:520px){
+  .dr{grid-template-columns:1fr 1fr;grid-template-areas:"dl s" "f t" "n n"}
+  .dr .dl{flex-direction:row;gap:8px;align-items:baseline}
+  .dr .stat{justify-self:end}
+}
+.pfoot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--bad-soft);color:var(--bad);border-radius:12px;padding:10px 12px}
+
+/* إضافة شخص */
+.form{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.form .fld > span{font-size:14px;color:var(--ink);font-weight:500}
+.form input[type=text],.form select,.form input[type=date]{width:100%;padding:12px}
+.jobs{display:flex;flex-wrap:wrap;gap:8px}
+.jobs label{position:relative}
+.jobs input{position:absolute;opacity:0;inset:0}
+.jobs span{display:block;border:1px solid var(--line);border-radius:999px;padding:8px 16px;background:var(--surface2);font-weight:500}
+.jobs input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.jobs input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+.form .actions{display:flex;gap:10px}
+.form .actions .btn{flex:1;padding:13px}
+
+/* المدير */
+.glist{display:flex;flex-direction:column;gap:10px}
+.gitem{text-align:right;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.gitem:hover{border-color:var(--accent)}
+.gitem .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.gitem b{font-weight:600;direction:ltr;text-align:right;unicode-bidi:plaintext}
+.gitem .meta{color:var(--muted);font-size:14px}
+.pill{display:inline-block;border-radius:999px;padding:1px 9px;font-size:12px;background:var(--surface2);color:var(--muted)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.dls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.dl-btn{display:flex;align-items:center;gap:8px;text-align:right;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:9px 10px;color:var(--accent);min-width:0}
+.dl-btn span{display:flex;flex-direction:column;min-width:0;color:var(--ink);line-height:1.3}
+.dl-btn:hover{border-color:var(--accent)}
+.dl-btn b{font-weight:600;font-size:14px}
+.dl-btn small{color:var(--muted);font-size:12px}
+@media (max-width:420px){.dl-btn{flex-direction:column;align-items:flex-start;gap:2px}}
+.alerts{border:1px solid var(--warn);border-radius:14px;background:var(--warn-soft);padding:12px 14px;color:var(--ink)}
+.alerts h3{margin:0 0 6px;font-size:16px;color:var(--warn)}
+.arow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.arow .nm{min-width:140px;font-weight:600}
+.arow input[type=number]{width:110px}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+details.pn{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 14px}
+details.pn summary{cursor:pointer;font-weight:600}
+.nlist{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:260px;overflow:auto}
+.nlist button{all:unset;cursor:pointer;display:flex;gap:8px;flex-wrap:wrap;padding:6px;border-radius:8px;width:100%;box-sizing:border-box}
+.nlist button:hover{background:var(--surface2)}
+.nlist .d{color:var(--muted);font-size:13px;min-width:56px;font-variant-numeric:tabular-nums}
+.nlist .t.red{color:var(--bad)}.nlist .t.green{color:var(--ok)}
+.hols{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
+.xl{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;color:#000}
+.fbar{display:flex;align-items:center;gap:6px;padding:6px 8px;border-bottom:1px solid #d4d4d4;background:#f3f3f3;direction:ltr;flex-wrap:wrap}
+.fbar .ref{width:62px;text-align:center;border:1px solid #c6c6c6;background:#fff;color:#000;padding:3px 4px;font:13px "Segoe UI",Tahoma,sans-serif;border-radius:2px}
+.fbar .fx{font:italic 14px "Cambria",Georgia,serif;color:#666;padding:0 4px}
+.fbar input.fin{flex:1 1 220px;border:1px solid #c6c6c6;border-radius:2px;background:#fff;color:#000;padding:4px 6px;font:13px Calibri,Carlito,"Segoe UI",sans-serif;min-width:0}
+.fbar .btn{background:#fff;color:#222;border-color:#c6c6c6;padding:3px 10px;font-size:12px;border-radius:4px}
+.fbar .hint{font-size:12px;color:#7a5b00;direction:rtl}
+.wsbar{display:flex;align-items:center;gap:10px;padding:6px 10px;background:#fafafa;border-bottom:1px solid #e3e3e3;flex-wrap:wrap;direction:rtl;font-size:13px;color:#333}
+.wsbar select{background:#fff;color:#000;border-color:#c6c6c6;padding:3px 6px}
+.gridwrap{overflow:auto;max-height:70vh;position:relative;outline:none}
+table.g{border-collapse:collapse;table-layout:fixed;direction:ltr;font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif;color:#000;background:#fff}
+table.g th{background:#efefef;color:#444;font:11px "Segoe UI",Tahoma,sans-serif;border:1px solid #d4d4d4;position:sticky;z-index:3}
+table.g thead th{top:0;height:20px}
+table.g th.rh{left:0;width:36px;z-index:2}
+table.g thead th.corner{left:0;z-index:4}
+table.g td{padding:0;position:relative;overflow:visible;box-shadow:inset -1px -1px 0 #e2e2e2;cursor:cell}
+table.g td.fill{box-shadow:none}
+table.g td .v{position:absolute;top:0;bottom:0;display:flex;padding:0 2px;white-space:nowrap;overflow:hidden;pointer-events:none;z-index:1}
+table.g td .v.wrap{white-space:normal;line-height:1.1}
+table.g td.sel{outline:2px solid #217346;outline-offset:-2px;z-index:2}
+table.g td.ovr::after{content:"";position:absolute;top:0;right:0;border-top:6px solid #e67e22;border-left:6px solid transparent;z-index:2}
+.tabs{display:flex;overflow-x:auto;background:#f0f0f0;border-top:1px solid #d4d4d4;direction:ltr;padding:0 6px}
+.tab{border:0;border-right:1px solid #d4d4d4;background:transparent;padding:7px 12px;font:12px "Segoe UI",Tahoma,sans-serif;color:#333;white-space:nowrap;border-bottom:3px solid transparent}
+.tab.on{background:#fff;color:#217346;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-left:4px;vertical-align:middle}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tabs) + 18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:12px;font-size:15px;z-index:50;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<div id="app" dir="rtl">
+  <div id="dbBanner" hidden></div>
+  <section id="lock" class="lock" aria-labelledby="lockTitle">
+    <div class="lock-in">
+      <div class="mark big" aria-hidden="true">ME</div>
+      <h1 id="lockTitle">عمالة <bdi>Middle East</bdi></h1>
+      <p class="lock-sub">حضور وغياب العمالة وتقفيل الـ <bdi>time sheet</bdi></p>
+      <form id="pwForm" class="pin" autocomplete="off">
+        <label for="pw">ادخل كلمة السر</label>
+        <input id="pw" type="password" inputmode="numeric" autocomplete="off" aria-describedby="pwErr">
+        <button class="btn primary" type="submit">دخول</button>
+        <p class="err" id="pwErr" hidden>كلمة السر مش صح، جرّب تاني.</p>
+      </form>
+      <button class="btn" id="installBtn" type="button" hidden style="margin-top:14px;width:100%">ثبّت التطبيق على الموبايل</button>
+      <p class="lock-sub" id="iosHint" hidden style="margin-top:12px;font-size:13px">علشان تثبّته على الآيفون: دوس زرار المشاركة في Safari، وبعدها "Add to Home Screen".</p>
+    </div>
+  </section>
+  <div id="shell" hidden>
+    <header class="appbar"><div class="bar-in">
+      <button class="iconbtn" id="backBtn" hidden aria-label="رجوع"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      <div class="mark" id="barMark" aria-hidden="true">ME</div>
+      <div class="bar-title"><h1 id="barTitle"></h1><p id="barSub"></p></div>
+      <button class="iconbtn" id="lockBtn" aria-label="قفل الصفحة" title="قفل الصفحة"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+    </div></header>
+    <main id="view" class="page" aria-live="polite"></main>
+    <nav class="tabbar" id="tabbar" aria-label="الأقسام">
+      <button data-tab="day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M9 15l2 2 4-4"/></svg><span>اليوم</span></button>
+      <button data-tab="people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.3 3-5 6-5s5.4 1.7 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg><span>العمال</span></button>
+      <button data-tab="close" id="tabClose" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 9h17M3.5 14.5h17M9.5 3.5v17"/></svg><span>التقفيل</span></button>
+    </nav>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+document.title = "عمالة Middle East";
+window.addEventListener("error", function(e){
+  var b = document.getElementById("dbBanner"); if(!b) return;
+  b.className = "banner bad"; b.hidden = false;
+  b.textContent = "حصل خطأ في الصفحة: " + (e.message || "") + (e.lineno ? " (سطر " + e.lineno + ")" : "");
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>const TPL={"cols":[89,64,64,64,64,64,64,64,64,64,75,64,64,64,64,64,64,64,64,64,64],"rows":{"1":30,"2":21,"3":24,"4":21,"5":21,"6":21,"7":21,"8":21,"9":34,"10":21,"11":21,"12":21,"13":21,"14":21,"15":21,"16":21,"17":21,"18":21,"19":21,"20":21,"21":21,"22":21,"23":21,"24":21,"25":21,"26":21,"27":21,"28":21,"29":21,"30":21,"31":20,"32":20,"33":20,"34":20,"35":20,"36":20,"37":20,"38":20,"39":20,"40":21},"nrows":40,"cells":{"A1":{"s":33,"v":"Attendance Sheet"},"B1":{"s":33},"C1":{"s":33},"D1":{"s":33},"E1":{"s":33},"F1":{"s":33},"G1":{"s":33},"H1":{"s":33},"I1":{"s":33},"J1":{"s":2},"K1":{"s":33,"v":"Attendance Sheet"},"L1":{"s":33},"M1":{"s":33},"N1":{"s":33},"O1":{"s":33},"P1":{"s":33},"Q1":{"s":33},"R1":{"s":33},"S1":{"s":33},"A2":{"s":7},"B2":{"s":6},"C2":{"s":6},"D2":{"s":6},"E2":{"s":6},"F2":{"s":6},"G2":{"s":6},"H2":{"s":6},"I2":{"s":6},"J2":{"s":1},"K2":{"s":7},"L2":{"s":6},"M2":{"s":6},"N2":{"s":6},"O2":{"s":6},"P2":{"s":6},"Q2":{"s":6},"R2":{"s":6},"S2":{"s":6},"A3":{"s":34,"v":"Middle East for Supplying and Contracting"},"B3":{"s":34},"C3":{"s":34},"D3":{"s":34},"E3":{"s":34},"F3":{"s":6},"G3":{"s":6},"H3":{"s":6},"I3":{"s":6},"J3":{"s":1},"K3":{"s":34,"v":"Middle East for Supplying and Contracting"},"L3":{"s":34},"M3":{"s":34},"N3":{"s":34},"O3":{"s":34},"P3":{"s":6},"Q3":{"s":6},"R3":{"s":6},"S3":{"s":6},"A4":{"s":35,"v":"6th October, 3 th industrial zone, part 128 "},"B4":{"s":35},"C4":{"s":35},"D4":{"s":35},"E4":{"s":36,"v":"Employee Name:"},"F4":{"s":36},"G4":{"s":37,"v":"Yassen Adel"},"H4":{"s":37},"I4":{"s":37},"J4":{"s":1},"K4":{"s":35,"v":"6th October, 3 th industrial zone, part 128 "},"L4":{"s":35},"M4":{"s":35},"N4":{"s":35},"O4":{"s":36,"v":"Employee Name:"},"P4":{"s":36},"Q4":{"s":37,"f":"G4"},"R4":{"s":37},"S4":{"s":37},"A5":{"s":35,"v":"6th October City, Giza , Egypt"},"B5":{"s":35},"C5":{"s":35},"D5":{"s":35},"E5":{"s":6},"F5":{"s":6},"G5":{"s":6},"H5":{"s":7},"I5":{"s":7},"J5":{"s":1},"K5":{"s":35,"v":"6th October City, Giza , Egypt"},"L5":{"s":35},"M5":{"s":35},"N5":{"s":35},"O5":{"s":6},"P5":{"s":6},"Q5":{"s":6},"R5":{"s":7},"S5":{"s":7},"A6":{"s":35,"v":"Tel : (+2)38838882 "},"B6":{"s":35},"C6":{"s":35},"D6":{"s":35},"E6":{"s":36},"F6":{"s":36},"G6":{"s":37,"v":"Welder"},"H6":{"s":37},"I6":{"s":37},"J6":{"s":1},"K6":{"s":35,"v":"Tel : (+2)38838882 "},"L6":{"s":35},"M6":{"s":35},"N6":{"s":35},"O6":{"s":36},"P6":{"s":36},"Q6":{"s":37,"f":"G6"},"R6":{"s":37},"S6":{"s":37},"A7":{"s":35,"v":"Fax : (+2)38838883 "},"B7":{"s":35},"C7":{"s":35},"D7":{"s":35},"E7":{"s":6},"F7":{"s":6},"G7":{"s":6},"H7":{"s":7},"I7":{"s":7},"J7":{"s":1},"K7":{"s":35,"v":"Fax : (+2)38838883 "},"L7":{"s":35},"M7":{"s":35},"N7":{"s":35},"O7":{"s":6},"P7":{"s":6},"Q7":{"s":6},"R7":{"s":7},"S7":{"s":7},"A8":{"s":38,"v":"Daily-rate"},"B8":{"s":38},"C8":{"s":39,"v":1250},"D8":{"s":39},"E8":{"s":36,"v":"Start date:"},"F8":{"s":36},"G8":{"s":40,"v":46327},"H8":{"s":40},"I8":{"s":40},"J8":{"s":1},"K8":{"s":38,"v":"Job:"},"L8":{"s":38},"M8":{"s":41},"N8":{"s":41},"O8":{"s":36,"v":"Start date:"},"P8":{"s":36},"Q8":{"s":40,"f":"A24+1"},"R8":{"s":40},"S8":{"s":40},"A9":{"s":26,"v":"يوم الأسبوع"},"B9":{"s":26,"v":"الساعات الأساسيه"},"C9":{"s":26,"v":"الساعات الإضافيه"},"D9":{"s":26,"v":"الجمعه والأعياد"},"E9":{"s":14},"F9":{"s":14},"G9":{"s":14},"H9":{"s":14},"I9":{"s":26,"v":"مجموع الساعات"},"J9":{"s":3},"K9":{"s":26,"v":"يوم الأسبوع"},"L9":{"s":26,"v":"الساعات الأساسيه"},"M9":{"s":26,"v":"الساعات الإضافيه"},"N9":{"s":26,"v":"الجمعه والأعياد"},"O9":{"s":14},"P9":{"s":14},"Q9":{"s":14},"R9":{"s":14},"S9":{"s":26,"v":"مجموع الساعات"},"A10":{"s":8,"f":"G8"},"B10":{"s":9},"C10":{"s":9},"D10":{"s":9},"E10":{"s":20},"F10":{"s":21},"G10":{"s":21},"H10":{"s":22},"I10":{"s":10,"f":"SUM(B10:D10)"},"J10":{"s":4},"K10":{"s":8,"f":"Q8"},"L10":{"s":9},"M10":{"s":9},"N10":{"s":9},"O10":{"s":20},"P10":{"s":21},"Q10":{"s":21},"R10":{"s":22},"S10":{"s":10,"f":"SUM(L10:N10)"},"A11":{"s":8,"f":"A10+1"},"B11":{"s":9},"C11":{"s":9},"D11":{"s":9},"E11":{"s":23},"F11":{"s":24},"G11":{"s":24},"H11":{"s":25},"I11":{"s":10,"f":"SUM(B11:D11)"},"J11":{"s":4},"K11":{"s":8,"f":"K10+1"},"L11":{"s":9},"M11":{"s":9},"N11":{"s":9},"O11":{"s":23},"P11":{"s":24},"Q11":{"s":24},"R11":{"s":25},"S11":{"s":10,"f":"SUM(L11:N11)"},"A12":{"s":8,"f":"A11+1"},"B12":{"s":9},"C12":{"s":9},"D12":{"s":9},"E12":{"s":23},"F12":{"s":24},"G12":{"s":24},"H12":{"s":25},"I12":{"s":10,"f":"SUM(B12:D12)"},"J12":{"s":4},"K12":{"s":8,"f":"K11+1"},"L12":{"s":9},"M12":{"s":9},"N12":{"s":9},"O12":{"s":23},"P12":{"s":24},"Q12":{"s":24},"R12":{"s":25},"S12":{"s":10,"f":"SUM(L12:N12)"},"A13":{"s":8,"f":"A12+1"},"B13":{"s":9},"C13":{"s":9},"D13":{"s":9},"E13":{"s":23},"F13":{"s":24},"G13":{"s":24},"H13":{"s":25},"I13":{"s":10,"f":"SUM(B13:D13)"},"J13":{"s":4},"K13":{"s":8,"f":"K12+1"},"L13":{"s":9},"M13":{"s":9},"N13":{"s":9},"O13":{"s":23},"P13":{"s":24},"Q13":{"s":24},"R13":{"s":25},"S13":{"s":10,"f":"SUM(L13:N13)"},"A14":{"s":8,"f":"A13+1"},"B14":{"s":9},"C14":{"s":9},"D14":{"s":9},"E14":{"s":23},"F14":{"s":24},"G14":{"s":24},"H14":{"s":25},"I14":{"s":10,"f":"SUM(B14:D14)"},"J14":{"s":4},"K14":{"s":8,"f":"K13+1"},"L14":{"s":9},"M14":{"s":9},"N14":{"s":9},"O14":{"s":23},"P14":{"s":24},"Q14":{"s":24},"R14":{"s":25},"S14":{"s":10,"f":"SUM(L14:N14)"},"A15":{"s":8,"f":"A14+1"},"B15":{"s":9},"C15":{"s":9},"D15":{"s":9},"E15":{"s":23},"F15":{"s":24},"G15":{"s":24},"H15":{"s":25},"I15":{"s":10,"f":"SUM(B15:D15)"},"J15":{"s":4},"K15":{"s":8,"f":"K14+1"},"L15":{"s":9},"M15":{"s":9},"N15":{"s":9},"O15":{"s":23},"P15":{"s":24},"Q15":{"s":24},"R15":{"s":25},"S15":{"s":10,"f":"SUM(L15:N15)"},"A16":{"s":8,"f":"A15+1"},"B16":{"s":9},"C16":{"s":9},"D16":{"s":9},"E16":{"s":23},"F16":{"s":24},"G16":{"s":24},"H16":{"s":25},"I16":{"s":10,"f":"SUM(B16:D16)"},"J16":{"s":4},"K16":{"s":8,"f":"K15+1"},"L16":{"s":9},"M16":{"s":9},"N16":{"s":9},"O16":{"s":23},"P16":{"s":24},"Q16":{"s":24},"R16":{"s":25},"S16":{"s":10,"f":"SUM(L16:N16)"},"A17":{"s":8,"f":"A16+1"},"B17":{"s":9},"C17":{"s":9},"D17":{"s":9},"E17":{"s":23},"F17":{"s":24},"G17":{"s":24},"H17":{"s":25},"I17":{"s":10,"f":"SUM(B17:D17)"},"J17":{"s":4},"K17":{"s":8,"f":"K16+1"},"L17":{"s":9},"M17":{"s":9},"N17":{"s":9},"O17":{"s":23},"P17":{"s":24},"Q17":{"s":24},"R17":{"s":25},"S17":{"s":10,"f":"SUM(L17:N17)"},"A18":{"s":8,"f":"A17+1"},"B18":{"s":9},"C18":{"s":9},"D18":{"s":9},"E18":{"s":23},"F18":{"s":24},"G18":{"s":24},"H18":{"s":25},"I18":{"s":10,"f":"SUM(B18:D18)"},"J18":{"s":4},"K18":{"s":8,"f":"K17+1"},"L18":{"s":9},"M18":{"s":9},"N18":{"s":9},"O18":{"s":23},"P18":{"s":24},"Q18":{"s":24},"R18":{"s":25},"S18":{"s":10,"f":"SUM(L18:N18)"},"A19":{"s":8,"f":"A18+1"},"B19":{"s":9},"C19":{"s":9},"D19":{"s":9},"E19":{"s":23},"F19":{"s":24},"G19":{"s":24},"H19":{"s":25},"I19":{"s":10,"f":"SUM(B19:D19)"},"J19":{"s":4},"K19":{"s":8,"f":"K18+1"},"L19":{"s":9},"M19":{"s":9},"N19":{"s":9},"O19":{"s":23},"P19":{"s":24},"Q19":{"s":24},"R19":{"s":25},"S19":{"s":10,"f":"SUM(L19:N19)"},"A20":{"s":8,"f":"A19+1"},"B20":{"s":9},"C20":{"s":9},"D20":{"s":9},"E20":{"s":23},"F20":{"s":24},"G20":{"s":24},"H20":{"s":25},"I20":{"s":10,"f":"SUM(B20:D20)"},"J20":{"s":4},"K20":{"s":8,"f":"K19+1"},"L20":{"s":9},"M20":{"s":9},"N20":{"s":9},"O20":{"s":23},"P20":{"s":24},"Q20":{"s":24},"R20":{"s":25},"S20":{"s":10,"f":"SUM(L20:N20)"},"A21":{"s":8,"f":"A20+1"},"B21":{"s":9},"C21":{"s":9},"D21":{"s":9},"E21":{"s":23},"F21":{"s":24},"G21":{"s":24},"H21":{"s":25},"I21":{"s":10,"f":"SUM(B21:D21)"},"J21":{"s":4},"K21":{"s":8,"f":"K20+1"},"L21":{"s":9},"M21":{"s":9},"N21":{"s":9},"O21":{"s":23},"P21":{"s":24},"Q21":{"s":24},"R21":{"s":25},"S21":{"s":10,"f":"SUM(L21:N21)"},"A22":{"s":8,"f":"A21+1"},"B22":{"s":9},"C22":{"s":9},"D22":{"s":9},"E22":{"s":23},"F22":{"s":24},"G22":{"s":24},"H22":{"s":25},"I22":{"s":10,"f":"SUM(B22:D22)"},"J22":{"s":4},"K22":{"s":8,"f":"K21+1"},"L22":{"s":9},"M22":{"s":9},"N22":{"s":9},"O22":{"s":23},"P22":{"s":24},"Q22":{"s":24},"R22":{"s":25},"S22":{"s":10,"f":"SUM(L22:N22)"},"A23":{"s":8,"f":"A22+1"},"B23":{"s":9},"C23":{"s":9},"D23":{"s":9},"E23":{"s":23},"F23":{"s":24},"G23":{"s":24},"H23":{"s":25},"I23":{"s":10,"f":"SUM(B23:D23)"},"J23":{"s":4},"K23":{"s":8,"f":"K22+1"},"L23":{"s":9},"M23":{"s":9},"N23":{"s":9},"O23":{"s":31},"P23":{"s":24},"Q23":{"s":24},"R23":{"s":25},"S23":{"s":10,"f":"SUM(L23:N23)"},"A24":{"s":8,"f":"A23+1"},"B24":{"s":9},"C24":{"s":9},"D24":{"s":9},"E24":{"s":23},"F24":{"s":24},"G24":{"s":24},"H24":{"s":25},"I24":{"s":10,"f":"SUM(B24:D24)"},"J24":{"s":4},"K24":{"s":8,"f":"K23+1"},"L24":{"s":9},"M24":{"s":9},"N24":{"s":9},"O24":{"s":31},"P24":{"s":24},"Q24":{"s":24},"R24":{"s":25},"S24":{"s":10,"f":"SUM(L24:N24)"},"A25":{"s":8},"B25":{"s":9},"C25":{"s":9},"D25":{"s":9},"E25":{"s":23},"F25":{"s":24},"G25":{"s":24},"H25":{"s":25},"I25":{"s":10},"J25":{"s":4},"K25":{"s":8,"f":"K24+1"},"L25":{"s":9},"M25":{"s":9},"N25":{"s":9},"O25":{"s":31},"P25":{"s":24},"Q25":{"s":24},"R25":{"s":25},"S25":{"s":10,"f":"SUM(L25:N25)"},"A26":{"s":8},"B26":{"s":10},"C26":{"s":10},"D26":{"s":10},"E26":{"s":10},"F26":{"s":10},"G26":{"s":10},"H26":{"s":10},"I26":{"s":10},"J26":{"s":4},"K26":{"s":8},"L26":{"s":10},"M26":{"s":10},"N26":{"s":10},"O26":{"s":10},"P26":{"s":10},"Q26":{"s":10},"R26":{"s":10},"S26":{"s":10},"A27":{"s":16,"v":"إجمالي الساعات"},"B27":{"s":10,"f":"SUM(B17:B25,B10:B16)"},"C27":{"s":10,"f":"SUM(C17:C25,C10:C16)"},"D27":{"s":10,"f":"SUM(D17:D25,D10:D16)"},"E27":{"s":10},"F27":{"s":10},"G27":{"s":10},"H27":{"s":10},"I27":{"s":11,"f":"SUM(I17:I23,I10:I16)"},"J27":{"s":5},"K27":{"s":16,"v":"إجمالي الساعات"},"L27":{"s":10,"f":"SUM(L17:L25,L10:L16)"},"M27":{"s":10,"f":"SUM(M17:M25,M10:M16)"},"N27":{"s":10,"f":"SUM(N17:N25,N10:N16)"},"O27":{"s":10},"P27":{"s":10},"Q27":{"s":10},"R27":{"s":10},"S27":{"s":11,"f":"SUM(S17:S23,S10:S16)"},"A28":{"s":17,"v":"سعر الساعه"},"B28":{"s":12,"f":"C8/8"},"C28":{"s":12,"f":"B28*1.5"},"D28":{"s":12,"f":"B28*2"},"E28":{"s":10},"F28":{"s":10},"G28":{"s":10},"H28":{"s":10},"I28":{"s":10},"J28":{"s":5},"K28":{"s":17,"v":"سعر الساعه"},"L28":{"s":12,"f":"B28"},"M28":{"s":12,"f":"L28*1.5"},"N28":{"s":12,"f":"D28"},"O28":{"s":10},"P28":{"s":10},"Q28":{"s":10},"R28":{"s":10},"S28":{"s":10},"A29":{"s":17,"v":"سعر الساعات"},"B29":{"s":13,"f":"B27*B28"},"C29":{"s":13,"f":"C27*C28"},"D29":{"s":13,"f":"D27*D28"},"E29":{"s":10},"F29":{"s":10},"G29":{"s":10},"H29":{"s":10},"I29":{"s":15,"f":"SUM(B29:D29)"},"J29":{"s":5},"K29":{"s":17,"v":"سعر الساعات"},"L29":{"s":13,"f":"L27*L28"},"M29":{"s":13,"f":"M27*M28"},"N29":{"s":13,"f":"N27*N28"},"O29":{"s":10},"P29":{"s":10},"Q29":{"s":10},"R29":{"s":10},"S29":{"s":15,"f":"SUM(L29:N29)"},"A30":{"s":7},"B30":{"s":6},"C30":{"s":6},"D30":{"s":6},"E30":{"s":6},"F30":{"s":6},"G30":{"s":6},"H30":{"s":6},"I30":{"s":6},"J30":{"s":1},"K30":{"s":7},"L30":{"s":6},"M30":{"s":6},"N30":{"s":6},"O30":{"s":6},"P30":{"s":6},"Q30":{"s":6},"R30":{"s":6},"S30":{"s":6},"A31":{"s":19},"B31":{"s":43,"v":"مجموع الساعات الكليه"},"C31":{"s":43},"D31":{"s":44,"f":"SUM(B27:D27)"},"E31":{"s":44},"F31":{"s":6},"G31":{"s":6},"H31":{"s":6},"I31":{"s":6},"K31":{"s":19},"L31":{"s":43,"v":"مجموع الساعات الكليه"},"M31":{"s":43},"N31":{"s":44,"f":"SUM(L27:N27)"},"O31":{"s":44},"P31":{"s":6},"Q31":{"s":6},"R31":{"s":6},"S31":{"s":6},"A32":{"s":19},"B32":{"s":19},"C32":{"s":19,"v":"الخصومات"},"D32":{"s":45,"v":0},"E32":{"s":45},"F32":{"s":46},"G32":{"s":46},"H32":{"s":6},"I32":{"s":6},"K32":{"s":19},"L32":{"s":19},"M32":{"s":19,"v":"الخصومات"},"N32":{"s":45,"v":0},"O32":{"s":45},"P32":{"s":46},"Q32":{"s":46},"R32":{"s":46},"S32":{"s":46},"A33":{"s":19},"B33":{"s":19},"C33":{"s":19,"v":"المكاغآت"},"D33":{"s":47,"f":"F33*C8"},"E33":{"s":47},"F33":{"s":28},"G33":{"s":28},"H33":{"s":42},"I33":{"s":42},"K33":{"s":19},"L33":{"s":19},"M33":{"s":19,"v":"المكاغآت"},"N33":{"s":47,"f":"C8*P33"},"O33":{"s":47},"P33":{"s":42},"Q33":{"s":42},"R33":{"s":6},"S33":{"s":6},"A34":{"s":19},"B34":{"s":43,"v":"المبلغ المستحق"},"C34":{"s":43},"D34":{"s":48,"f":"I29-D32+D33"},"E34":{"s":48},"F34":{"s":6},"G34":{"s":6},"H34":{"s":6},"I34":{"s":6},"K34":{"s":19},"L34":{"s":43,"v":"المبلغ المستحق"},"M34":{"s":43},"N34":{"s":48,"f":"S29-N32+N33"},"O34":{"s":48},"P34":{"s":6},"Q34":{"s":6},"R34":{"s":6},"S34":{"s":6},"A35":{"s":7},"B35":{"s":6},"C35":{"s":6},"D35":{"s":6},"E35":{"s":6},"F35":{"s":6},"G35":{"s":6},"H35":{"s":6},"I35":{"s":6},"K35":{"s":7},"L35":{"s":6},"M35":{"s":6},"N35":{"s":6},"O35":{"s":6},"P35":{"s":6},"Q35":{"s":6},"R35":{"s":6},"S35":{"s":6},"A36":{"s":49},"B36":{"s":49},"C36":{"s":49},"D36":{"s":50},"E36":{"s":50},"F36":{"s":6},"G36":{"s":6},"H36":{"s":6},"I36":{"s":6},"K36":{"s":49},"L36":{"s":49},"M36":{"s":49},"N36":{"s":50},"O36":{"s":50},"P36":{"s":6},"Q36":{"s":6},"R36":{"s":6},"S36":{"s":6},"A37":{"s":51,"v":"Employee Signature"},"B37":{"s":51},"C37":{"s":51},"D37":{"s":51,"v":"Date"},"E37":{"s":51},"F37":{"s":6},"G37":{"s":6},"H37":{"s":6},"I37":{"s":6},"K37":{"s":51,"v":"Employee Signature"},"L37":{"s":51},"M37":{"s":51},"N37":{"s":51,"v":"Date"},"O37":{"s":51},"P37":{"s":6},"Q37":{"s":6},"R37":{"s":6},"S37":{"s":6},"A38":{"s":49},"B38":{"s":49},"C38":{"s":49},"D38":{"s":50},"E38":{"s":50},"F38":{"s":6},"G38":{"s":6},"H38":{"s":6},"I38":{"s":6},"K38":{"s":49},"L38":{"s":49},"M38":{"s":49},"N38":{"s":50},"O38":{"s":50},"P38":{"s":6},"Q38":{"s":6},"R38":{"s":6},"S38":{"s":6},"A39":{"s":51,"v":"Supervisor Signature"},"B39":{"s":51},"C39":{"s":51},"D39":{"s":51,"v":"Date"},"E39":{"s":51},"F39":{"s":6},"G39":{"s":6},"H39":{"s":6},"I39":{"s":6},"K39":{"s":51,"v":"Supervisor Signature"},"L39":{"s":51},"M39":{"s":51},"N39":{"s":51,"v":"Date"},"O39":{"s":51},"P39":{"s":6},"Q39":{"s":6},"R39":{"s":6},"S39":{"s":6},"A40":{"s":18},"B40":{"s":1},"C40":{"s":1},"D40":{"s":1},"E40":{"s":1},"F40":{"s":1},"G40":{"s":1},"H40":{"s":1},"I40":{"s":1}},"styles":{"33":{"bg":"#DCE6F2","fc":"#376092","b":1,"sz":18.0,"ff":"Cambria","ha":"center","va":"center","nf":"General"},"2":{"sz":10.0,"ff":"Tahoma","nf":"General"},"7":{"sz":10.0,"ff":"Calibri","ha":"left","nf":"General"},"6":{"sz":10.0,"ff":"Calibri","nf":"General"},"1":{"sz":10.0,"ff":"Trebuchet MS","nf":"General"},"34":{"b":1,"sz":12.0,"ff":"Trebuchet MS","ha":"left","nf":"General"},"35":{"sz":10.0,"ff":"Calibri","ha":"left","nf":"General"},"36":{"sz":10.0,"ff":"Calibri","ha":"right","nf":"General"},"37":{"sz":10.0,"ff":"Calibri","ha":"center","bb":"1px solid #000000","nf":"General"},"38":{"sz":10.0,"ff":"Calibri","ha":"center","va":"center","nf":"General"},"39":{"sz":10.0,"ff":"Trebuchet MS","ha":"center","va":"center","nf":"[$EGP]\\ #,##0"},"40":{"sz":10.0,"ff":"Calibri","ha":"center","bb":"1px solid #000000","nf":"mm-dd-yy"},"41":{"sz":10.0,"ff":"Trebuchet MS","ha":"center","va":"center","nf":"General"},"26":{"bg":"#376092","fc":"#FFFFFF","b":1,"sz":10.0,"ff":"Cambria","ha":"center","va":"center","wrap":1,"bb":"1px solid #000000","nf":"General"},"14":{"bg":"#376092","fc":"#FFFFFF","sz":10.0,"ff":"Cambria","ha":"center","va":"center","wrap":1,"bb":"1px solid #000000","nf":"General"},"3":{"sz":10.0,"ff":"Trebuchet MS","ha":"right","va":"center","nf":"General"},"8":{"bg":"#DCE6F2","b":1,"sz":10.0,"ff":"Calibri","ha":"left","va":"center","nf":"ddd\\ m/d"},"9":{"sz":10.0,"ff":"Calibri","ha":"center","va":"center","br":"1px solid #000000","bb":"1px solid #000000","bl":"1px solid #000000","nf":"0.00"},"20":{"sz":10.0,"ff":"Calibri","va":"center","bt":"1px solid #000000","bl":"1px solid #000000","nf":"0.00"},"21":{"sz":10.0,"ff":"Calibri","va":"center","bt":"1px solid #000000","nf":"0.00"},"22":{"sz":10.0,"ff":"Calibri","va":"center","bt":"1px solid #000000","br":"1px solid #000000","nf":"0.00"},"10":{"bg":"#DCE6F2","sz":10.0,"ff":"Calibri","ha":"center","va":"center","nf":"#,##0.00"},"4":{"sz":10.0,"ff":"Trebuchet MS","nf":"0.00"},"23":{"sz":10.0,"ff":"Calibri","va":"center","bl":"1px solid #000000","nf":"0.00"},"24":{"sz":10.0,"ff":"Calibri","va":"center","nf":"0.00"},"25":{"sz":10.0,"ff":"Calibri","va":"center","br":"1px solid #000000","nf":"0.00"},"31":{"sz":10.0,"ff":"Calibri","ha":"center","va":"center","bl":"1px solid #000000","nf":"0.00"},"16":{"bg":"#DCE6F2","b":1,"sz":10.0,"ff":"Calibri","ha":"left","va":"center","nf":"General"},"11":{"bg":"#B9CDE5","b":1,"sz":10.0,"ff":"Calibri","ha":"center","va":"center","nf":"#,##0.00"},"5":{"sz":10.0,"ff":"Trebuchet MS","nf":"#,##0.00"},"17":{"b":1,"sz":10.0,"ff":"Calibri","ha":"left","va":"center","nf":"General"},"12":{"sz":10.0,"ff":"Calibri","ha":"center","va":"center","bt":"1px solid #000000","br":"1px solid #000000","bb":"1px solid #000000","bl":"1px solid #000000","nf":"#,##0.00"},"13":{"sz":10.0,"ff":"Calibri","ha":"center","va":"center","nf":"#,##0.00"},"15":{"bg":"#DCE6F2","b":1,"sz":10.0,"ff":"Calibri","ha":"center","va":"center","nf":"0.00"},"19":{"b":1,"sz":10.0,"ff":"Calibri","nf":"General"},"43":{"b":1,"sz":10.0,"ff":"Calibri","ha":"right","nf":"General"},"44":{"b":1,"sz":10.0,"ff":"Calibri","ha":"center","nf":"#,##0.00"},"45":{"fc":"#FF0000","b":1,"sz":10.0,"ff":"Calibri","ha":"center","nf":"[$EGP]\\ #,##0.00"},"46":{"fc":"#FF0000","b":1,"sz":10.0,"ff":"Calibri","ha":"center","nf":"General"},"47":{"fc":"#00B050","b":1,"sz":10.0,"ff":"Calibri","ha":"center","nf":"[$EGP]\\ #,##0.00"},"28":{"fc":"#00B050","b":1,"sz":9.0,"ff":"Calibri","ha":"center","va":"center","nf":"General"},"42":{"fc":"#00B050","b":1,"sz":9.0,"ff":"Calibri","ha":"center","nf":"General"},"48":{"b":1,"sz":10.0,"ff":"Calibri","ha":"center","nf":"[$EGP]\\ #,##0.00"},"49":{"sz":10.0,"ff":"Calibri","ha":"left","bb":"1px solid #000000","nf":"General"},"50":{"sz":10.0,"ff":"Calibri","ha":"left","bb":"1px solid #000000","nf":"General"},"51":{"sz":10.0,"ff":"Calibri","ha":"left","bt":"1px solid #000000","nf":"General"},"18":{"sz":10.0,"ff":"Trebuchet MS","ha":"left","nf":"General"},"57":{"fc":"#FF0000","b":1,"sz":12.0,"ff":"Calibri","ha":"center","nf":"General"},"58":{"fc":"#00B050","b":1,"sz":11.0,"ff":"Calibri","ha":"center","va":"center","nf":"0.00"}},"merges":["A39:C39","D39:E39","K39:M39","N39:O39","A37:C37","D37:E37","K37:M37","N37:O37","A38:C38","D38:E38","K38:M38","N38:O38","B34:C34","D34:E34","L34:M34","N34:O34","A36:C36","D36:E36","K36:M36","N36:O36","P33:Q33","O8:P8","Q8:S8","B31:C31","D31:E31","L31:M31","N31:O31","D32:E32","F32:G32","N32:O32","D33:E33","N33:O33","H33:I33","P32:S32","O6:P6","Q6:S6","A7:D7","K7:N7","A8:B8","C8:D8","E8:F8","G8:I8","K8:L8","M8:N8","A5:D5","K5:N5","A6:D6","E6:F6","G6:I6","K6:N6","A1:I1","K1:S1","A3:E3","K3:O3","A4:D4","E4:F4","G4:I4","K4:N4","O4:P4","Q4:S4"],"note":{"red":57,"green":58},"sheetXml":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x14ac xr xr2 xr3\" xmlns:x14ac=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\" xmlns:xr3=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision3\" xr:uid=\"{4B28A6F0-1F4D-40F8-922A-6F87C3BD7361}\"><sheetPr><tabColor rgb=\"FFFF0000\"/><\/sheetPr><dimension ref=\"A1:S40\"/><sheetViews><sheetView workbookViewId=\"0\"><selection activeCell=\"V18\" sqref=\"V18\"/><\/sheetView><\/sheetViews><sheetFormatPr defaultRowHeight=\"15\" x14ac:dyDescent=\"0.25\"/><cols><col min=\"1\" max=\"1\" width=\"12\" customWidth=\"1\"/><col min=\"11\" max=\"11\" width=\"10.140625\" customWidth=\"1\"/><\/cols><sheetData><row r=\"1\" spans=\"1:19\" ht=\"22.5\" x14ac:dyDescent=\"0.25\"><c r=\"A1\" s=\"33\" t=\"s\"><v>0<\/v><\/c><c r=\"B1\" s=\"33\"/><c r=\"C1\" s=\"33\"/><c r=\"D1\" s=\"33\"/><c r=\"E1\" s=\"33\"/><c r=\"F1\" s=\"33\"/><c r=\"G1\" s=\"33\"/><c r=\"H1\" s=\"33\"/><c r=\"I1\" s=\"33\"/><c r=\"J1\" s=\"2\"/><c r=\"K1\" s=\"33\" t=\"s\"><v>0<\/v><\/c><c r=\"L1\" s=\"33\"/><c r=\"M1\" s=\"33\"/><c r=\"N1\" s=\"33\"/><c r=\"O1\" s=\"33\"/><c r=\"P1\" s=\"33\"/><c r=\"Q1\" s=\"33\"/><c r=\"R1\" s=\"33\"/><c r=\"S1\" s=\"33\"/><\/row><row r=\"2\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A2\" s=\"7\"/><c r=\"B2\" s=\"6\"/><c r=\"C2\" s=\"6\"/><c r=\"D2\" s=\"6\"/><c r=\"E2\" s=\"6\"/><c r=\"F2\" s=\"6\"/><c r=\"G2\" s=\"6\"/><c r=\"H2\" s=\"6\"/><c r=\"I2\" s=\"6\"/><c r=\"J2\" s=\"1\"/><c r=\"K2\" s=\"7\"/><c r=\"L2\" s=\"6\"/><c r=\"M2\" s=\"6\"/><c r=\"N2\" s=\"6\"/><c r=\"O2\" s=\"6\"/><c r=\"P2\" s=\"6\"/><c r=\"Q2\" s=\"6\"/><c r=\"R2\" s=\"6\"/><c r=\"S2\" s=\"6\"/><\/row><row r=\"3\" spans=\"1:19\" ht=\"18\" x14ac:dyDescent=\"0.35\"><c r=\"A3\" s=\"34\" t=\"s\"><v>1<\/v><\/c><c r=\"B3\" s=\"34\"/><c r=\"C3\" s=\"34\"/><c r=\"D3\" s=\"34\"/><c r=\"E3\" s=\"34\"/><c r=\"F3\" s=\"6\"/><c r=\"G3\" s=\"6\"/><c r=\"H3\" s=\"6\"/><c r=\"I3\" s=\"6\"/><c r=\"J3\" s=\"1\"/><c r=\"K3\" s=\"34\" t=\"s\"><v>1<\/v><\/c><c r=\"L3\" s=\"34\"/><c r=\"M3\" s=\"34\"/><c r=\"N3\" s=\"34\"/><c r=\"O3\" s=\"34\"/><c r=\"P3\" s=\"6\"/><c r=\"Q3\" s=\"6\"/><c r=\"R3\" s=\"6\"/><c r=\"S3\" s=\"6\"/><\/row><row r=\"4\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A4\" s=\"35\" t=\"s\"><v>2<\/v><\/c><c r=\"B4\" s=\"35\"/><c r=\"C4\" s=\"35\"/><c r=\"D4\" s=\"35\"/><c r=\"E4\" s=\"36\" t=\"s\"><v>3<\/v><\/c><c r=\"F4\" s=\"36\"/><c r=\"G4\" s=\"37\" t=\"s\"><v>41<\/v><\/c><c r=\"H4\" s=\"37\"/><c r=\"I4\" s=\"37\"/><c r=\"J4\" s=\"1\"/><c r=\"K4\" s=\"35\" t=\"s\"><v>2<\/v><\/c><c r=\"L4\" s=\"35\"/><c r=\"M4\" s=\"35\"/><c r=\"N4\" s=\"35\"/><c r=\"O4\" s=\"36\" t=\"s\"><v>3<\/v><\/c><c r=\"P4\" s=\"36\"/><c r=\"Q4\" s=\"37\" t=\"str\"><f>G4<\/f><v>Yassen Adel<\/v><\/c><c r=\"R4\" s=\"37\"/><c r=\"S4\" s=\"37\"/><\/row><row r=\"5\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A5\" s=\"35\" t=\"s\"><v>4<\/v><\/c><c r=\"B5\" s=\"35\"/><c r=\"C5\" s=\"35\"/><c r=\"D5\" s=\"35\"/><c r=\"E5\" s=\"6\"/><c r=\"F5\" s=\"6\"/><c r=\"G5\" s=\"6\"/><c r=\"H5\" s=\"7\"/><c r=\"I5\" s=\"7\"/><c r=\"J5\" s=\"1\"/><c r=\"K5\" s=\"35\" t=\"s\"><v>4<\/v><\/c><c r=\"L5\" s=\"35\"/><c r=\"M5\" s=\"35\"/><c r=\"N5\" s=\"35\"/><c r=\"O5\" s=\"6\"/><c r=\"P5\" s=\"6\"/><c r=\"Q5\" s=\"6\"/><c r=\"R5\" s=\"7\"/><c r=\"S5\" s=\"7\"/><\/row><row r=\"6\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A6\" s=\"35\" t=\"s\"><v>5<\/v><\/c><c r=\"B6\" s=\"35\"/><c r=\"C6\" s=\"35\"/><c r=\"D6\" s=\"35\"/><c r=\"E6\" s=\"36\"/><c r=\"F6\" s=\"36\"/><c r=\"G6\" s=\"37\" t=\"s\"><v>34<\/v><\/c><c r=\"H6\" s=\"37\"/><c r=\"I6\" s=\"37\"/><c r=\"J6\" s=\"1\"/><c r=\"K6\" s=\"35\" t=\"s\"><v>5<\/v><\/c><c r=\"L6\" s=\"35\"/><c r=\"M6\" s=\"35\"/><c r=\"N6\" s=\"35\"/><c r=\"O6\" s=\"36\"/><c r=\"P6\" s=\"36\"/><c r=\"Q6\" s=\"37\" t=\"str\"><f>G6<\/f><v>Welder<\/v><\/c><c r=\"R6\" s=\"37\"/><c r=\"S6\" s=\"37\"/><\/row><row r=\"7\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A7\" s=\"35\" t=\"s\"><v>7<\/v><\/c><c r=\"B7\" s=\"35\"/><c r=\"C7\" s=\"35\"/><c r=\"D7\" s=\"35\"/><c r=\"E7\" s=\"6\"/><c r=\"F7\" s=\"6\"/><c r=\"G7\" s=\"6\"/><c r=\"H7\" s=\"7\"/><c r=\"I7\" s=\"7\"/><c r=\"J7\" s=\"1\"/><c r=\"K7\" s=\"35\" t=\"s\"><v>7<\/v><\/c><c r=\"L7\" s=\"35\"/><c r=\"M7\" s=\"35\"/><c r=\"N7\" s=\"35\"/><c r=\"O7\" s=\"6\"/><c r=\"P7\" s=\"6\"/><c r=\"Q7\" s=\"6\"/><c r=\"R7\" s=\"7\"/><c r=\"S7\" s=\"7\"/><\/row><row r=\"8\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A8\" s=\"38\" t=\"s\"><v>30<\/v><\/c><c r=\"B8\" s=\"38\"/><c r=\"C8\" s=\"39\"><v>1250<\/v><\/c><c r=\"D8\" s=\"39\"/><c r=\"E8\" s=\"36\" t=\"s\"><v>9<\/v><\/c><c r=\"F8\" s=\"36\"/><c r=\"G8\" s=\"40\"><v>46327<\/v><\/c><c r=\"H8\" s=\"40\"/><c r=\"I8\" s=\"40\"/><c r=\"J8\" s=\"1\"/><c r=\"K8\" s=\"38\" t=\"s\"><v>8<\/v><\/c><c r=\"L8\" s=\"38\"/><c r=\"M8\" s=\"41\"/><c r=\"N8\" s=\"41\"/><c r=\"O8\" s=\"36\" t=\"s\"><v>9<\/v><\/c><c r=\"P8\" s=\"36\"/><c r=\"Q8\" s=\"40\"><f>A24+1<\/f><v>46342<\/v><\/c><c r=\"R8\" s=\"40\"/><c r=\"S8\" s=\"40\"/><\/row><row r=\"9\" spans=\"1:19\" ht=\"25.5\" x14ac:dyDescent=\"0.25\"><c r=\"A9\" s=\"26\" t=\"s\"><v>18<\/v><\/c><c r=\"B9\" s=\"26\" t=\"s\"><v>19<\/v><\/c><c r=\"C9\" s=\"26\" t=\"s\"><v>20<\/v><\/c><c r=\"D9\" s=\"26\" t=\"s\"><v>21<\/v><\/c><c r=\"E9\" s=\"14\"/><c r=\"F9\" s=\"14\"/><c r=\"G9\" s=\"14\"/><c r=\"H9\" s=\"14\"/><c r=\"I9\" s=\"26\" t=\"s\"><v>22<\/v><\/c><c r=\"J9\" s=\"3\"/><c r=\"K9\" s=\"26\" t=\"s\"><v>18<\/v><\/c><c r=\"L9\" s=\"26\" t=\"s\"><v>19<\/v><\/c><c r=\"M9\" s=\"26\" t=\"s\"><v>20<\/v><\/c><c r=\"N9\" s=\"26\" t=\"s\"><v>21<\/v><\/c><c r=\"O9\" s=\"14\"/><c r=\"P9\" s=\"14\"/><c r=\"Q9\" s=\"14\"/><c r=\"R9\" s=\"14\"/><c r=\"S9\" s=\"26\" t=\"s\"><v>22<\/v><\/c><\/row><row r=\"10\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A10\" s=\"8\"><f>G8<\/f><v>46327<\/v><\/c><c r=\"B10\" s=\"9\"/><c r=\"C10\" s=\"9\"/><c r=\"D10\" s=\"9\"/><c r=\"E10\" s=\"20\"/><c r=\"F10\" s=\"21\"/><c r=\"G10\" s=\"21\"/><c r=\"H10\" s=\"22\"/><c r=\"I10\" s=\"10\"><f>SUM(B10:D10)<\/f><v>0<\/v><\/c><c r=\"J10\" s=\"4\"/><c r=\"K10\" s=\"8\"><f>Q8<\/f><v>46342<\/v><\/c><c r=\"L10\" s=\"9\"/><c r=\"M10\" s=\"9\"/><c r=\"N10\" s=\"9\"/><c r=\"O10\" s=\"20\"/><c r=\"P10\" s=\"21\"/><c r=\"Q10\" s=\"21\"/><c r=\"R10\" s=\"22\"/><c r=\"S10\" s=\"10\"><f>SUM(L10:N10)<\/f><v>0<\/v><\/c><\/row><row r=\"11\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A11\" s=\"8\"><f t=\"shared\" ref=\"A11:A16\" si=\"0\">A10+1<\/f><v>46328<\/v><\/c><c r=\"B11\" s=\"9\"/><c r=\"C11\" s=\"9\"/><c r=\"D11\" s=\"9\"/><c r=\"E11\" s=\"23\"/><c r=\"F11\" s=\"24\"/><c r=\"G11\" s=\"24\"/><c r=\"H11\" s=\"25\"/><c r=\"I11\" s=\"10\"><f t=\"shared\" ref=\"I11:I16\" si=\"1\">SUM(B11:D11)<\/f><v>0<\/v><\/c><c r=\"J11\" s=\"4\"/><c r=\"K11\" s=\"8\"><f t=\"shared\" ref=\"K11:K16\" si=\"2\">K10+1<\/f><v>46343<\/v><\/c><c r=\"L11\" s=\"9\"/><c r=\"M11\" s=\"9\"/><c r=\"N11\" s=\"9\"/><c r=\"O11\" s=\"23\"/><c r=\"P11\" s=\"24\"/><c r=\"Q11\" s=\"24\"/><c r=\"R11\" s=\"25\"/><c r=\"S11\" s=\"10\"><f t=\"shared\" ref=\"S11:S16\" si=\"3\">SUM(L11:N11)<\/f><v>0<\/v><\/c><\/row><row r=\"12\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A12\" s=\"8\"><f t=\"shared\" si=\"0\"/><v>46329<\/v><\/c><c r=\"B12\" s=\"9\"/><c r=\"C12\" s=\"9\"/><c r=\"D12\" s=\"9\"/><c r=\"E12\" s=\"23\"/><c r=\"F12\" s=\"24\"/><c r=\"G12\" s=\"24\"/><c r=\"H12\" s=\"25\"/><c r=\"I12\" s=\"10\"><f t=\"shared\" si=\"1\"/><v>0<\/v><\/c><c r=\"J12\" s=\"4\"/><c r=\"K12\" s=\"8\"><f t=\"shared\" si=\"2\"/><v>46344<\/v><\/c><c r=\"L12\" s=\"9\"/><c r=\"M12\" s=\"9\"/><c r=\"N12\" s=\"9\"/><c r=\"O12\" s=\"23\"/><c r=\"P12\" s=\"24\"/><c r=\"Q12\" s=\"24\"/><c r=\"R12\" s=\"25\"/><c r=\"S12\" s=\"10\"><f t=\"shared\" si=\"3\"/><v>0<\/v><\/c><\/row><row r=\"13\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A13\" s=\"8\"><f t=\"shared\" si=\"0\"/><v>46330<\/v><\/c><c r=\"B13\" s=\"9\"/><c r=\"C13\" s=\"9\"/><c r=\"D13\" s=\"9\"/><c r=\"E13\" s=\"23\"/><c r=\"F13\" s=\"24\"/><c r=\"G13\" s=\"24\"/><c r=\"H13\" s=\"25\"/><c r=\"I13\" s=\"10\"><f t=\"shared\" si=\"1\"/><v>0<\/v><\/c><c r=\"J13\" s=\"4\"/><c r=\"K13\" s=\"8\"><f t=\"shared\" si=\"2\"/><v>46345<\/v><\/c><c r=\"L13\" s=\"9\"/><c r=\"M13\" s=\"9\"/><c r=\"N13\" s=\"9\"/><c r=\"O13\" s=\"23\"/><c r=\"P13\" s=\"24\"/><c r=\"Q13\" s=\"24\"/><c r=\"R13\" s=\"25\"/><c r=\"S13\" s=\"10\"><f t=\"shared\" si=\"3\"/><v>0<\/v><\/c><\/row><row r=\"14\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A14\" s=\"8\"><f t=\"shared\" si=\"0\"/><v>46331<\/v><\/c><c r=\"B14\" s=\"9\"/><c r=\"C14\" s=\"9\"/><c r=\"D14\" s=\"9\"/><c r=\"E14\" s=\"23\"/><c r=\"F14\" s=\"24\"/><c r=\"G14\" s=\"24\"/><c r=\"H14\" s=\"25\"/><c r=\"I14\" s=\"10\"><f t=\"shared\" si=\"1\"/><v>0<\/v><\/c><c r=\"J14\" s=\"4\"/><c r=\"K14\" s=\"8\"><f t=\"shared\" si=\"2\"/><v>46346<\/v><\/c><c r=\"L14\" s=\"9\"/><c r=\"M14\" s=\"9\"/><c r=\"N14\" s=\"9\"/><c r=\"O14\" s=\"23\"/><c r=\"P14\" s=\"24\"/><c r=\"Q14\" s=\"24\"/><c r=\"R14\" s=\"25\"/><c r=\"S14\" s=\"10\"><f t=\"shared\" si=\"3\"/><v>0<\/v><\/c><\/row><row r=\"15\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A15\" s=\"8\"><f t=\"shared\" si=\"0\"/><v>46332<\/v><\/c><c r=\"B15\" s=\"9\"/><c r=\"C15\" s=\"9\"/><c r=\"D15\" s=\"9\"/><c r=\"E15\" s=\"23\"/><c r=\"F15\" s=\"24\"/><c r=\"G15\" s=\"24\"/><c r=\"H15\" s=\"25\"/><c r=\"I15\" s=\"10\"><f t=\"shared\" si=\"1\"/><v>0<\/v><\/c><c r=\"J15\" s=\"4\"/><c r=\"K15\" s=\"8\"><f t=\"shared\" si=\"2\"/><v>46347<\/v><\/c><c r=\"L15\" s=\"9\"/><c r=\"M15\" s=\"9\"/><c r=\"N15\" s=\"9\"/><c r=\"O15\" s=\"23\"/><c r=\"P15\" s=\"24\"/><c r=\"Q15\" s=\"24\"/><c r=\"R15\" s=\"25\"/><c r=\"S15\" s=\"10\"><f t=\"shared\" si=\"3\"/><v>0<\/v><\/c><\/row><row r=\"16\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A16\" s=\"8\"><f t=\"shared\" si=\"0\"/><v>46333<\/v><\/c><c r=\"B16\" s=\"9\"/><c r=\"C16\" s=\"9\"/><c r=\"D16\" s=\"9\"/><c r=\"E16\" s=\"23\"/><c r=\"F16\" s=\"24\"/><c r=\"G16\" s=\"24\"/><c r=\"H16\" s=\"25\"/><c r=\"I16\" s=\"10\"><f t=\"shared\" si=\"1\"/><v>0<\/v><\/c><c r=\"J16\" s=\"4\"/><c r=\"K16\" s=\"8\"><f t=\"shared\" si=\"2\"/><v>46348<\/v><\/c><c r=\"L16\" s=\"9\"/><c r=\"M16\" s=\"9\"/><c r=\"N16\" s=\"9\"/><c r=\"O16\" s=\"23\"/><c r=\"P16\" s=\"24\"/><c r=\"Q16\" s=\"24\"/><c r=\"R16\" s=\"25\"/><c r=\"S16\" s=\"10\"><f t=\"shared\" si=\"3\"/><v>0<\/v><\/c><\/row><row r=\"17\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A17\" s=\"8\"><f>A16+1<\/f><v>46334<\/v><\/c><c r=\"B17\" s=\"9\"/><c r=\"C17\" s=\"9\"/><c r=\"D17\" s=\"9\"/><c r=\"E17\" s=\"23\"/><c r=\"F17\" s=\"24\"/><c r=\"G17\" s=\"24\"/><c r=\"H17\" s=\"25\"/><c r=\"I17\" s=\"10\"><f>SUM(B17:D17)<\/f><v>0<\/v><\/c><c r=\"J17\" s=\"4\"/><c r=\"K17\" s=\"8\"><f>K16+1<\/f><v>46349<\/v><\/c><c r=\"L17\" s=\"9\"/><c r=\"M17\" s=\"9\"/><c r=\"N17\" s=\"9\"/><c r=\"O17\" s=\"23\"/><c r=\"P17\" s=\"24\"/><c r=\"Q17\" s=\"24\"/><c r=\"R17\" s=\"25\"/><c r=\"S17\" s=\"10\"><f>SUM(L17:N17)<\/f><v>0<\/v><\/c><\/row><row r=\"18\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A18\" s=\"8\"><f t=\"shared\" ref=\"A18:A22\" si=\"4\">A17+1<\/f><v>46335<\/v><\/c><c r=\"B18\" s=\"9\"/><c r=\"C18\" s=\"9\"/><c r=\"D18\" s=\"9\"/><c r=\"E18\" s=\"23\"/><c r=\"F18\" s=\"24\"/><c r=\"G18\" s=\"24\"/><c r=\"H18\" s=\"25\"/><c r=\"I18\" s=\"10\"><f t=\"shared\" ref=\"I18:I24\" si=\"5\">SUM(B18:D18)<\/f><v>0<\/v><\/c><c r=\"J18\" s=\"4\"/><c r=\"K18\" s=\"8\"><f t=\"shared\" ref=\"K18:K25\" si=\"6\">K17+1<\/f><v>46350<\/v><\/c><c r=\"L18\" s=\"9\"/><c r=\"M18\" s=\"9\"/><c r=\"N18\" s=\"9\"/><c r=\"O18\" s=\"23\"/><c r=\"P18\" s=\"24\"/><c r=\"Q18\" s=\"24\"/><c r=\"R18\" s=\"25\"/><c r=\"S18\" s=\"10\"><f t=\"shared\" ref=\"S18:S25\" si=\"7\">SUM(L18:N18)<\/f><v>0<\/v><\/c><\/row><row r=\"19\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A19\" s=\"8\"><f t=\"shared\" si=\"4\"/><v>46336<\/v><\/c><c r=\"B19\" s=\"9\"/><c r=\"C19\" s=\"9\"/><c r=\"D19\" s=\"9\"/><c r=\"E19\" s=\"23\"/><c r=\"F19\" s=\"24\"/><c r=\"G19\" s=\"24\"/><c r=\"H19\" s=\"25\"/><c r=\"I19\" s=\"10\"><f t=\"shared\" si=\"5\"/><v>0<\/v><\/c><c r=\"J19\" s=\"4\"/><c r=\"K19\" s=\"8\"><f t=\"shared\" si=\"6\"/><v>46351<\/v><\/c><c r=\"L19\" s=\"9\"/><c r=\"M19\" s=\"9\"/><c r=\"N19\" s=\"9\"/><c r=\"O19\" s=\"23\"/><c r=\"P19\" s=\"24\"/><c r=\"Q19\" s=\"24\"/><c r=\"R19\" s=\"25\"/><c r=\"S19\" s=\"10\"><f t=\"shared\" si=\"7\"/><v>0<\/v><\/c><\/row><row r=\"20\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A20\" s=\"8\"><f t=\"shared\" si=\"4\"/><v>46337<\/v><\/c><c r=\"B20\" s=\"9\"/><c r=\"C20\" s=\"9\"/><c r=\"D20\" s=\"9\"/><c r=\"E20\" s=\"23\"/><c r=\"F20\" s=\"24\"/><c r=\"G20\" s=\"24\"/><c r=\"H20\" s=\"25\"/><c r=\"I20\" s=\"10\"><f t=\"shared\" si=\"5\"/><v>0<\/v><\/c><c r=\"J20\" s=\"4\"/><c r=\"K20\" s=\"8\"><f t=\"shared\" si=\"6\"/><v>46352<\/v><\/c><c r=\"L20\" s=\"9\"/><c r=\"M20\" s=\"9\"/><c r=\"N20\" s=\"9\"/><c r=\"O20\" s=\"23\"/><c r=\"P20\" s=\"24\"/><c r=\"Q20\" s=\"24\"/><c r=\"R20\" s=\"25\"/><c r=\"S20\" s=\"10\"><f t=\"shared\" si=\"7\"/><v>0<\/v><\/c><\/row><row r=\"21\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A21\" s=\"8\"><f t=\"shared\" si=\"4\"/><v>46338<\/v><\/c><c r=\"B21\" s=\"9\"/><c r=\"C21\" s=\"9\"/><c r=\"D21\" s=\"9\"/><c r=\"E21\" s=\"23\"/><c r=\"F21\" s=\"24\"/><c r=\"G21\" s=\"24\"/><c r=\"H21\" s=\"25\"/><c r=\"I21\" s=\"10\"><f t=\"shared\" si=\"5\"/><v>0<\/v><\/c><c r=\"J21\" s=\"4\"/><c r=\"K21\" s=\"8\"><f t=\"shared\" si=\"6\"/><v>46353<\/v><\/c><c r=\"L21\" s=\"9\"/><c r=\"M21\" s=\"9\"/><c r=\"N21\" s=\"9\"/><c r=\"O21\" s=\"23\"/><c r=\"P21\" s=\"24\"/><c r=\"Q21\" s=\"24\"/><c r=\"R21\" s=\"25\"/><c r=\"S21\" s=\"10\"><f t=\"shared\" si=\"7\"/><v>0<\/v><\/c><\/row><row r=\"22\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A22\" s=\"8\"><f t=\"shared\" si=\"4\"/><v>46339<\/v><\/c><c r=\"B22\" s=\"9\"/><c r=\"C22\" s=\"9\"/><c r=\"D22\" s=\"9\"/><c r=\"E22\" s=\"23\"/><c r=\"F22\" s=\"24\"/><c r=\"G22\" s=\"24\"/><c r=\"H22\" s=\"25\"/><c r=\"I22\" s=\"10\"><f t=\"shared\" si=\"5\"/><v>0<\/v><\/c><c r=\"J22\" s=\"4\"/><c r=\"K22\" s=\"8\"><f t=\"shared\" si=\"6\"/><v>46354<\/v><\/c><c r=\"L22\" s=\"9\"/><c r=\"M22\" s=\"9\"/><c r=\"N22\" s=\"9\"/><c r=\"O22\" s=\"23\"/><c r=\"P22\" s=\"24\"/><c r=\"Q22\" s=\"24\"/><c r=\"R22\" s=\"25\"/><c r=\"S22\" s=\"10\"><f t=\"shared\" si=\"7\"/><v>0<\/v><\/c><\/row><row r=\"23\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A23\" s=\"8\"><f>A22+1<\/f><v>46340<\/v><\/c><c r=\"B23\" s=\"9\"/><c r=\"C23\" s=\"9\"/><c r=\"D23\" s=\"9\"/><c r=\"E23\" s=\"23\"/><c r=\"F23\" s=\"24\"/><c r=\"G23\" s=\"24\"/><c r=\"H23\" s=\"25\"/><c r=\"I23\" s=\"10\"><f t=\"shared\" si=\"5\"/><v>0<\/v><\/c><c r=\"J23\" s=\"4\"/><c r=\"K23\" s=\"8\"><f t=\"shared\" si=\"6\"/><v>46355<\/v><\/c><c r=\"L23\" s=\"9\"/><c r=\"M23\" s=\"9\"/><c r=\"N23\" s=\"9\"/><c r=\"O23\" s=\"31\"/><c r=\"P23\" s=\"24\"/><c r=\"Q23\" s=\"24\"/><c r=\"R23\" s=\"25\"/><c r=\"S23\" s=\"10\"><f t=\"shared\" si=\"7\"/><v>0<\/v><\/c><\/row><row r=\"24\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A24\" s=\"8\"><f>A23+1<\/f><v>46341<\/v><\/c><c r=\"B24\" s=\"9\"/><c r=\"C24\" s=\"9\"/><c r=\"D24\" s=\"9\"/><c r=\"E24\" s=\"23\"/><c r=\"F24\" s=\"24\"/><c r=\"G24\" s=\"24\"/><c r=\"H24\" s=\"25\"/><c r=\"I24\" s=\"10\"><f t=\"shared\" si=\"5\"/><v>0<\/v><\/c><c r=\"J24\" s=\"4\"/><c r=\"K24\" s=\"8\"><f t=\"shared\" si=\"6\"/><v>46356<\/v><\/c><c r=\"L24\" s=\"9\"/><c r=\"M24\" s=\"9\"/><c r=\"N24\" s=\"9\"/><c r=\"O24\" s=\"31\"/><c r=\"P24\" s=\"24\"/><c r=\"Q24\" s=\"24\"/><c r=\"R24\" s=\"25\"/><c r=\"S24\" s=\"10\"><f t=\"shared\" si=\"7\"/><v>0<\/v><\/c><\/row><row r=\"25\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A25\" s=\"8\"/><c r=\"B25\" s=\"9\"/><c r=\"C25\" s=\"9\"/><c r=\"D25\" s=\"9\"/><c r=\"E25\" s=\"23\"/><c r=\"F25\" s=\"24\"/><c r=\"G25\" s=\"24\"/><c r=\"H25\" s=\"25\"/><c r=\"I25\" s=\"10\"/><c r=\"J25\" s=\"4\"/><c r=\"K25\" s=\"8\"><f t=\"shared\" si=\"6\"/><v>46357<\/v><\/c><c r=\"L25\" s=\"9\"/><c r=\"M25\" s=\"9\"/><c r=\"N25\" s=\"9\"/><c r=\"O25\" s=\"31\"/><c r=\"P25\" s=\"24\"/><c r=\"Q25\" s=\"24\"/><c r=\"R25\" s=\"25\"/><c r=\"S25\" s=\"10\"><f t=\"shared\" si=\"7\"/><v>0<\/v><\/c><\/row><row r=\"26\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A26\" s=\"8\"/><c r=\"B26\" s=\"10\"/><c r=\"C26\" s=\"10\"/><c r=\"D26\" s=\"10\"/><c r=\"E26\" s=\"10\"/><c r=\"F26\" s=\"10\"/><c r=\"G26\" s=\"10\"/><c r=\"H26\" s=\"10\"/><c r=\"I26\" s=\"10\"/><c r=\"J26\" s=\"4\"/><c r=\"K26\" s=\"8\"/><c r=\"L26\" s=\"10\"/><c r=\"M26\" s=\"10\"/><c r=\"N26\" s=\"10\"/><c r=\"O26\" s=\"10\"/><c r=\"P26\" s=\"10\"/><c r=\"Q26\" s=\"10\"/><c r=\"R26\" s=\"10\"/><c r=\"S26\" s=\"10\"/><\/row><row r=\"27\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A27\" s=\"16\" t=\"s\"><v>23<\/v><\/c><c r=\"B27\" s=\"10\"><f>SUM(B17:B25,B10:B16)<\/f><v>0<\/v><\/c><c r=\"C27\" s=\"10\"><f>SUM(C17:C25,C10:C16)<\/f><v>0<\/v><\/c><c r=\"D27\" s=\"10\"><f>SUM(D17:D25,D10:D16)<\/f><v>0<\/v><\/c><c r=\"E27\" s=\"10\"/><c r=\"F27\" s=\"10\"/><c r=\"G27\" s=\"10\"/><c r=\"H27\" s=\"10\"/><c r=\"I27\" s=\"11\"><f>SUM(I17:I23,I10:I16)<\/f><v>0<\/v><\/c><c r=\"J27\" s=\"5\"/><c r=\"K27\" s=\"16\" t=\"s\"><v>23<\/v><\/c><c r=\"L27\" s=\"10\"><f>SUM(L17:L25,L10:L16)<\/f><v>0<\/v><\/c><c r=\"M27\" s=\"10\"><f>SUM(M17:M25,M10:M16)<\/f><v>0<\/v><\/c><c r=\"N27\" s=\"10\"><f>SUM(N17:N25,N10:N16)<\/f><v>0<\/v><\/c><c r=\"O27\" s=\"10\"/><c r=\"P27\" s=\"10\"/><c r=\"Q27\" s=\"10\"/><c r=\"R27\" s=\"10\"/><c r=\"S27\" s=\"11\"><f>SUM(S17:S23,S10:S16)<\/f><v>0<\/v><\/c><\/row><row r=\"28\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A28\" s=\"17\" t=\"s\"><v>24<\/v><\/c><c r=\"B28\" s=\"12\"><f>C8/8<\/f><v>156.25<\/v><\/c><c r=\"C28\" s=\"12\"><f>B28*1.5<\/f><v>234.375<\/v><\/c><c r=\"D28\" s=\"12\"><f>B28*2<\/f><v>312.5<\/v><\/c><c r=\"E28\" s=\"10\"/><c r=\"F28\" s=\"10\"/><c r=\"G28\" s=\"10\"/><c r=\"H28\" s=\"10\"/><c r=\"I28\" s=\"10\"/><c r=\"J28\" s=\"5\"/><c r=\"K28\" s=\"17\" t=\"s\"><v>24<\/v><\/c><c r=\"L28\" s=\"12\"><f>B28<\/f><v>156.25<\/v><\/c><c r=\"M28\" s=\"12\"><f>L28*1.5<\/f><v>234.375<\/v><\/c><c r=\"N28\" s=\"12\"><f>D28<\/f><v>312.5<\/v><\/c><c r=\"O28\" s=\"10\"/><c r=\"P28\" s=\"10\"/><c r=\"Q28\" s=\"10\"/><c r=\"R28\" s=\"10\"/><c r=\"S28\" s=\"10\"/><\/row><row r=\"29\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A29\" s=\"17\" t=\"s\"><v>25<\/v><\/c><c r=\"B29\" s=\"13\"><f>B27*B28<\/f><v>0<\/v><\/c><c r=\"C29\" s=\"13\"><f>C27*C28<\/f><v>0<\/v><\/c><c r=\"D29\" s=\"13\"><f>D27*D28<\/f><v>0<\/v><\/c><c r=\"E29\" s=\"10\"/><c r=\"F29\" s=\"10\"/><c r=\"G29\" s=\"10\"/><c r=\"H29\" s=\"10\"/><c r=\"I29\" s=\"15\"><f>SUM(B29:D29)<\/f><v>0<\/v><\/c><c r=\"J29\" s=\"5\"/><c r=\"K29\" s=\"17\" t=\"s\"><v>25<\/v><\/c><c r=\"L29\" s=\"13\"><f>L27*L28<\/f><v>0<\/v><\/c><c r=\"M29\" s=\"13\"><f>M27*M28<\/f><v>0<\/v><\/c><c r=\"N29\" s=\"13\"><f>N27*N28<\/f><v>0<\/v><\/c><c r=\"O29\" s=\"10\"/><c r=\"P29\" s=\"10\"/><c r=\"Q29\" s=\"10\"/><c r=\"R29\" s=\"10\"/><c r=\"S29\" s=\"15\"><f>SUM(L29:N29)<\/f><v>0<\/v><\/c><\/row><row r=\"30\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A30\" s=\"7\"/><c r=\"B30\" s=\"6\"/><c r=\"C30\" s=\"6\"/><c r=\"D30\" s=\"6\"/><c r=\"E30\" s=\"6\"/><c r=\"F30\" s=\"6\"/><c r=\"G30\" s=\"6\"/><c r=\"H30\" s=\"6\"/><c r=\"I30\" s=\"6\"/><c r=\"J30\" s=\"1\"/><c r=\"K30\" s=\"7\"/><c r=\"L30\" s=\"6\"/><c r=\"M30\" s=\"6\"/><c r=\"N30\" s=\"6\"/><c r=\"O30\" s=\"6\"/><c r=\"P30\" s=\"6\"/><c r=\"Q30\" s=\"6\"/><c r=\"R30\" s=\"6\"/><c r=\"S30\" s=\"6\"/><\/row><row r=\"31\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A31\" s=\"19\"/><c r=\"B31\" s=\"43\" t=\"s\"><v>26<\/v><\/c><c r=\"C31\" s=\"43\"/><c r=\"D31\" s=\"44\"><f>SUM(B27:D27)<\/f><v>0<\/v><\/c><c r=\"E31\" s=\"44\"/><c r=\"F31\" s=\"6\"/><c r=\"G31\" s=\"6\"/><c r=\"H31\" s=\"6\"/><c r=\"I31\" s=\"6\"/><c r=\"K31\" s=\"19\"/><c r=\"L31\" s=\"43\" t=\"s\"><v>26<\/v><\/c><c r=\"M31\" s=\"43\"/><c r=\"N31\" s=\"44\"><f>SUM(L27:N27)<\/f><v>0<\/v><\/c><c r=\"O31\" s=\"44\"/><c r=\"P31\" s=\"6\"/><c r=\"Q31\" s=\"6\"/><c r=\"R31\" s=\"6\"/><c r=\"S31\" s=\"6\"/><\/row><row r=\"32\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A32\" s=\"19\"/><c r=\"B32\" s=\"19\"/><c r=\"C32\" s=\"19\" t=\"s\"><v>27<\/v><\/c><c r=\"D32\" s=\"45\"><v>0<\/v><\/c><c r=\"E32\" s=\"45\"/><c r=\"F32\" s=\"46\"/><c r=\"G32\" s=\"46\"/><c r=\"H32\" s=\"6\"/><c r=\"I32\" s=\"6\"/><c r=\"K32\" s=\"19\"/><c r=\"L32\" s=\"19\"/><c r=\"M32\" s=\"19\" t=\"s\"><v>27<\/v><\/c><c r=\"N32\" s=\"45\"><v>0<\/v><\/c><c r=\"O32\" s=\"45\"/><c r=\"P32\" s=\"46\"/><c r=\"Q32\" s=\"46\"/><c r=\"R32\" s=\"46\"/><c r=\"S32\" s=\"46\"/><\/row><row r=\"33\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A33\" s=\"19\"/><c r=\"B33\" s=\"19\"/><c r=\"C33\" s=\"19\" t=\"s\"><v>28<\/v><\/c><c r=\"D33\" s=\"47\"><f>F33*C8<\/f><v>0<\/v><\/c><c r=\"E33\" s=\"47\"/><c r=\"F33\" s=\"28\"/><c r=\"G33\" s=\"28\"/><c r=\"H33\" s=\"42\"/><c r=\"I33\" s=\"42\"/><c r=\"K33\" s=\"19\"/><c r=\"L33\" s=\"19\"/><c r=\"M33\" s=\"19\" t=\"s\"><v>28<\/v><\/c><c r=\"N33\" s=\"47\"><f>C8*P33<\/f><v>0<\/v><\/c><c r=\"O33\" s=\"47\"/><c r=\"P33\" s=\"42\"/><c r=\"Q33\" s=\"42\"/><c r=\"R33\" s=\"6\"/><c r=\"S33\" s=\"6\"/><\/row><row r=\"34\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A34\" s=\"19\"/><c r=\"B34\" s=\"43\" t=\"s\"><v>29<\/v><\/c><c r=\"C34\" s=\"43\"/><c r=\"D34\" s=\"48\"><f>I29-D32+D33<\/f><v>0<\/v><\/c><c r=\"E34\" s=\"48\"/><c r=\"F34\" s=\"6\"/><c r=\"G34\" s=\"6\"/><c r=\"H34\" s=\"6\"/><c r=\"I34\" s=\"6\"/><c r=\"K34\" s=\"19\"/><c r=\"L34\" s=\"43\" t=\"s\"><v>29<\/v><\/c><c r=\"M34\" s=\"43\"/><c r=\"N34\" s=\"48\"><f>S29-N32+N33<\/f><v>0<\/v><\/c><c r=\"O34\" s=\"48\"/><c r=\"P34\" s=\"6\"/><c r=\"Q34\" s=\"6\"/><c r=\"R34\" s=\"6\"/><c r=\"S34\" s=\"6\"/><\/row><row r=\"35\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A35\" s=\"7\"/><c r=\"B35\" s=\"6\"/><c r=\"C35\" s=\"6\"/><c r=\"D35\" s=\"6\"/><c r=\"E35\" s=\"6\"/><c r=\"F35\" s=\"6\"/><c r=\"G35\" s=\"6\"/><c r=\"H35\" s=\"6\"/><c r=\"I35\" s=\"6\"/><c r=\"K35\" s=\"7\"/><c r=\"L35\" s=\"6\"/><c r=\"M35\" s=\"6\"/><c r=\"N35\" s=\"6\"/><c r=\"O35\" s=\"6\"/><c r=\"P35\" s=\"6\"/><c r=\"Q35\" s=\"6\"/><c r=\"R35\" s=\"6\"/><c r=\"S35\" s=\"6\"/><\/row><row r=\"36\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A36\" s=\"49\"/><c r=\"B36\" s=\"49\"/><c r=\"C36\" s=\"49\"/><c r=\"D36\" s=\"50\"/><c r=\"E36\" s=\"50\"/><c r=\"F36\" s=\"6\"/><c r=\"G36\" s=\"6\"/><c r=\"H36\" s=\"6\"/><c r=\"I36\" s=\"6\"/><c r=\"K36\" s=\"49\"/><c r=\"L36\" s=\"49\"/><c r=\"M36\" s=\"49\"/><c r=\"N36\" s=\"50\"/><c r=\"O36\" s=\"50\"/><c r=\"P36\" s=\"6\"/><c r=\"Q36\" s=\"6\"/><c r=\"R36\" s=\"6\"/><c r=\"S36\" s=\"6\"/><\/row><row r=\"37\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A37\" s=\"51\" t=\"s\"><v>10<\/v><\/c><c r=\"B37\" s=\"51\"/><c r=\"C37\" s=\"51\"/><c r=\"D37\" s=\"51\" t=\"s\"><v>11<\/v><\/c><c r=\"E37\" s=\"51\"/><c r=\"F37\" s=\"6\"/><c r=\"G37\" s=\"6\"/><c r=\"H37\" s=\"6\"/><c r=\"I37\" s=\"6\"/><c r=\"K37\" s=\"51\" t=\"s\"><v>10<\/v><\/c><c r=\"L37\" s=\"51\"/><c r=\"M37\" s=\"51\"/><c r=\"N37\" s=\"51\" t=\"s\"><v>11<\/v><\/c><c r=\"O37\" s=\"51\"/><c r=\"P37\" s=\"6\"/><c r=\"Q37\" s=\"6\"/><c r=\"R37\" s=\"6\"/><c r=\"S37\" s=\"6\"/><\/row><row r=\"38\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A38\" s=\"49\"/><c r=\"B38\" s=\"49\"/><c r=\"C38\" s=\"49\"/><c r=\"D38\" s=\"50\"/><c r=\"E38\" s=\"50\"/><c r=\"F38\" s=\"6\"/><c r=\"G38\" s=\"6\"/><c r=\"H38\" s=\"6\"/><c r=\"I38\" s=\"6\"/><c r=\"K38\" s=\"49\"/><c r=\"L38\" s=\"49\"/><c r=\"M38\" s=\"49\"/><c r=\"N38\" s=\"50\"/><c r=\"O38\" s=\"50\"/><c r=\"P38\" s=\"6\"/><c r=\"Q38\" s=\"6\"/><c r=\"R38\" s=\"6\"/><c r=\"S38\" s=\"6\"/><\/row><row r=\"39\" spans=\"1:19\" x14ac:dyDescent=\"0.25\"><c r=\"A39\" s=\"51\" t=\"s\"><v>12<\/v><\/c><c r=\"B39\" s=\"51\"/><c r=\"C39\" s=\"51\"/><c r=\"D39\" s=\"51\" t=\"s\"><v>11<\/v><\/c><c r=\"E39\" s=\"51\"/><c r=\"F39\" s=\"6\"/><c r=\"G39\" s=\"6\"/><c r=\"H39\" s=\"6\"/><c r=\"I39\" s=\"6\"/><c r=\"K39\" s=\"51\" t=\"s\"><v>12<\/v><\/c><c r=\"L39\" s=\"51\"/><c r=\"M39\" s=\"51\"/><c r=\"N39\" s=\"51\" t=\"s\"><v>11<\/v><\/c><c r=\"O39\" s=\"51\"/><c r=\"P39\" s=\"6\"/><c r=\"Q39\" s=\"6\"/><c r=\"R39\" s=\"6\"/><c r=\"S39\" s=\"6\"/><\/row><row r=\"40\" spans=\"1:19\" ht=\"15.75\" x14ac:dyDescent=\"0.3\"><c r=\"A40\" s=\"18\"/><c r=\"B40\" s=\"1\"/><c r=\"C40\" s=\"1\"/><c r=\"D40\" s=\"1\"/><c r=\"E40\" s=\"1\"/><c r=\"F40\" s=\"1\"/><c r=\"G40\" s=\"1\"/><c r=\"H40\" s=\"1\"/><c r=\"I40\" s=\"1\"/><\/row><\/sheetData><mergeCells count=\"60\"><mergeCell ref=\"A39:C39\"/><mergeCell ref=\"D39:E39\"/><mergeCell ref=\"K39:M39\"/><mergeCell ref=\"N39:O39\"/><mergeCell ref=\"A37:C37\"/><mergeCell ref=\"D37:E37\"/><mergeCell ref=\"K37:M37\"/><mergeCell ref=\"N37:O37\"/><mergeCell ref=\"A38:C38\"/><mergeCell ref=\"D38:E38\"/><mergeCell ref=\"K38:M38\"/><mergeCell ref=\"N38:O38\"/><mergeCell ref=\"B34:C34\"/><mergeCell ref=\"D34:E34\"/><mergeCell ref=\"L34:M34\"/><mergeCell ref=\"N34:O34\"/><mergeCell ref=\"A36:C36\"/><mergeCell ref=\"D36:E36\"/><mergeCell ref=\"K36:M36\"/><mergeCell ref=\"N36:O36\"/><mergeCell ref=\"P33:Q33\"/><mergeCell ref=\"O8:P8\"/><mergeCell ref=\"Q8:S8\"/><mergeCell ref=\"B31:C31\"/><mergeCell ref=\"D31:E31\"/><mergeCell ref=\"L31:M31\"/><mergeCell ref=\"N31:O31\"/><mergeCell ref=\"D32:E32\"/><mergeCell ref=\"F32:G32\"/><mergeCell ref=\"N32:O32\"/><mergeCell ref=\"D33:E33\"/><mergeCell ref=\"N33:O33\"/><mergeCell ref=\"H33:I33\"/><mergeCell ref=\"P32:S32\"/><mergeCell ref=\"O6:P6\"/><mergeCell ref=\"Q6:S6\"/><mergeCell ref=\"A7:D7\"/><mergeCell ref=\"K7:N7\"/><mergeCell ref=\"A8:B8\"/><mergeCell ref=\"C8:D8\"/><mergeCell ref=\"E8:F8\"/><mergeCell ref=\"G8:I8\"/><mergeCell ref=\"K8:L8\"/><mergeCell ref=\"M8:N8\"/><mergeCell ref=\"A5:D5\"/><mergeCell ref=\"K5:N5\"/><mergeCell ref=\"A6:D6\"/><mergeCell ref=\"E6:F6\"/><mergeCell ref=\"G6:I6\"/><mergeCell ref=\"K6:N6\"/><mergeCell ref=\"A1:I1\"/><mergeCell ref=\"K1:S1\"/><mergeCell ref=\"A3:E3\"/><mergeCell ref=\"K3:O3\"/><mergeCell ref=\"A4:D4\"/><mergeCell ref=\"E4:F4\"/><mergeCell ref=\"G4:I4\"/><mergeCell ref=\"K4:N4\"/><mergeCell ref=\"O4:P4\"/><mergeCell ref=\"Q4:S4\"/><\/mergeCells><pageMargins left=\"0.7\" right=\"0.7\" top=\"0.75\" bottom=\"0.75\" header=\"0.3\" footer=\"0.3\"/><\/worksheet>","parts":{"_rels/.rels":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties\" Target=\"docProps/app.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties\" Target=\"docProps/core.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument\" Target=\"xl/workbook.xml\"/><\/Relationships>","docProps/core.xml":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<cp:coreProperties xmlns:cp=\"http://schemas.openxmlformats.org/package/2006/metadata/core-properties\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:dcmitype=\"http://purl.org/dc/dcmitype/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><dc:creator>Islam Adel<\/dc:creator><cp:lastModifiedBy>Magdy Bassem<\/cp:lastModifiedBy><cp:lastPrinted>2025-09-01T07:17:07Z<\/cp:lastPrinted><dcterms:created xsi:type=\"dcterms:W3CDTF\">2023-11-01T14:05:25Z<\/dcterms:created><dcterms:modified xsi:type=\"dcterms:W3CDTF\">2026-11-23T14:55:50Z<\/dcterms:modified><\/cp:coreProperties>","xl/styles.xml":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<styleSheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x14ac x16r2 xr\" xmlns:x14ac=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac\" xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\"><numFmts count=\"4\"><numFmt numFmtId=\"44\" formatCode=\"_(&quot;$&quot;* #,##0.00_);_(&quot;$&quot;* \\(#,##0.00\\);_(&quot;$&quot;* &quot;-&quot;??_);_(@_)\"/><numFmt numFmtId=\"164\" formatCode=\"ddd\\ m/d\"/><numFmt numFmtId=\"165\" formatCode=\"[$EGP]\\ #,##0.00\"/><numFmt numFmtId=\"166\" formatCode=\"[$EGP]\\ #,##0\"/><\/numFmts><fonts count=\"19\" x14ac:knownFonts=\"1\"><font><sz val=\"11\"/><color theme=\"1\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><sz val=\"10\"/><name val=\"Trebuchet MS\"/><family val=\"2\"/><\/font><font><sz val=\"10\"/><name val=\"Verdana\"/><family val=\"2\"/><\/font><font><sz val=\"10\"/><name val=\"Tahoma\"/><family val=\"2\"/><\/font><font><sz val=\"10\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><b/><sz val=\"10\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><sz val=\"10\"/><color theme=\"0\"/><name val=\"Cambria\"/><family val=\"1\"/><scheme val=\"major\"/><\/font><font><b/><sz val=\"18\"/><color theme=\"4\" tint=\"-0.249977111117893\"/><name val=\"Cambria\"/><family val=\"1\"/><scheme val=\"major\"/><\/font><font><sz val=\"10\"/><name val=\"Arial\"/><family val=\"2\"/><\/font><font><u/><sz val=\"10\"/><color indexed=\"12\"/><name val=\"Arial\"/><family val=\"2\"/><\/font><font><b/><sz val=\"12\"/><name val=\"Trebuchet MS\"/><family val=\"2\"/><\/font><font><b/><sz val=\"10\"/><color rgb=\"FFFF0000\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><b/><sz val=\"10\"/><color rgb=\"FF00B050\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><b/><sz val=\"9\"/><color rgb=\"FF00B050\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><b/><sz val=\"9\"/><color rgb=\"FFFF0000\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><b/><sz val=\"10\"/><color theme=\"0\"/><name val=\"Cambria\"/><family val=\"1\"/><scheme val=\"major\"/><\/font><font><b/><sz val=\"9\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><b/><sz val=\"12\"/><color rgb=\"FFFF0000\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><font><b/><sz val=\"11\"/><color rgb=\"FF00B050\"/><name val=\"Calibri\"/><family val=\"2\"/><scheme val=\"minor\"/><\/font><\/fonts><fills count=\"5\"><fill><patternFill patternType=\"none\"/><\/fill><fill><patternFill patternType=\"gray125\"/><\/fill><fill><patternFill patternType=\"solid\"><fgColor theme=\"4\" tint=\"0.59999389629810485\"/><bgColor indexed=\"64\"/><\/patternFill><\/fill><fill><patternFill patternType=\"solid\"><fgColor theme=\"4\" tint=\"0.79998168889431442\"/><bgColor indexed=\"64\"/><\/patternFill><\/fill><fill><patternFill patternType=\"solid\"><fgColor theme=\"4\" tint=\"-0.249977111117893\"/><bgColor indexed=\"64\"/><\/patternFill><\/fill><\/fills><borders count=\"9\"><border><left/><right/><top/><bottom/><diagonal/><\/border><border><left style=\"thin\"><color indexed=\"64\"/><\/left><right style=\"thin\"><color indexed=\"64\"/><\/right><top/><bottom style=\"thin\"><color indexed=\"64\"/><\/bottom><diagonal/><\/border><border><left/><right/><top/><bottom style=\"thin\"><color indexed=\"64\"/><\/bottom><diagonal/><\/border><border><left style=\"thin\"><color indexed=\"64\"/><\/left><right style=\"thin\"><color indexed=\"64\"/><\/right><top style=\"thin\"><color indexed=\"64\"/><\/top><bottom style=\"thin\"><color indexed=\"64\"/><\/bottom><diagonal/><\/border><border><left/><right/><top style=\"thin\"><color indexed=\"64\"/><\/top><bottom/><diagonal/><\/border><border><left style=\"thin\"><color indexed=\"64\"/><\/left><right/><top style=\"thin\"><color indexed=\"64\"/><\/top><bottom/><diagonal/><\/border><border><left/><right style=\"thin\"><color indexed=\"64\"/><\/right><top style=\"thin\"><color indexed=\"64\"/><\/top><bottom/><diagonal/><\/border><border><left style=\"thin\"><color indexed=\"64\"/><\/left><right/><top/><bottom/><diagonal/><\/border><border><left/><right style=\"thin\"><color indexed=\"64\"/><\/right><top/><bottom/><diagonal/><\/border><\/borders><cellStyleXfs count=\"5\"><xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\"/><xf numFmtId=\"0\" fontId=\"1\" fillId=\"0\" borderId=\"0\"/><xf numFmtId=\"44\" fontId=\"2\" fillId=\"0\" borderId=\"0\" applyFont=\"0\" applyFill=\"0\" applyBorder=\"0\" applyAlignment=\"0\" applyProtection=\"0\"/><xf numFmtId=\"0\" fontId=\"8\" fillId=\"0\" borderId=\"0\"/><xf numFmtId=\"0\" fontId=\"9\" fillId=\"0\" borderId=\"0\" applyNumberFormat=\"0\" applyFill=\"0\" applyBorder=\"0\" applyAlignment=\"0\" applyProtection=\"0\"><alignment vertical=\"top\"/><protection locked=\"0\"/><\/xf><\/cellStyleXfs><cellXfs count=\"60\"><xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\"/><xf numFmtId=\"0\" fontId=\"1\" fillId=\"0\" borderId=\"0\" xfId=\"1\"/><xf numFmtId=\"0\" fontId=\"3\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\"/><xf numFmtId=\"0\" fontId=\"1\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyAlignment=\"1\"><alignment horizontal=\"right\" vertical=\"center\"/><\/xf><xf numFmtId=\"2\" fontId=\"1\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\"/><xf numFmtId=\"4\" fontId=\"1\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\"/><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\"/><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"left\"/><\/xf><xf numFmtId=\"164\" fontId=\"5\" fillId=\"3\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyFill=\"1\" applyAlignment=\"1\"><alignment horizontal=\"left\" vertical=\"center\"/><\/xf><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"1\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"4\" fontId=\"4\" fillId=\"3\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyFill=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"4\" fontId=\"5\" fillId=\"2\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyFill=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"4\" fontId=\"4\" fillId=\"0\" borderId=\"3\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"4\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"6\" fillId=\"4\" borderId=\"2\" xfId=\"1\" applyFont=\"1\" applyFill=\"1\" applyBorder=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\" wrapText=\"1\"/><\/xf><xf numFmtId=\"2\" fontId=\"5\" fillId=\"3\" borderId=\"0\" xfId=\"2\" applyNumberFormat=\"1\" applyFont=\"1\" applyFill=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"5\" fillId=\"3\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyFill=\"1\" applyAlignment=\"1\"><alignment horizontal=\"left\" vertical=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"5\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"left\" vertical=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"1\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyAlignment=\"1\"><alignment horizontal=\"left\"/><\/xf><xf numFmtId=\"0\" fontId=\"5\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\"/><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"5\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"4\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"6\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"7\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"8\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"0\" fontId=\"15\" fillId=\"4\" borderId=\"2\" xfId=\"1\" applyFont=\"1\" applyFill=\"1\" applyBorder=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\" wrapText=\"1\"/><\/xf><xf numFmtId=\"0\" fontId=\"11\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\"/><xf numFmtId=\"0\" fontId=\"13\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"16\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\"/><xf numFmtId=\"0\" fontId=\"13\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\"/><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"7\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"0\" fontId=\"14\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment wrapText=\"1\"/><\/xf><xf numFmtId=\"0\" fontId=\"7\" fillId=\"3\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyFill=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"10\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"left\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"left\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"right\"/><\/xf><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"2\" xfId=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"166\" fontId=\"1\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"14\" fontId=\"4\" fillId=\"0\" borderId=\"2\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"center\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"0\" fontId=\"1\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"13\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"5\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"right\"/><\/xf><xf numFmtId=\"4\" fontId=\"5\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"165\" fontId=\"11\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"11\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"165\" fontId=\"12\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"165\" fontId=\"5\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"2\" xfId=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\"><alignment horizontal=\"left\"/><\/xf><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"2\" xfId=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"left\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"4\" xfId=\"1\" applyFont=\"1\" applyBorder=\"1\" applyAlignment=\"1\"><alignment horizontal=\"left\"/><\/xf><xf numFmtId=\"0\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"13\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" vertical=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"0\" fontId=\"16\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" wrapText=\"1\"/><\/xf><xf numFmtId=\"0\" fontId=\"14\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\" wrapText=\"1\"/><\/xf><xf numFmtId=\"0\" fontId=\"17\" fillId=\"0\" borderId=\"0\" xfId=\"0\" applyFont=\"1\" applyAlignment=\"1\"><alignment horizontal=\"center\"/><\/xf><xf numFmtId=\"2\" fontId=\"18\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"center\" vertical=\"center\" readingOrder=\"1\"/><protection locked=\"0\"/><\/xf><xf numFmtId=\"2\" fontId=\"4\" fillId=\"0\" borderId=\"0\" xfId=\"1\" applyNumberFormat=\"1\" applyFont=\"1\" applyAlignment=\"1\" applyProtection=\"1\"><alignment horizontal=\"center\" vertical=\"center\" readingOrder=\"1\"/><protection locked=\"0\"/><\/xf><\/cellXfs><cellStyles count=\"5\"><cellStyle name=\"Currency 2\" xfId=\"2\" xr:uid=\"{00000000-0005-0000-0000-000000000000}\"/><cellStyle name=\"Hyperlink 2\" xfId=\"4\" xr:uid=\"{00000000-0005-0000-0000-000001000000}\"/><cellStyle name=\"Normal\" xfId=\"0\" builtinId=\"0\"/><cellStyle name=\"Normal 2\" xfId=\"3\" xr:uid=\"{00000000-0005-0000-0000-000003000000}\"/><cellStyle name=\"Normal 3\" xfId=\"1\" xr:uid=\"{00000000-0005-0000-0000-000004000000}\"/><\/cellStyles><dxfs count=\"0\"/><tableStyles count=\"0\" defaultTableStyle=\"TableStyleMedium2\" defaultPivotStyle=\"PivotStyleLight16\"/><colors><mruColors><color rgb=\"FFD1F12F\"/><\/mruColors><\/colors><extLst><ext uri=\"{EB79DEF2-80B8-43e5-95BD-54CBDDF9020C}\" xmlns:x14=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/main\"><x14:slicerStyles defaultSlicerStyle=\"SlicerStyleLight1\"/><\/ext><ext uri=\"{9260A510-F301-46a8-8635-F512D64BE5F5}\" xmlns:x15=\"http://schemas.microsoft.com/office/spreadsheetml/2010/11/main\"><x15:timelineStyles defaultTimelineStyle=\"TimeSlicerStyleLight1\"/><\/ext><\/extLst><\/styleSheet>","xl/theme/theme1.xml":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<a:theme xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" name=\"Office Theme 2007 - 2010\"><a:themeElements><a:clrScheme name=\"Office 2007 - 2010\"><a:dk1><a:sysClr val=\"windowText\" lastClr=\"000000\"/><\/a:dk1><a:lt1><a:sysClr val=\"window\" lastClr=\"FFFFFF\"/><\/a:lt1><a:dk2><a:srgbClr val=\"1F497D\"/><\/a:dk2><a:lt2><a:srgbClr val=\"EEECE1\"/><\/a:lt2><a:accent1><a:srgbClr val=\"4F81BD\"/><\/a:accent1><a:accent2><a:srgbClr val=\"C0504D\"/><\/a:accent2><a:accent3><a:srgbClr val=\"9BBB59\"/><\/a:accent3><a:accent4><a:srgbClr val=\"8064A2\"/><\/a:accent4><a:accent5><a:srgbClr val=\"4BACC6\"/><\/a:accent5><a:accent6><a:srgbClr val=\"F79646\"/><\/a:accent6><a:hlink><a:srgbClr val=\"0000FF\"/><\/a:hlink><a:folHlink><a:srgbClr val=\"800080\"/><\/a:folHlink><\/a:clrScheme><a:fontScheme name=\"Office 2007 - 2010\"><a:majorFont><a:latin typeface=\"Cambria\"/><a:ea typeface=\"\"/><a:cs typeface=\"\"/><a:font script=\"Jpan\" typeface=\"ＭＳ Ｐゴシック\"/><a:font script=\"Hang\" typeface=\"맑은 고딕\"/><a:font script=\"Hans\" typeface=\"宋体\"/><a:font script=\"Hant\" typeface=\"新細明體\"/><a:font script=\"Arab\" typeface=\"Times New Roman\"/><a:font script=\"Hebr\" typeface=\"Times New Roman\"/><a:font script=\"Thai\" typeface=\"Tahoma\"/><a:font script=\"Ethi\" typeface=\"Nyala\"/><a:font script=\"Beng\" typeface=\"Vrinda\"/><a:font script=\"Gujr\" typeface=\"Shruti\"/><a:font script=\"Khmr\" typeface=\"MoolBoran\"/><a:font script=\"Knda\" typeface=\"Tunga\"/><a:font script=\"Guru\" typeface=\"Raavi\"/><a:font script=\"Cans\" typeface=\"Euphemia\"/><a:font script=\"Cher\" typeface=\"Plantagenet Cherokee\"/><a:font script=\"Yiii\" typeface=\"Microsoft Yi Baiti\"/><a:font script=\"Tibt\" typeface=\"Microsoft Himalaya\"/><a:font script=\"Thaa\" typeface=\"MV Boli\"/><a:font script=\"Deva\" typeface=\"Mangal\"/><a:font script=\"Telu\" typeface=\"Gautami\"/><a:font script=\"Taml\" typeface=\"Latha\"/><a:font script=\"Syrc\" typeface=\"Estrangelo Edessa\"/><a:font script=\"Orya\" typeface=\"Kalinga\"/><a:font script=\"Mlym\" typeface=\"Kartika\"/><a:font script=\"Laoo\" typeface=\"DokChampa\"/><a:font script=\"Sinh\" typeface=\"Iskoola Pota\"/><a:font script=\"Mong\" typeface=\"Mongolian Baiti\"/><a:font script=\"Viet\" typeface=\"Times New Roman\"/><a:font script=\"Uigh\" typeface=\"Microsoft Uighur\"/><a:font script=\"Geor\" typeface=\"Sylfaen\"/><\/a:majorFont><a:minorFont><a:latin typeface=\"Calibri\"/><a:ea typeface=\"\"/><a:cs typeface=\"\"/><a:font script=\"Jpan\" typeface=\"ＭＳ Ｐゴシック\"/><a:font script=\"Hang\" typeface=\"맑은 고딕\"/><a:font script=\"Hans\" typeface=\"宋体\"/><a:font script=\"Hant\" typeface=\"新細明體\"/><a:font script=\"Arab\" typeface=\"Arial\"/><a:font script=\"Hebr\" typeface=\"Arial\"/><a:font script=\"Thai\" typeface=\"Tahoma\"/><a:font script=\"Ethi\" typeface=\"Nyala\"/><a:font script=\"Beng\" typeface=\"Vrinda\"/><a:font script=\"Gujr\" typeface=\"Shruti\"/><a:font script=\"Khmr\" typeface=\"DaunPenh\"/><a:font script=\"Knda\" typeface=\"Tunga\"/><a:font script=\"Guru\" typeface=\"Raavi\"/><a:font script=\"Cans\" typeface=\"Euphemia\"/><a:font script=\"Cher\" typeface=\"Plantagenet Cherokee\"/><a:font script=\"Yiii\" typeface=\"Microsoft Yi Baiti\"/><a:font script=\"Tibt\" typeface=\"Microsoft Himalaya\"/><a:font script=\"Thaa\" typeface=\"MV Boli\"/><a:font script=\"Deva\" typeface=\"Mangal\"/><a:font script=\"Telu\" typeface=\"Gautami\"/><a:font script=\"Taml\" typeface=\"Latha\"/><a:font script=\"Syrc\" typeface=\"Estrangelo Edessa\"/><a:font script=\"Orya\" typeface=\"Kalinga\"/><a:font script=\"Mlym\" typeface=\"Kartika\"/><a:font script=\"Laoo\" typeface=\"DokChampa\"/><a:font script=\"Sinh\" typeface=\"Iskoola Pota\"/><a:font script=\"Mong\" typeface=\"Mongolian Baiti\"/><a:font script=\"Viet\" typeface=\"Arial\"/><a:font script=\"Uigh\" typeface=\"Microsoft Uighur\"/><a:font script=\"Geor\" typeface=\"Sylfaen\"/><\/a:minorFont><\/a:fontScheme><a:fmtScheme name=\"Office 2007 - 2010\"><a:fillStyleLst><a:solidFill><a:schemeClr val=\"phClr\"/><\/a:solidFill><a:gradFill rotWithShape=\"1\"><a:gsLst><a:gs pos=\"0\"><a:schemeClr val=\"phClr\"><a:tint val=\"50000\"/><a:satMod val=\"300000\"/><\/a:schemeClr><\/a:gs><a:gs pos=\"35000\"><a:schemeClr val=\"phClr\"><a:tint val=\"37000\"/><a:satMod val=\"300000\"/><\/a:schemeClr><\/a:gs><a:gs pos=\"100000\"><a:schemeClr val=\"phClr\"><a:tint val=\"15000\"/><a:satMod val=\"350000\"/><\/a:schemeClr><\/a:gs><\/a:gsLst><a:lin ang=\"16200000\" scaled=\"1\"/><\/a:gradFill><a:gradFill rotWithShape=\"1\"><a:gsLst><a:gs pos=\"0\"><a:schemeClr val=\"phClr\"><a:shade val=\"51000\"/><a:satMod val=\"130000\"/><\/a:schemeClr><\/a:gs><a:gs pos=\"80000\"><a:schemeClr val=\"phClr\"><a:shade val=\"93000\"/><a:satMod val=\"130000\"/><\/a:schemeClr><\/a:gs><a:gs pos=\"100000\"><a:schemeClr val=\"phClr\"><a:shade val=\"94000\"/><a:satMod val=\"135000\"/><\/a:schemeClr><\/a:gs><\/a:gsLst><a:lin ang=\"16200000\" scaled=\"0\"/><\/a:gradFill><\/a:fillStyleLst><a:lnStyleLst><a:ln w=\"9525\" cap=\"flat\" cmpd=\"sng\" algn=\"ctr\"><a:solidFill><a:schemeClr val=\"phClr\"><a:shade val=\"95000\"/><a:satMod val=\"105000\"/><\/a:schemeClr><\/a:solidFill><a:prstDash val=\"solid\"/><\/a:ln><a:ln w=\"25400\" cap=\"flat\" cmpd=\"sng\" algn=\"ctr\"><a:solidFill><a:schemeClr val=\"phClr\"/><\/a:solidFill><a:prstDash val=\"solid\"/><\/a:ln><a:ln w=\"38100\" cap=\"flat\" cmpd=\"sng\" algn=\"ctr\"><a:solidFill><a:schemeClr val=\"phClr\"/><\/a:solidFill><a:prstDash val=\"solid\"/><\/a:ln><\/a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst><a:outerShdw blurRad=\"40000\" dist=\"20000\" dir=\"5400000\" rotWithShape=\"0\"><a:srgbClr val=\"000000\"><a:alpha val=\"38000\"/><\/a:srgbClr><\/a:outerShdw><\/a:effectLst><\/a:effectStyle><a:effectStyle><a:effectLst><a:outerShdw blurRad=\"40000\" dist=\"23000\" dir=\"5400000\" rotWithShape=\"0\"><a:srgbClr val=\"000000\"><a:alpha val=\"35000\"/><\/a:srgbClr><\/a:outerShdw><\/a:effectLst><\/a:effectStyle><a:effectStyle><a:effectLst><a:outerShdw blurRad=\"40000\" dist=\"23000\" dir=\"5400000\" rotWithShape=\"0\"><a:srgbClr val=\"000000\"><a:alpha val=\"35000\"/><\/a:srgbClr><\/a:outerShdw><\/a:effectLst><a:scene3d><a:camera prst=\"orthographicFront\"><a:rot lat=\"0\" lon=\"0\" rev=\"0\"/><\/a:camera><a:lightRig rig=\"threePt\" dir=\"t\"><a:rot lat=\"0\" lon=\"0\" rev=\"1200000\"/><\/a:lightRig><\/a:scene3d><a:sp3d><a:bevelT w=\"63500\" h=\"25400\"/><\/a:sp3d><\/a:effectStyle><\/a:effectStyleLst><a:bgFillStyleLst><a:solidFill><a:schemeClr val=\"phClr\"/><\/a:solidFill><a:gradFill rotWithShape=\"1\"><a:gsLst><a:gs pos=\"0\"><a:schemeClr val=\"phClr\"><a:tint val=\"40000\"/><a:satMod val=\"350000\"/><\/a:schemeClr><\/a:gs><a:gs pos=\"40000\"><a:schemeClr val=\"phClr\"><a:tint val=\"45000\"/><a:shade val=\"99000\"/><a:satMod val=\"350000\"/><\/a:schemeClr><\/a:gs><a:gs pos=\"100000\"><a:schemeClr val=\"phClr\"><a:shade val=\"20000\"/><a:satMod val=\"255000\"/><\/a:schemeClr><\/a:gs><\/a:gsLst><a:path path=\"circle\"><a:fillToRect l=\"50000\" t=\"-80000\" r=\"50000\" b=\"180000\"/><\/a:path><\/a:gradFill><a:gradFill rotWithShape=\"1\"><a:gsLst><a:gs pos=\"0\"><a:schemeClr val=\"phClr\"><a:tint val=\"80000\"/><a:satMod val=\"300000\"/><\/a:schemeClr><\/a:gs><a:gs pos=\"100000\"><a:schemeClr val=\"phClr\"><a:shade val=\"30000\"/><a:satMod val=\"200000\"/><\/a:schemeClr><\/a:gs><\/a:gsLst><a:path path=\"circle\"><a:fillToRect l=\"50000\" t=\"50000\" r=\"50000\" b=\"50000\"/><\/a:path><\/a:gradFill><\/a:bgFillStyleLst><\/a:fmtScheme><\/a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/><\/a:theme>","xl/sharedStrings.xml":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<sst xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" count=\"1307\" uniqueCount=\"56\"><si><t>Attendance Sheet<\/t><\/si><si><t>Middle East for Supplying and Contracting<\/t><\/si><si><t xml:space=\"preserve\">6th October, 3 th industrial zone, part 128 <\/t><\/si><si><t>Employee Name:<\/t><\/si><si><t>6th October City, Giza , Egypt<\/t><\/si><si><t xml:space=\"preserve\">Tel : (+2)38838882 <\/t><\/si><si><t>Grinder<\/t><\/si><si><t xml:space=\"preserve\">Fax : (+2)38838883 <\/t><\/si><si><t>Job:<\/t><\/si><si><t>Start date:<\/t><\/si><si><t>Employee Signature<\/t><\/si><si><t>Date<\/t><\/si><si><t>Supervisor Signature<\/t><\/si><si><t>Helper<\/t><\/si><si><t>Emad Hamdy<\/t><\/si><si><t>Ahmed Adel<\/t><\/si><si><t>Mohamed Moawad<\/t><\/si><si><t>Ibrahim Nasser<\/t><\/si><si><t>يوم الأسبوع<\/t><\/si><si><t>الساعات الأساسيه<\/t><\/si><si><t>الساعات الإضافيه<\/t><\/si><si><t>الجمعه والأعياد<\/t><\/si><si><t>مجموع الساعات<\/t><\/si><si><t>إجمالي الساعات<\/t><\/si><si><t>سعر الساعه<\/t><\/si><si><t>سعر الساعات<\/t><\/si><si><t>مجموع الساعات الكليه<\/t><\/si><si><t>الخصومات<\/t><\/si><si><t>المكاغآت<\/t><\/si><si><t>المبلغ المستحق<\/t><\/si><si><t>Daily-rate<\/t><\/si><si><t>Omar Rabee<\/t><\/si><si><t>Mohamed El Zahhar<\/t><\/si><si><t>Kareem Taha<\/t><\/si><si><t>Welder<\/t><\/si><si><t>Mahmoud Zaki<\/t><\/si><si><t>Ziad Adel<\/t><\/si><si><t>Nagah Wael<\/t><\/si><si><t>Saad Qonsowa<\/t><\/si><si><t>Ali Mohamed Ali<\/t><\/si><si><t>Mostafa Adel<\/t><\/si><si><t>Yassen Adel<\/t><\/si><si><t>Adham Abo El Ezz<\/t><\/si><si><t>Ibrahim Tamim<\/t><\/si><si><t>Mahmoud Baloza<\/t><\/si><si><t>Hossam Fikry<\/t><\/si><si><t>Yasser Samy<\/t><\/si><si><t>Ahmed Yasser<\/t><\/si><si><t>تعديل فالي<\/t><\/si><si><t>Fares Gaber<\/t><\/si><si><t>maoad<\/t><\/si><si><t>Mahmoud Adel<\/t><\/si><si><t>Abo Bakr<\/t><\/si><si><t>Diaa<\/t><\/si><si><t xml:space=\"preserve\">غياب بدون اذن <\/t><\/si><si><t>3 أيام مكافأة تانك دينا<\/t><\/si><\/sst>","xl/workbook.xml":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<workbook xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x15 xr xr6 xr10 xr2\" xmlns:x15=\"http://schemas.microsoft.com/office/spreadsheetml/2010/11/main\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns:xr6=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision6\" xmlns:xr10=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision10\" xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"><fileVersion appName=\"xl\" lastEdited=\"7\" lowestEdited=\"7\" rupBuild=\"30625\"/><workbookPr codeName=\"ThisWorkbook\" defaultThemeVersion=\"124226\"/><mc:AlternateContent xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\"><mc:Choice Requires=\"x15\"><x15ac:absPath url=\"C:\\Users\\user\\Desktop\\\" xmlns:x15ac=\"http://schemas.microsoft.com/office/spreadsheetml/2010/11/ac\"/><\/mc:Choice><\/mc:AlternateContent><xr:revisionPtr revIDLastSave=\"0\" documentId=\"13_ncr:1_{4F9B4ED4-72DB-45AE-BE73-1A9B0D620D5E}\" xr6:coauthVersionLast=\"47\" xr6:coauthVersionMax=\"47\" xr10:uidLastSave=\"{00000000-0000-0000-0000-000000000000}\"/><bookViews><workbookView xWindow=\"-120\" yWindow=\"-120\" windowWidth=\"29040\" windowHeight=\"16440\" tabRatio=\"864\" firstSheet=\"13\" activeTab=\"21\" xr2:uid=\"{00000000-000D-0000-FFFF-FFFF00000000}\"/><\/bookViews><sheets><sheet name=\"Yassen Adel\" sheetId=\"77\" r:id=\"rId1\"/><sheet name=\"Saad Qonsowa\" sheetId=\"82\" r:id=\"rId2\"/><sheet name=\"Mostafa Adel\" sheetId=\"59\" r:id=\"rId3\"/><sheet name=\"Emad Hamdy\" sheetId=\"6\" r:id=\"rId4\"/><sheet name=\"Ahmed Adel\" sheetId=\"49\" r:id=\"rId5\"/><sheet name=\"Omar Rabee\" sheetId=\"67\" r:id=\"rId6\"/><sheet name=\"Hossam Fikry\" sheetId=\"106\" r:id=\"rId7\"/><sheet name=\"Nagah Wael\" sheetId=\"83\" r:id=\"rId8\"/><sheet name=\"Mohamed El Zahhar\" sheetId=\"51\" r:id=\"rId9\"/><sheet name=\"Kareem Taha\" sheetId=\"55\" r:id=\"rId10\"/><sheet name=\"Ibrahim Nasser\" sheetId=\"64\" r:id=\"rId11\"/><sheet name=\"Mahmoud Zaki\" sheetId=\"78\" r:id=\"rId12\"/><sheet name=\"Ziad Adel\" sheetId=\"80\" r:id=\"rId13\"/><sheet name=\"Ali Mohamed Ali\" sheetId=\"88\" r:id=\"rId14\"/><sheet name=\"Adham Abo El Ezz\" sheetId=\"103\" r:id=\"rId15\"/><sheet name=\"Ibrahim Tamim\" sheetId=\"104\" r:id=\"rId16\"/><sheet name=\"Mahmoud Baloza\" sheetId=\"105\" r:id=\"rId17\"/><sheet name=\"Yasser Samy\" sheetId=\"111\" r:id=\"rId18\"/><sheet name=\"Ahmed Yasser\" sheetId=\"112\" r:id=\"rId19\"/><sheet name=\"Fares Gaber\" sheetId=\"50\" r:id=\"rId20\"/><sheet name=\"Karim EL shamy\" sheetId=\"113\" r:id=\"rId21\"/><sheet name=\"Maoad\" sheetId=\"114\" r:id=\"rId22\"/><sheet name=\"Mahmoud Adel\" sheetId=\"115\" r:id=\"rId23\"/><sheet name=\"Abo Bakr\" sheetId=\"116\" r:id=\"rId24\"/><sheet name=\"Diaa\" sheetId=\"118\" r:id=\"rId25\"/><\/sheets><calcPr calcId=\"191029\"/><extLst><ext uri=\"{B58B0392-4F1F-4190-BB64-5DF3571DCE5F}\" xmlns:xcalcf=\"http://schemas.microsoft.com/office/spreadsheetml/2018/calcfeatures\"><xcalcf:calcFeatures><xcalcf:feature name=\"microsoft.com:RD\"/><xcalcf:feature name=\"microsoft.com:Single\"/><xcalcf:feature name=\"microsoft.com:FV\"/><xcalcf:feature name=\"microsoft.com:CNMTM\"/><xcalcf:feature name=\"microsoft.com:LET_WF\"/><xcalcf:feature name=\"microsoft.com:LAMBDA_WF\"/><xcalcf:feature name=\"microsoft.com:ARRAYTEXT_WF\"/><\/xcalcf:calcFeatures><\/ext><\/extLst><\/workbook>"}};</script>
+<script>
+"use strict";
+/* ===================== ثوابت ===================== */
+const PW_REC = "505152", PW_MGR = "707172";
+const JOBS = ["مساعد","حجار","براد","لحام","مشرف"];
+const JOB_EN = {"مساعد":"Helper","حجار":"Grinder","براد":"Fitter","لحام":"Welder","مشرف":"Supervisor"};
+const TAB_COLOR = {"لحام":"FFFF0000","حجار":"FFFFC000","مساعد":"FF0070C0","براد":"FF7030A0","مشرف":"FF00B0F0"};
+const STAFF_TAB = "FF92D050";
+const AR_MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const EN_MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const AR_DAYS = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const EN_DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const NOTE_CHIPS = ["غياب بدون إذن","غياب بإذن","تأخير بدون إذن","مكافأة"];
+
+/* ===================== أدوات التواريخ ===================== */
+const pad2 = n => String(n).padStart(2, "0");
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+const parseYMD = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const daysIn = (y, m) => new Date(y, m, 0).getDate();
+const ymOf = s => s.slice(0, 7);
+function addMonths(ym, k){ let [y,m] = ym.split("-").map(Number); m += k; while(m>12){m-=12;y++} while(m<1){m+=12;y--} return `${y}-${pad2(m)}`; }
+function addDays(d, k){ const x = new Date(d); x.setDate(x.getDate()+k); return x; }
+const todayStr = () => ymd(new Date());
+const serial = d => Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - Date.UTC(1899, 11, 30)) / 86400000);
+const fromSerial = n => { const t = new Date(Date.UTC(1899, 11, 30) + Math.floor(n) * 86400000); return new Date(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate()); };
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const xesc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
+
+/* ===================== حساب الساعات (قواعد الشركة) =====================
+   - يوم عادي: الشغل الفعلي = (الانصراف - الحضور) ناقص الجزء اللي واقع في البريك (1 لـ 2 الضهر).
+     أساسي = أقل من 8 والشغل الفعلي، والإضافي = اللي فوق الـ 8. (التأخير بيتخصم من الإضافي تلقائياً)
+   - الخميس: 8 ساعات يوم كامل حتى لو مشي بدري، والإضافي = اللي بعد الساعة 5، والتأخير يتخصم من الإضافي الأول وبعدين من الأساسي.
+   - الجمعة والأعياد: كل الساعات (ناقص البريك) في خانة الجمعة والأعياد. */
+const toMin = s => { if(!s) return null; const [h,m] = s.split(":").map(Number); return h*60+m; };
+const r2 = x => Math.round(x*100)/100;
+function calcDay(dateStr, f, t, holiday){
+  if(!f || !t) return null;
+  const a = toMin(f), b = toMin(t);
+  if(!(b > a)) return {err:"وقت الانصراف لازم يكون بعد الحضور"};
+  const dow = parseYMD(dateStr).getDay();
+  const brk = Math.max(0, Math.min(b, 14*60) - Math.max(a, 13*60));
+  if(dow === 5 || holiday) return {fri: r2((b - a - brk)/60), hol: !!holiday && dow !== 5};
+  if(dow === 4){
+    const late = Math.max(0, a - 8*60)/60;
+    let ot = Math.max(0, b - 17*60)/60, basic = 8;
+    const d = Math.min(late, ot); ot -= d; basic -= (late - d);
+    return {basic: r2(Math.max(0, basic)), ot: r2(ot)};
+  }
+  const worked = (b - a - brk)/60;
+  return {basic: r2(Math.max(0, Math.min(8, worked))), ot: r2(Math.max(0, worked - 8))};
+}
+function calcText(c){
+  if(!c) return "";
+  if(c.err) return c.err;
+  if(c.fri != null) return `${c.hol ? "عيد" : "جمعة"}: ${c.fri} ساعة`;
+  return `${c.basic} أساسي` + (c.ot ? ` + ${c.ot} إضافي` : "");
+}
+/* الساعة: "من" دايماً الصبح. "إلى": 1-11 يعني بعد الضهر، 12 = الضهر، 13-24 زي ما هي */
+function normFrom(h, m){ return `${pad2(h)}:${pad2(m)}`; }
+function normTo(h, m){ let H = h; if(H >= 1 && H <= 11) H += 12; if(H === 0) H = 24; return `${pad2(H)}:${pad2(m)}`; }
+function showFrom(s){ if(!s) return ["",""]; const [h,m] = s.split(":"); return [h, m]; }
+function showTo(s){ if(!s) return ["",""]; let [h,m] = s.split(":").map(Number); if(h > 12) h -= 12; return [pad2(h), pad2(m)]; }
+
+/* ===================== تخزين البيانات (db) =====================
+   workers/{wid}: {name, job, order, addedAt, removedAt, hist:{type:{ym:v}, rate:{ym:v}, title:{ym:v}}}
+   att/{wid}__{ym}: {wid, ym, days:{DD:{f,t,n}}}         ← اللي بيسجله العامل المسؤول
+   ovr/{wid}__{ym}: {wid, ym, cells:{A1:"raw"}}           ← تعديلات المدير على الشيت (null = رجوع للأوتوماتيك)
+   cfg/main: {holidays:{"YYYY-MM-DD":true}} */
+const S = {
+  level: 0, sec: null, workers: {}, att: {}, ovr: {}, cfg: {holidays:{}},
+  loaded: {workers:false, att:false, ovr:false, cfg:false}, slow:false,
+  rec: {group:null, open:new Set(), adding:false, q:"", confirm:null},
+  mgr: {group:null, sheet:null, sel:"A1", editing:false},
+  pending:false, readOnly:false
+};
+let DB = null, DL = null, MEM = false;
+
+function makeMemDB(){
+  const docs = new Map(), ls = new Set();
+  const clone = o => o === undefined ? undefined : JSON.parse(JSON.stringify(o));
+  const collOf = p => p.split("/").slice(0,-1).join("/");
+  const snap = p => { const d = docs.get(p); return {id:p.split("/").pop(), exists:!!d, data:()=>clone(d), metadata:{fromCache:false, hasPendingWrites:false}}; };
+  const fire = l => { const ds = [...docs.keys()].filter(k => collOf(k) === l.coll).sort().map(snap); l.cb({docs:ds, size:ds.length, empty:!ds.length, docChanges:()=>[], metadata:{fromCache:false, hasPendingWrites:false}}); };
+  const emit = p => queueMicrotask(() => { for(const l of ls){ if(l.coll === collOf(p)) fire(l); else if(l.doc === p) l.cb(snap(p)); } });
+  const merge = (a, b) => { for(const k in b){ const v = b[k]; if(v && typeof v === "object" && !Array.isArray(v) && a[k] && typeof a[k] === "object") merge(a[k], v); else a[k] = clone(v); } };
+  const api = {
+    doc(p){ return { path:p, id:p.split("/").pop(),
+      get: async () => snap(p),
+      set: async d => { docs.set(p, clone(d)); emit(p); },
+      update: async d => { const c = docs.get(p); if(!c) throw {code:"invalid_argument", message:"missing"}; merge(c, d); emit(p); },
+      delete: async () => { docs.delete(p); emit(p); },
+      onSnapshot(cb){ const l = {doc:p, cb}; ls.add(l); queueMicrotask(() => cb(snap(p))); return () => ls.delete(l); } }; },
+    collection(c){ return { path:c, doc: id => api.doc(c + "/" + id),
+      onSnapshot(cb){ const l = {coll:c, cb}; ls.add(l); queueMicrotask(() => fire(l)); return () => ls.delete(l); } }; },
+    _docs: docs
+  };
+  return api;
+}
+
+/* نسخة Google Apps Script: البيانات في Google Sheet، والمتصفح بيسأل عن الجديد كل 20 ثانية */
+/* نسخة التطبيق (PWA): نفس الكلام بس بيكلم السيرفر بـ fetch على لينك الـ API */
+function apiCall(url){
+  return async (fn, ...a) => {
+    const body = fn === "dbSync" ? {fn, since: a[0]} : {fn, ops: a[0]};
+    let r;
+    try{ r = await fetch(url, {method:"POST", body: JSON.stringify(body), redirect:"follow"}); }
+    catch(e){ throw {code:"unavailable", message:"network"}; }
+    if(!r.ok) throw {code:"unavailable", message:"http " + r.status};
+    const j = await r.json().catch(() => null);
+    if(!j) throw {code:"unavailable", message:"bad response"};
+    if(!j.ok) throw {code: /bad|missing|large/.test(j.error || "") ? "invalid_argument" : "unavailable", message: j.error};
+    return j.res;
+  };
+}
+function makeGasDB(transport){
+  let ver = null, docs = {}, first = true;
+  const ls = new Set();
+  const clone = o => o === undefined ? undefined : JSON.parse(JSON.stringify(o));
+  const collOf = p => p.split("/").slice(0,-1).join("/");
+  const snap = p => { const d = docs[p]; return {id:p.split("/").pop(), exists:!!d, data:()=>clone(d), metadata:{fromCache:false, hasPendingWrites:false}}; };
+  const fire = l => {
+    if(l.doc){ l.cb(snap(l.doc)); return; }
+    const ds = Object.keys(docs).filter(k => collOf(k) === l.coll).sort().map(snap);
+    l.cb({docs:ds, size:ds.length, empty:!ds.length, docChanges:()=>[], metadata:{fromCache:false, hasPendingWrites:false}});
+  };
+  const call = transport || ((fn, ...a) => new Promise((res, rej) => google.script.run.withSuccessHandler(res)
+    .withFailureHandler(e => rej({code: /bad|missing|large/.test(String(e && e.message)) ? "invalid_argument" : "unavailable", message: String(e && e.message || e)}))[fn](...a)));
+  const apply = r => { if(!r || r.same) return; ver = r.ver; docs = r.docs || {}; first = false; for(const l of ls) fire(l); };
+  let syncing = false;
+  async function sync(){ if(syncing) return; syncing = true; try{ apply(await call("dbSync", ver)); }catch(e){ console.warn(e); if(first) for(const l of ls) l.err && l.err(e); } finally{ syncing = false; } }
+  const write = async ops => { apply(await call("dbWrite", ops)); };
+  setInterval(() => { if(document.visibilityState === "visible") sync(); }, 20000);
+  document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") sync(); });
+  setTimeout(sync, 0);
+  const api = {
+    doc(p){ return { path:p, id:p.split("/").pop(),
+      get: async () => snap(p),
+      set: d => write([{op:"set", path:p, data:d}]),
+      update: d => write([{op:"update", path:p, data:d}]),
+      delete: () => write([{op:"delete", path:p}]),
+      onSnapshot(cb, err){ const l = {doc:p, cb, err}; ls.add(l); if(!first) queueMicrotask(() => fire(l)); return () => ls.delete(l); } }; },
+    collection(c){ return { path:c, doc: id => api.doc(c + "/" + id),
+      onSnapshot(cb, err){ const l = {coll:c, cb, err}; ls.add(l); if(!first) queueMicrotask(() => fire(l)); return () => ls.delete(l); } }; },
+    upsert: (p, partial, base) => write([{op:"upsert", path:p, data:partial, base:base || {}}]),
+    sync
+  };
+  return api;
+}
+/* التحميل في نسخة Google: لينك تحميل عادي */
+const anchorDownloads = { async save({filename, data}){
+  const url = URL.createObjectURL(data instanceof Blob ? data : new Blob([data]));
+  const a = document.createElement("a"); a.href = url; a.download = filename; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 5000);
+  return {status:"saved"};
+} };
+
+const wq = {};
+function enqueue(path, fn){ const p = (wq[path] || Promise.resolve()).then(fn, fn); wq[path] = p.catch(() => {}); return p; }
+async function upsert(path, partial, base){
+  if(DB.upsert) return enqueue(path, () => DB.upsert(path, partial, base));
+  return enqueue(path, async () => {
+    const ref = DB.doc(path);
+    const snap = await ref.get();
+    if(snap.exists) await ref.update(partial);
+    else await ref.set(Object.assign({}, base || {}, partial));
+  });
+}
+function dbErr(e){
+  const c = e && e.code;
+  if(c === "invalid_argument") return "التعديل ما اتحفظش: غالباً حسابك ما عندوش صلاحية تعديل. اطلب من صاحب الصفحة يخليك Contributor.";
+  if(c === "quota_exceeded") return "مساحة التخزين اتملت. كلّم المسؤول.";
+  return "التعديل ما اتحفظش، جرّب تاني بعد شوية.";
+}
+async function safeWrite(fn, okMsg){
+  if(S.readOnly){ toast("الصفحة دلوقتي للقراءة بس، التعديل مش هيتحفظ."); return false; }
+  try{ await fn(); if(okMsg) toast(okMsg); return true; }
+  catch(e){ console.error(e); toast(dbErr(e)); return false; }
+}
+
+function subscribe(){
+  const slowTimer = setTimeout(() => { if(!allLoaded()){ S.slow = true; requestRender(); } }, 10000);
+  const done = k => { S.loaded[k] = true; if(allLoaded()){ clearTimeout(slowTimer); S.slow = false; } requestRender(); };
+  const onErr = k => e => { console.error(k, e); S.loaded[k] = true; showBanner("bad", "البيانات مش واصلة دلوقتي. افتح الصفحة تاني بعد شوية."); requestRender(); };
+  const coll = (name, target, k) => DB.collection(name).onSnapshot(snap => {
+    const o = {}; snap.docs.forEach(d => { if(d.exists) o[d.id] = d.data(); }); S[target] = o; done(k);
+  }, onErr(k));
+  coll("workers", "workers", "workers");
+  coll("att", "att", "att");
+  coll("ovr", "ovr", "ovr");
+  DB.doc("cfg/main").onSnapshot(s => { S.cfg = (s.exists && s.data()) || {holidays:{}}; if(!S.cfg.holidays) S.cfg.holidays = {}; done("cfg"); }, onErr("cfg"));
+}
+const allLoaded = () => Object.values(S.loaded).every(Boolean);
+
+/* ===================== قواعد العمال والفترات ===================== */
+function eff(w, field, ym){
+  const h = w && w.hist && w.hist[field]; if(!h) return undefined;
+  const keys = Object.keys(h).filter(k => h[k] !== null && h[k] !== undefined && h[k] !== "").sort();
+  if(!keys.length) return undefined;
+  let v = h[keys[0]]; for(const k of keys){ if(k <= ym) v = h[k]; } return v;
+}
+const wType = (w, ym) => eff(w, "type", ym) || "daily";
+function sheetPeriod(type, ym){
+  const [y,m] = ym.split("-").map(Number);
+  if(type === "staff"){ const [py,pm] = addMonths(ym,-1).split("-").map(Number); return {start:new Date(py,pm-1,26), len:daysIn(py,pm)}; }
+  return {start:new Date(y,m-1,1), len:daysIn(y,m)};
+}
+function dayRec(wid, date){ const d = S.att[wid + "__" + ymOf(date)]; const r = d && d.days && d.days[date.slice(8)]; return r || null; }
+function hasAttBetween(wid, start, len){ for(let i=0;i<len;i++){ const r = dayRec(wid, ymd(addDays(start,i))); if(r && (r.f || r.n)) return true; } return false; }
+function activeBetween(w, start, len){
+  const s = ymd(start), e = ymd(addDays(start, len-1));
+  if(w.addedAt && w.addedAt > e) return false;
+  if(w.removedAt && w.removedAt < s) return false;
+  return true;
+}
+const inRange = (w, wid, start, len) => activeBetween(w, start, len) || hasAttBetween(wid, start, len);
+function sortedWorkers(){ return Object.entries(S.workers).sort((a,b) => (a[1].order||0)-(b[1].order||0) || String(a[1].name).localeCompare(String(b[1].name))); }
+const isHoliday = d => !!(S.cfg.holidays && S.cfg.holidays[d]);
+const noteIsGood = n => /مكاف/.test(n || "");
+
+/* ===================== محرك المعادلات (زي الإكسيل) ===================== */
+const COLS = "ABCDEFGHIJKLMNOPQRSTU".split("");
+const colNum = L => { let n=0; for(const ch of L) n = n*26 + ch.charCodeAt(0) - 64; return n; };
+const colLet = n => { let s=""; while(n>0){ const m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26); } return s; };
+const splitRef = ref => { const m = /^([A-Z]+)(\d+)$/.exec(ref); return [m[1], +m[2]]; };
+class XErr { constructor(c){ this.e = c; } }
+const astCache = new Map();
+function tokenize(s){
+  const t = []; let i = 0;
+  while(i < s.length){
+    const c = s[i], rest = s.slice(i);
+    if(c === " "){ i++; continue; }
+    let m;
+    if((m = /^(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?/.exec(rest))){ t.push({k:"n", v:parseFloat(m[0])}); i += m[0].length; continue; }
+    if(c === '"'){ let j = i+1, str = ""; while(j < s.length){ if(s[j] === '"'){ if(s[j+1] === '"'){ str += '"'; j += 2; continue; } break; } str += s[j++]; } t.push({k:"s", v:str}); i = j+1; continue; }
+    if((m = /^([A-Za-z_][A-Za-z0-9_.]*)\s*\(/.exec(rest))){ t.push({k:"f", v:m[1].toUpperCase()}); i += m[0].length; continue; }
+    if((m = /^\$?([A-Za-z]{1,3})\$?(\d+)(?::\$?([A-Za-z]{1,3})\$?(\d+))?/.exec(rest))){
+      t.push({k:"r", a:m[1].toUpperCase()+m[2], b:m[3] ? m[3].toUpperCase()+m[4] : null}); i += m[0].length; continue; }
+    if((m = /^(TRUE|FALSE)\b/i.exec(rest))){ t.push({k:"b", v:m[1].toUpperCase() === "TRUE"}); i += m[0].length; continue; }
+    const two = s.slice(i, i+2);
+    if(two === "<=" || two === ">=" || two === "<>"){ t.push({k:"o", v:two}); i += 2; continue; }
+    if("+-*/^&=<>(),%".includes(c)){ t.push({k:"o", v:c}); i++; continue; }
+    throw new XErr("#NAME?");
+  }
+  return t;
+}
+function parseFormula(src){
+  if(astCache.has(src)) return astCache.get(src);
+  const tk = tokenize(src); let p = 0;
+  const isOp = v => tk[p] && tk[p].k === "o" && tk[p].v === v;
+  const cmp = () => { let a = cat(); while(tk[p] && tk[p].k === "o" && ["=","<>","<",">","<=",">="].includes(tk[p].v)){ const op = tk[p++].v; a = {t:"bin", op, a, b:cat()}; } return a; };
+  const cat = () => { let a = add(); while(isOp("&")){ p++; a = {t:"bin", op:"&", a, b:add()}; } return a; };
+  const add = () => { let a = mul(); while(isOp("+") || isOp("-")){ const op = tk[p++].v; a = {t:"bin", op, a, b:mul()}; } return a; };
+  const mul = () => { let a = pw(); while(isOp("*") || isOp("/")){ const op = tk[p++].v; a = {t:"bin", op, a, b:pw()}; } return a; };
+  const pw = () => { let a = un(); while(isOp("^")){ p++; a = {t:"bin", op:"^", a, b:un()}; } return a; };
+  const un = () => { if(isOp("-")){ p++; return {t:"neg", a:un()}; } if(isOp("+")){ p++; return un(); } return post(); };
+  const post = () => { let a = prim(); while(isOp("%")){ p++; a = {t:"bin", op:"/", a, b:{t:"n", v:100}}; } return a; };
+  const prim = () => {
+    const k = tk[p++]; if(!k) throw new XErr("#VALUE!");
+    if(k.k === "n") return {t:"n", v:k.v};
+    if(k.k === "s") return {t:"s", v:k.v};
+    if(k.k === "b") return {t:"b", v:k.v};
+    if(k.k === "r") return k.b ? {t:"rng", a:k.a, b:k.b} : {t:"ref", a:k.a};
+    if(k.k === "f"){ const args = []; if(!isOp(")")){ args.push(cmp()); while(isOp(",")){ p++; args.push(cmp()); } } if(!isOp(")")) throw new XErr("#VALUE!"); p++; return {t:"fn", n:k.v, args}; }
+    if(k.k === "o" && k.v === "("){ const e = cmp(); if(!isOp(")")) throw new XErr("#VALUE!"); p++; return e; }
+    throw new XErr("#VALUE!");
+  };
+  const ast = cmp(); if(p < tk.length) throw new XErr("#VALUE!");
+  astCache.set(src, ast); return ast;
+}
+function rangeRefs(a, b){
+  const [ca, ra] = splitRef(a), [cb, rb] = splitRef(b), out = [];
+  for(let r = Math.min(ra,rb); r <= Math.max(ra,rb); r++) for(let c = Math.min(colNum(ca),colNum(cb)); c <= Math.max(colNum(ca),colNum(cb)); c++) out.push(colLet(c) + r);
+  return out;
+}
+function evalSheet(cells){
+  const cache = {}, busy = {};
+  const num = v => { if(v instanceof XErr) throw v; if(v === null || v === undefined || v === "") return 0; if(typeof v === "boolean") return v ? 1 : 0; if(typeof v === "number") return v; const n = Number(v); if(isNaN(n)) throw new XErr("#VALUE!"); return n; };
+  const str = v => { if(v instanceof XErr) throw v; if(v === null || v === undefined) return ""; if(typeof v === "boolean") return v ? "TRUE" : "FALSE"; return String(v); };
+  function val(ref){
+    if(ref in cache) return cache[ref];
+    const c = cells[ref]; if(!c) return null;
+    if(c.f != null){
+      if(busy[ref]) return (cache[ref] = new XErr("#REF!"));
+      busy[ref] = true; let r;
+      try{ r = ev(parseFormula(c.f)); if(r && r.list) r = r.list[0] ?? null; if(typeof r === "number" && !isFinite(r)) r = new XErr("#NUM!"); }
+      catch(e){ r = e instanceof XErr ? e : new XErr("#NAME?"); }
+      busy[ref] = false; return (cache[ref] = r);
+    }
+    return c.v === undefined ? null : c.v;
+  }
+  function flat(args){ const out = []; for(const a of args){ const v = ev(a); if(v && v.list) out.push(...v.list.map(x => ({x, fromRange:true}))); else out.push({x:v, fromRange:false}); } return out; }
+  function nums(args){ const out = []; for(const {x, fromRange} of flat(args)){ if(x instanceof XErr) throw x; if(fromRange){ if(typeof x === "number") out.push(x); } else out.push(num(x)); } return out; }
+  function ev(n){
+    switch(n.t){
+      case "n": case "s": case "b": return n.v;
+      case "ref": { const v = val(n.a); return v; }
+      case "rng": return {list: rangeRefs(n.a, n.b).map(val)};
+      case "neg": return -num(ev(n.a));
+      case "bin": {
+        const A = ev(n.a), B = ev(n.b);
+        const a1 = A && A.list ? A.list[0] : A, b1 = B && B.list ? B.list[0] : B;
+        switch(n.op){
+          case "+": return num(a1) + num(b1);
+          case "-": return num(a1) - num(b1);
+          case "*": return num(a1) * num(b1);
+          case "/": { const d = num(b1); if(d === 0) throw new XErr("#DIV/0!"); return num(a1) / d; }
+          case "^": return Math.pow(num(a1), num(b1));
+          case "&": return str(a1) + str(b1);
+          default: {
+            if(a1 instanceof XErr) throw a1; if(b1 instanceof XErr) throw b1;
+            const x = (typeof a1 === "string" || typeof b1 === "string") ? [str(a1), str(b1)] : [num(a1), num(b1)];
+            return {"=":x[0]===x[1], "<>":x[0]!==x[1], "<":x[0]<x[1], ">":x[0]>x[1], "<=":x[0]<=x[1], ">=":x[0]>=x[1]}[n.op];
+          }
+        }
+      }
+      case "fn": {
+        const A = n.args;
+        switch(n.n){
+          case "SUM": return nums(A).reduce((s,x) => s+x, 0);
+          case "MIN": { const v = nums(A); return v.length ? Math.min(...v) : 0; }
+          case "MAX": { const v = nums(A); return v.length ? Math.max(...v) : 0; }
+          case "AVERAGE": { const v = nums(A); if(!v.length) throw new XErr("#DIV/0!"); return v.reduce((s,x)=>s+x,0)/v.length; }
+          case "COUNT": return flat(A).filter(o => typeof o.x === "number").length;
+          case "COUNTA": return flat(A).filter(o => o.x !== null && o.x !== "" && o.x !== undefined).length;
+          case "ROUND": case "ROUNDUP": case "ROUNDDOWN": {
+            const x = num(ev(A[0])), d = A[1] ? num(ev(A[1])) : 0, f = Math.pow(10, d);
+            if(n.n === "ROUND") return Math.sign(x) * Math.round(Math.abs(x)*f + 1e-9)/f;
+            if(n.n === "ROUNDUP") return Math.sign(x) * Math.ceil(Math.abs(x)*f - 1e-9)/f;
+            return Math.sign(x) * Math.floor(Math.abs(x)*f + 1e-9)/f;
+          }
+          case "INT": return Math.floor(num(ev(A[0])));
+          case "ABS": return Math.abs(num(ev(A[0])));
+          case "IF": { const c = ev(A[0]); const t = (c && c.list) ? c.list[0] : c; return (typeof t === "string" ? t !== "" : num(t) !== 0) ? (A[1] ? ev(A[1]) : true) : (A[2] ? ev(A[2]) : false); }
+          case "AND": return nums(A).every(x => x !== 0);
+          case "OR": return nums(A).some(x => x !== 0);
+          case "NOT": return !num(ev(A[0]));
+          default: throw new XErr("#NAME?");
+        }
+      }
+    }
+    throw new XErr("#VALUE!");
+  }
+  const out = {};
+  for(const ref in cells){ const v = val(ref); out[ref] = (v && v.list) ? (v.list[0] ?? null) : v; }
+  return out;
+}
+
+/* ===================== تنسيق الأرقام زي الإكسيل ===================== */
+function group(n, dp){ const s = Math.abs(n).toFixed(dp); const [i, f] = s.split("."); return (n < 0 && Number(s) !== 0 ? "-" : "") + i.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (f ? "." + f : ""); }
+function fmtVal(v, nf){
+  if(v === null || v === undefined || v === "") return "";
+  if(v instanceof XErr) return v.e;
+  if(typeof v === "boolean") return v ? "TRUE" : "FALSE";
+  if(typeof v === "string") return v;
+  nf = (nf || "General").replace(/\\ /g, " ");
+  if(/ddd/.test(nf)){ const d = fromSerial(v); return `${EN_DAYS[d.getDay()]} ${d.getMonth()+1}/${d.getDate()}`; }
+  if(nf === "mm-dd-yy" || /^m+[-/]d+[-/]y+$/.test(nf)){ const d = fromSerial(v); return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`; }
+  const pre = (/^\[\$([^\]-]+)[^\]]*\]\s*/.exec(nf) || [])[1];
+  const core = nf.replace(/^\[\$[^\]]*\]\s*/, "");
+  const dpM = /0\.(0+)/.exec(core); const dp = dpM ? dpM[1].length : 0;
+  if(/#,##0/.test(core)) return (pre ? pre + " " : "") + group(v, dp);
+  if(/^0(\.0+)?$/.test(core)) return (pre ? pre + " " : "") + v.toFixed(dp);
+  if(Number.isInteger(v)) return String(v);
+  return String(parseFloat(v.toPrecision(10)));
+}
+
+/* ===================== بناء شيت عامل ===================== */
+function rawToCell(raw){
+  if(raw === "" ) return {};
+  if(typeof raw === "number") return {v:raw};
+  const s = String(raw);
+  if(s.startsWith("=") && s.length > 1) return {f:s.slice(1)};
+  const n = Number(s.replace(/,/g, ""));
+  if(s.trim() !== "" && !isNaN(n) && /^[-+]?[\d,]*\.?\d+(e[-+]?\d+)?$/i.test(s.trim())) return {v:n};
+  return {v:s};
+}
+function buildSheet(wid, ym, opts){
+  opts = opts || {};
+  const w = S.workers[wid], type = wType(w, ym), per = sheetPeriod(type, ym);
+  const cells = {};
+  for(const ref in TPL.cells){ const c = TPL.cells[ref]; cells[ref] = {s:c.s}; if("f" in c) cells[ref].f = c.f; else if("v" in c) cells[ref].v = c.v; }
+  const put = (ref, v, s) => { cells[ref] = Object.assign({s: cells[ref] ? cells[ref].s : 0}, v === null ? {} : {v}); if(s != null) cells[ref].s = s; };
+  const rate = eff(w, "rate", ym), title = eff(w, "title", ym) || JOB_EN[w.job] || "";
+  put("G4", w.name || ""); put("G6", title); put("C8", rate === undefined ? null : Number(rate)); put("G8", serial(per.start));
+  const rightLen = per.len - 15;
+  for(let i = rightLen; i < 16; i++){ const ref = "K" + (10+i); if(cells[ref]){ delete cells[ref].f; delete cells[ref].v; } }
+  const notes = [];
+  for(let i = 0; i < per.len; i++){
+    const date = ymd(addDays(per.start, i));
+    const left = i < 15, row = 10 + (left ? i : i - 15);
+    if(opts.upto && !left && type === "daily") continue;
+    const r = dayRec(wid, date); if(!r) continue;
+    const c = calcDay(date, r.f, r.t, isHoliday(date));
+    const [cB, cC, cD, cN] = left ? ["B","C","D","F"] : ["L","M","N","P"];
+    if(c && !c.err){
+      if(c.fri != null){ if(c.fri > 0) put(cD + row, c.fri); }
+      else { if(c.basic > 0) put(cB + row, c.basic); if(c.ot > 0) put(cC + row, c.ot); }
+    }
+    if(r.n){ put(cN + row, r.n, noteIsGood(r.n) ? TPL.note.green : TPL.note.red); notes.push({date, ref:cN+row, text:r.n}); }
+  }
+  const auto = {};
+  for(const ref in cells) auto[ref] = cells[ref];
+  const o = S.ovr[wid + "__" + ym], ovrRefs = new Set();
+  if(o && o.cells){
+    for(const ref in o.cells){
+      const raw = o.cells[ref]; if(raw === null || raw === undefined) continue;
+      if(!/^[A-U]([1-9]|[1-3]\d|40)$/.test(ref)) continue;
+      cells[ref] = Object.assign({s: cells[ref] ? cells[ref].s : 0}, rawToCell(raw));
+      ovrRefs.add(ref);
+    }
+  }
+  const vals = evalSheet(cells);
+  const g4 = vals.G4;
+  const name = (typeof g4 === "string" && g4.trim()) ? g4.trim() : (w.name || "Sheet");
+  return {wid, w, ym, type, per, cells, auto, vals, ovrRefs, notes, name, tab: type === "staff" ? STAFF_TAB : (TAB_COLOR[w.job] || "FF808080")};
+}
+/* شيتات الشهر: اليومية الأول وبعدين المتعينين (زي الملف الأصلي) */
+function bookSheets(ym, kind){
+  // kind: view1 | view2 | p1 | p2 | staff | all
+  const daily = [], staff = [];
+  for(const [wid, w] of sortedWorkers()){
+    const type = wType(w, ym), per = sheetPeriod(type, ym);
+    const upto = type === "daily" && (kind === "p1" || kind === "view1");
+    if(!inRange(w, wid, per.start, upto ? 15 : per.len)) continue;
+    if((kind === "p1" || kind === "p2") && type !== "daily") continue;
+    if(kind === "staff" && type !== "staff") continue;
+    (type === "staff" ? staff : daily).push(buildSheet(wid, ym, {upto}));
+  }
+  return daily.concat(staff);
+}
+
+/* ===================== التصدير لملف xlsx ===================== */
+function sheetNamesUnique(list){
+  const used = new Set();
+  return list.map(n => {
+    let b = String(n).replace(/[:\\\/?*\[\]]/g, " ").replace(/^'+|'+$/g, "").trim().slice(0, 31) || "Sheet", x = b, k = 2;
+    while(used.has(x.toLowerCase())){ const suf = ` (${k++})`; x = b.slice(0, 31 - suf.length) + suf; }
+    used.add(x.toLowerCase()); return x;
+  });
+}
+function sheetXmlOf(sh, first, si){
+  const rowTags = {};
+  TPL.sheetXml.replace(/<row r="(\d+)"([^>]*)>/g, (m, r, a) => { rowTags[r] = `<row r="${r}"${a.replace(/\s*spans="[^"]*"/, "")}>`; return m; });
+  const byRow = {};
+  let maxC = 19;
+  for(const ref in sh.cells){ const [c, r] = splitRef(ref); (byRow[r] = byRow[r] || []).push(ref); maxC = Math.max(maxC, colNum(c)); }
+  let sd = "<sheetData>";
+  for(let r = 1; r <= TPL.nrows; r++){
+    const refs = (byRow[r] || []).sort((a,b) => colNum(splitRef(a)[0]) - colNum(splitRef(b)[0]));
+    sd += rowTags[r] || `<row r="${r}">`;
+    for(const ref of refs){
+      const c = sh.cells[ref], s = c.s ? ` s="${c.s}"` : "";
+      if(c.f != null){
+        const v = sh.vals[ref];
+        if(v instanceof XErr) sd += `<c r="${ref}"${s} t="e"><f>${xesc(c.f)}</f><v>${xesc(v.e)}</v></c>`;
+        else if(typeof v === "string") sd += `<c r="${ref}"${s} t="str"><f>${xesc(c.f)}</f><v>${xesc(v)}</v></c>`;
+        else if(typeof v === "boolean") sd += `<c r="${ref}"${s} t="b"><f>${xesc(c.f)}</f><v>${v ? 1 : 0}</v></c>`;
+        else if(typeof v === "number") sd += `<c r="${ref}"${s}><f>${xesc(c.f)}</f><v>${v}</v></c>`;
+        else sd += `<c r="${ref}"${s}><f>${xesc(c.f)}</f></c>`;
+      } else if(typeof c.v === "number") sd += `<c r="${ref}"${s}><v>${c.v}</v></c>`;
+      else if(typeof c.v === "string" && c.v !== "") sd += `<c r="${ref}"${s} t="s"><v>${si(c.v)}</v></c>`;
+      else sd += `<c r="${ref}"${s}/>`;
+    }
+    sd += "</row>";
+  }
+  sd += "</sheetData>";
+  let x = TPL.sheetXml;
+  x = x.replace(/<sheetPr>[\s\S]*?<\/sheetPr>|<sheetPr\/>/, `<sheetPr><tabColor rgb="${sh.tab}"/></sheetPr>`);
+  x = x.replace(/<dimension ref="[^"]*"\/>/, `<dimension ref="A1:${colLet(maxC)}40"/>`);
+  x = x.replace(/<sheetViews>[\s\S]*?<\/sheetViews>/, `<sheetViews><sheetView ${first ? 'tabSelected="1" ' : ""}workbookViewId="0"><selection activeCell="A1" sqref="A1"/></sheetView></sheetViews>`);
+  x = x.replace(/<sheetData>[\s\S]*<\/sheetData>|<sheetData\/>/, sd);
+  return x;
+}
+async function buildXlsx(sheets){
+  const zip = new JSZip(), sst = [], sstIdx = new Map(); let refs = 0;
+  const si = s => { refs++; if(!sstIdx.has(s)){ sstIdx.set(s, sst.length); sst.push(s); } return sstIdx.get(s); };
+  const names = sheetNamesUnique(sheets.map(s => s.name));
+  sheets.forEach((sh, i) => zip.file(`xl/worksheets/sheet${i+1}.xml`, sheetXmlOf(sh, i === 0, si)));
+  const N = sheets.length, H = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+  zip.file("xl/sharedStrings.xml", H + `<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${refs}" uniqueCount="${sst.length}">` + sst.map(s => `<si><t${/^\s|\s$/.test(s) ? ' xml:space="preserve"' : ""}>${xesc(s)}</t></si>`).join("") + "</sst>");
+  let wb = TPL.parts["xl/workbook.xml"];
+  wb = wb.replace(/<sheets>[\s\S]*<\/sheets>/, "<sheets>" + names.map((n, i) => `<sheet name="${xesc(n)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join("") + "</sheets>");
+  wb = wb.replace(/firstSheet="\d+"/, 'firstSheet="0"').replace(/activeTab="\d+"/, 'activeTab="0"');
+  wb = wb.replace(/<calcPr[^>]*\/>/, '<calcPr calcId="191029" fullCalcOnLoad="1"/>');
+  wb = wb.replace(/<definedNames>[\s\S]*?<\/definedNames>/, "");
+  zip.file("xl/workbook.xml", wb);
+  const R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/";
+  zip.file("xl/_rels/workbook.xml.rels", H + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+    sheets.map((s, i) => `<Relationship Id="rId${i+1}" Type="${R}worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("") +
+    `<Relationship Id="rId${N+1}" Type="${R}theme" Target="theme/theme1.xml"/><Relationship Id="rId${N+2}" Type="${R}styles" Target="styles.xml"/><Relationship Id="rId${N+3}" Type="${R}sharedStrings" Target="sharedStrings.xml"/></Relationships>`);
+  zip.file("xl/styles.xml", TPL.parts["xl/styles.xml"]);
+  zip.file("xl/theme/theme1.xml", TPL.parts["xl/theme/theme1.xml"]);
+  zip.file("_rels/.rels", TPL.parts["_rels/.rels"]);
+  const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+  zip.file("docProps/core.xml", TPL.parts["docProps/core.xml"].replace(/(<dcterms:modified[^>]*>)[^<]*(<\/dcterms:modified>)/, `$1${now}$2`));
+  zip.file("docProps/app.xml", H + '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Microsoft Excel</Application><DocSecurity>0</DocSecurity><ScaleCrop>false</ScaleCrop>' +
+    `<HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Worksheets</vt:lpstr></vt:variant><vt:variant><vt:i4>${N}</vt:i4></vt:variant></vt:vector></HeadingPairs>` +
+    `<TitlesOfParts><vt:vector size="${N}" baseType="lpstr">` + names.map(n => `<vt:lpstr>${xesc(n)}</vt:lpstr>`).join("") + "</vt:vector></TitlesOfParts><LinksUpToDate>false</LinksUpToDate><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>16.0300</AppVersion></Properties>");
+  const CT = "application/vnd.openxmlformats-officedocument.";
+  zip.file("[Content_Types].xml", H + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+    `<Override PartName="/xl/workbook.xml" ContentType="${CT}spreadsheetml.sheet.main+xml"/>` +
+    sheets.map((s, i) => `<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="${CT}spreadsheetml.worksheet+xml"/>`).join("") +
+    `<Override PartName="/xl/theme/theme1.xml" ContentType="${CT}theme+xml"/><Override PartName="/xl/styles.xml" ContentType="${CT}spreadsheetml.styles+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="${CT}spreadsheetml.sharedStrings+xml"/>` +
+    `<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="${CT}extended-properties+xml"/></Types>`);
+  return zip.generateAsync({type:"blob", compression:"DEFLATE", compressionOptions:{level:6}});
+}
+function fileTitle(ym, kind){
+  const [y, m] = ym.split("-").map(Number), base = `${EN_MONTHS[m-1]} ${y}`;
+  return {p1:`${base} (Manpower 1st Period)`, p2:`${base} (Manpower 2nd Period)`, staff:`${base} (Manpower Staff)`, all:`${base} (Manpower All)`}[kind];
+}
+async function download(ym, kind){
+  const sheets = bookSheets(ym, kind);
+  if(!sheets.length){ toast("مفيش شيتات في الملف ده."); return; }
+  if(!DL){ toast("التحميل مش متاح هنا. افتح الصفحة من المتصفح على الكمبيوتر."); return; }
+  try{
+    const blob = await buildXlsx(sheets);
+    await DL.save({filename: fileTitle(ym, kind) + ".xlsx", data: blob});
+    toast("الملف اتحمّل");
+  }catch(e){
+    if(e && e.code === "declined") return;
+    if(e && e.code === "rate_limited"){ toast("فيه تحميل لسه مفتوح، استنى ثانية وجرّب تاني."); return; }
+    console.error(e); toast("التحميل ما نجحش. جرّب من متصفح على الكمبيوتر.");
+  }
+}
+
+/* ===================== واجهة: عام ===================== */
+const $ = s => document.querySelector(s);
+const view = () => $("#view");
+let toastT = null;
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3500); }
+function showBanner(kind, msg){ const b = $("#dbBanner"); b.className = kind; b.textContent = msg; b.hidden = false; }
+/* ما نرسمش الصفحة من جديد والمستخدم بيكتب أو بينقل بين الخانات (Tab) — وإلا التركيز يضيع */
+let lastBlurAt = 0;
+function isEditing(){
+  const a = document.activeElement;
+  if(a && a.closest && a.closest("#view") && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return true;
+  return performance.now() - lastBlurAt < 250;
+}
+function requestRender(){ if(isEditing()){ S.pending = true; return; } render(); }
+document.addEventListener("focusout", e => {
+  if(e.target && e.target.closest && e.target.closest("#view") && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) lastBlurAt = performance.now();
+  setTimeout(() => { if(S.pending && !isEditing()){ S.pending = false; render(); } }, 300);
+});
+const ICON_PREV = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+const ICON_DL = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
+const ICON_NEXT ='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
+
+S.tab = null; S.day = null; S.q = ""; S.adding = false;
+S.people = {half: null, wid: null, confirm: false};
+
+function setLevel(l){
+  S.level = l;
+  try{ if(l) sessionStorage.setItem("me_lvl", String(l)); else sessionStorage.removeItem("me_lvl"); }catch(e){}
+  if(!l){ S.tab = null; S.adding = false; S.people.wid = null; S.mgr.group = null; }
+  else if(!S.tab || (S.tab === "close" && l < 2)) S.tab = l === 2 ? "close" : "day";
+  render(); window.scrollTo(0, 0);
+}
+$("#pwForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = $("#pw").value.trim(); $("#pwErr").hidden = true;
+  if(v === PW_MGR){ $("#pw").value = ""; S.tab = "close"; setLevel(2); }
+  else if(v === PW_REC){ $("#pw").value = ""; S.tab = "day"; setLevel(1); }
+  else { $("#pwErr").hidden = false; $("#pw").select(); }
+});
+$("#pw").addEventListener("input", () => $("#pwErr").hidden = true);
+$("#lockBtn").addEventListener("click", () => setLevel(0));
+$("#backBtn").addEventListener("click", goBack);
+$("#tabbar").addEventListener("click", e => {
+  const b = e.target.closest("button[data-tab]"); if(!b || b.hidden) return;
+  if(S.tab === b.dataset.tab){ // دوسة تانية على نفس التاب = يرجع لأوله
+    if(S.tab === "people") S.people.wid = null;
+    if(S.tab === "close") S.mgr.group = null;
+  }
+  S.tab = b.dataset.tab; S.adding = false; S.people.confirm = false; render(); window.scrollTo(0, 0);
+});
+function goBack(){
+  if(S.adding) S.adding = false;
+  else if(S.tab === "people" && S.people.wid){ S.people.wid = null; S.people.confirm = false; }
+  else if(S.tab === "close" && S.mgr.group) S.mgr.group = null;
+  render(); window.scrollTo(0, 0);
+}
+
+function render(){
+  const locked = !S.level;
+  $("#lock").hidden = !locked; $("#shell").hidden = locked;
+  if(locked){ setTimeout(() => { const p = $("#pw"); if(p && document.activeElement !== p) p.focus({preventScroll:true}); }, 0); return; }
+  $("#tabClose").hidden = S.level < 2;
+  document.querySelectorAll("#tabbar button[data-tab]").forEach(b => { if(b.dataset.tab === S.tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  const v = view();
+  const ae = document.activeElement, fid = ae && ae.id && v.contains(ae) && ae.id !== "gw" ? ae.id : null;
+  let selA = null, selB = null; try{ selA = ae.selectionStart; selB = ae.selectionEnd; }catch(e){}
+  let scr;
+  if(!allLoaded()) scr = {title:"عمالة <bdi>Middle East</bdi>", sub:"", html:`<div class="loading">${S.slow ? "البيانات بتاخد وقت أطول من العادي…" : "بيحمّل البيانات…"}</div>`};
+  else if(S.adding) scr = screenAdd();
+  else if(S.tab === "day") scr = screenDay();
+  else if(S.tab === "people") scr = S.people.wid && S.workers[S.people.wid] ? screenPerson() : screenPeople();
+  else scr = S.mgr.group ? screenBook() : screenBooks();
+  $("#barTitle").innerHTML = scr.title; $("#barSub").innerHTML = scr.sub || "";
+  $("#backBtn").hidden = !scr.back; $("#barMark").hidden = !!scr.back;
+  document.body.classList.toggle("wide", !!scr.wide);
+  const fab = !S.adding && (S.tab === "day" || (S.tab === "people" && !S.people.wid)) && allLoaded();
+  v.innerHTML = scr.html + (fab ? `<button class="fab" data-act="add"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>شخص جديد</button>` : "");
+  if(scr.after) scr.after();
+  if(fid){ const el = document.getElementById(fid); if(el && document.activeElement !== el){ el.focus({preventScroll:true}); try{ if(selA != null) el.setSelectionRange(selA, selB); }catch(e){} } }
+}
+
+/* ===================== تسجيل الحضور: أدوات مشتركة ===================== */
+function halfInfo(key){ // "YYYY-MM|1"
+  const [ym, h] = key.split("|"), [y, m] = ym.split("-").map(Number), half = +h;
+  const start = new Date(y, m-1, half === 1 ? 1 : 16), len = half === 1 ? 15 : daysIn(y, m) - 15;
+  return {ym, y, m, half, start, len, end: addDays(start, len-1),
+    label: `شهر ${AR_MONTHS[m-1]} ${half === 1 ? "النصف الأول" : "النصف التاني"}`,
+    range: `${half === 1 ? 1 : 16} لـ ${half === 1 ? 15 : daysIn(y, m)} ${AR_MONTHS[m-1]}`};
+}
+const halfKeyOf = date => `${ymOf(date)}|${+date.slice(8) <= 15 ? 1 : 2}`;
+function nextHalf(k){ const [ym, h] = k.split("|"); return h === "1" ? `${ym}|2` : `${addMonths(ym, 1)}|1`; }
+function prevHalf(k){ const [ym, h] = k.split("|"); return h === "2" ? `${ym}|1` : `${addMonths(ym, -1)}|2`; }
+function halfWorkers(hi){ return sortedWorkers().filter(([wid, w]) => inRange(w, wid, hi.start, hi.len)); }
+const qMatch = w => { const q = S.q.trim().toLowerCase(); return !q || String(w.name).toLowerCase().includes(q); };
+function longDate(date){ const d = parseYMD(date); return `${AR_DAYS[d.getDay()]} ${d.getDate()} ${AR_MONTHS[d.getMonth()]}`; }
+function timeBox(idp, val, ap, label){
+  return `<span class="tm" data-tm="${idp}"><input id="${idp}-h" class="hh" inputmode="numeric" maxlength="2" placeholder="--" aria-label="${label}: الساعة" value="${esc(val[0])}" autocomplete="off"><b>:</b><input id="${idp}-m" class="mm" inputmode="numeric" maxlength="2" placeholder="00" aria-label="${label}: الدقايق" value="${esc(val[1])}" autocomplete="off"><span class="ap">${ap}</span></span>`;
+}
+function statusOf(wid, date){
+  const r = dayRec(wid, date) || {}, dow = parseYMD(date).getDay(), hol = isHoliday(date);
+  if(r.f){
+    const c = calcDay(date, r.f, r.t, hol);
+    if(c.err) return {cls:"bad", t:c.err};
+    if(c.fri != null) return {cls:"ok", t:`${hol ? "عيد" : "جمعة"}: ${c.fri} ساعة`};
+    return {cls:"ok", t: c.ot ? `${c.basic} + ${c.ot} إضافي` : `${c.basic} ساعات`};
+  }
+  if(r.n) return {cls: noteIsGood(r.n) ? "ok" : "bad", t: r.n};
+  if(dow === 5) return {cls:"off", t:"جمعة"};
+  if(hol) return {cls:"off", t:"عيد"};
+  if(date > todayStr()) return {cls:"off", t:"لسه"};
+  return {cls:"todo", t:"لسه ما اتسجلش"};
+}
+const statHtml = (wid, date, idp) => { const s = statusOf(wid, date); return `<span class="stat ${s.cls}" id="${idp}-c">${esc(s.t)}</span>`; };
+const isOffDay = date => parseYMD(date).getDay() === 5 || isHoliday(date);
+function readTime(prefix, isTo){
+  const hEl = document.getElementById(prefix + "-h"), mEl = document.getElementById(prefix + "-m");
+  const hs = hEl.value.trim(), ms = mEl.value.trim();
+  if(!hs && !ms) return {empty:true};
+  if(!/^\d{1,2}$/.test(hs) || (ms && !/^\d{1,2}$/.test(ms))) return {bad:"اكتب الساعة أرقام بس"};
+  const h = +hs, m = ms ? +ms : 0;
+  if(m > 59) return {bad:"الدقايق من 0 لـ 59"};
+  if(h > 24 || (!isTo && h > 23)) return {bad:"الساعة من 1 لـ 12"};
+  return {v: isTo ? normTo(h, m) : normFrom(h, m)};
+}
+function padHourInput(el){ const v = el.value.trim(); if(/^\d$/.test(v)) el.value = "0" + v; }
+async function saveDayRow(row){
+  const wid = row.dataset.wid, date = row.dataset.date, idp = `d-${wid}-${date}`;
+  const f = readTime(idp + "-f", false), t = readTime(idp + "-t", true);
+  const note = document.getElementById(idp + "-n").value.trim();
+  const st = document.getElementById(idp + "-c");
+  const show = (txt, cls) => { st.textContent = txt; st.className = "stat " + cls; };
+  row.querySelectorAll(".tm").forEach(x => x.classList.remove("bad"));
+  if(f.bad || t.bad){ show(f.bad || t.bad, "bad"); (f.bad ? row.querySelector(".tf .tm") : row.querySelector(".tt .tm")).classList.add("bad"); return; }
+  if(f.empty !== t.empty){ show(f.empty ? "ناقص ميعاد الحضور" : "ناقص ميعاد الانصراف", "todo"); return; }
+  const rec = {};
+  if(!f.empty){ rec.f = f.v; rec.t = t.v; }
+  if(note) rec.n = note;
+  if(rec.f){ const c = calcDay(date, rec.f, rec.t, isHoliday(date)); if(c.err){ show(c.err, "bad"); row.querySelector(".tt .tm").classList.add("bad"); return; } }
+  const old = dayRec(wid, date) || {};
+  if((old.f || "") === (rec.f || "") && (old.t || "") === (rec.t || "") && (old.n || "") === (rec.n || "")){ const s = statusOf(wid, date); show(s.t, s.cls); return; }
+  const ym = ymOf(date), dd = date.slice(8), path = `att/${wid}__${ym}`;
+  const val = Object.keys(rec).length ? rec : null;
+  show("بيتحفظ…", "off");
+  const ok = await safeWrite(() => upsert(path, {days:{[dd]: val}}, {wid, ym}));
+  if(ok){
+    const key = `${wid}__${ym}`, loc = JSON.parse(JSON.stringify(S.att[key] || {wid, ym, days:{}}));
+    loc.days = loc.days || {}; loc.days[dd] = val; S.att[key] = loc;
+    const s = statusOf(wid, date); show(s.t + " ✓", s.cls);
+    const q = row.querySelector(".quick"); if(q) q.hidden = !!(rec.f || rec.n);
+  } else { const s = statusOf(wid, date); show(s.t, s.cls); }
+}
+function quickFill(row, kind){
+  const wid = row.dataset.wid, date = row.dataset.date, idp = `d-${wid}-${date}`;
+  const set = (id, v) => { const el = document.getElementById(idp + id); if(el) el.value = v; };
+  if(kind === "full"){
+    const thu = parseYMD(date).getDay() === 4;
+    set("-f-h", "08"); set("-f-m", "00"); set("-t-h", thu ? "01" : "08"); set("-t-m", "00");
+  } else {
+    set("-f-h", ""); set("-f-m", ""); set("-t-h", ""); set("-t-m", "");
+    set("-n", kind === "absent" ? "غياب بدون إذن" : "غياب بإذن");
+  }
+  saveDayRow(row);
+}
+
+/* ===================== تاب اليوم ===================== */
+function screenDay(){
+  if(!S.day) S.day = todayStr();
+  const date = S.day, d = parseYMD(date), isToday = date === todayStr();
+  const all = sortedWorkers().filter(([wid, w]) => inRange(w, wid, d, 1));
+  const list = all.filter(([, w]) => qMatch(w));
+  const off = isOffDay(date), thu = d.getDay() === 4;
+  const done = all.filter(([wid]) => { const r = dayRec(wid, date); return r && (r.f || r.n); }).length;
+  const rows = list.map(([wid, w]) => {
+    const r = dayRec(wid, date) || {}, idp = `d-${wid}-${date}`;
+    return `<div class="wrow rr ${off ? "fri" : ""}" data-wid="${wid}" data-date="${date}">
+      <div class="wtop"><div class="who"><b><bdi>${esc(w.name)}</bdi></b><span>${esc(w.job || "")}</span></div>${statHtml(wid, date, idp)}</div>
+      <div class="wtimes">
+        <label class="fld tf"><span>حضر الساعة</span>${timeBox(idp + "-f", showFrom(r.f), "صباحاً", "حضر")}</label>
+        <label class="fld tt"><span>مشي الساعة</span>${timeBox(idp + "-t", showTo(r.t), "مساءً", "مشي")}</label>
+      </div>
+      <input type="text" class="note" id="${idp}-n" placeholder="ملحوظة (لو فيه)" aria-label="ملحوظة" value="${esc(r.n || "")}" autocomplete="off">
+      <div class="quick" ${r.f || r.n ? "hidden" : ""}>
+        ${off ? "" : `<button class="chip go" data-act="quick" data-kind="full">حضر من 8 لـ ${thu ? "1" : "8"}</button>`}
+        <button class="chip" data-act="quick" data-kind="absent">غياب بدون إذن</button>
+        <button class="chip" data-act="quick" data-kind="absent-ok">غياب بإذن</button>
+      </div>
+    </div>`;
+  }).join("");
+  const pct = all.length ? Math.round(done * 100 / all.length) : 0;
+  return {
+    title: "تسجيل الحضور", sub: isToday ? "النهاردة" : longDate(date),
+    html: `<div class="daynav">
+        <button class="iconbtn" data-act="day-prev" aria-label="اليوم اللي قبله">${ICON_PREV}</button>
+        <label class="datepick"><b>${longDate(date)}${isToday ? '<span class="today-pill">النهاردة</span>' : ""}</b><span>${off ? (d.getDay() === 5 ? "يوم جمعة: الساعات كلها بتتحسب جمعة" : "يوم عيد: الساعات كلها بتتحسب زي الجمعة") : "دوس هنا لاختيار يوم تاني"}</span>
+          <input type="date" id="dayPick" value="${date}" aria-label="اختار اليوم"></label>
+        <button class="iconbtn" data-act="day-next" aria-label="اليوم اللي بعده">${ICON_NEXT}</button>
+      </div>
+      ${isToday ? "" : `<button class="btn small" data-act="day-today" style="align-self:center">ارجع للنهاردة</button>`}
+      <div class="tally"><div class="strip" aria-hidden="true">${all.map(([wid]) => `<i class="${statusOf(wid, date).cls}"></i>`).join("")}</div><span>اتسجل ${done} من ${all.length}</span></div>
+      ${all.length > 6 ? `<input type="text" class="search" id="q" placeholder="دوّر على اسم" aria-label="دوّر على اسم" value="${esc(S.q)}" autocomplete="off">` : ""}
+      ${list.length ? `<div class="roster">${rows}</div>` : `<div class="empty">${all.length ? "مفيش اسم بالشكل ده." : "مفيش عمال في اليوم ده. دوس \"شخص جديد\" تحت وضيف أول واحد."}</div>`}`
+  };
+}
+
+/* ===================== تاب العمال ===================== */
+function screenPeople(){
+  if(!S.people.half) S.people.half = halfKeyOf(todayStr());
+  const hi = halfInfo(S.people.half), cur = halfKeyOf(todayStr());
+  const all = halfWorkers(hi), list = all.filter(([, w]) => qMatch(w));
+  const today = todayStr();
+  const rows = list.map(([wid, w]) => {
+    let n = 0, notes = 0, miss = 0;
+    for(let i = 0; i < hi.len; i++){
+      const date = ymd(addDays(hi.start, i)), r = dayRec(wid, date);
+      if(r && r.f) n++; if(r && r.n) notes++;
+      if(!(r && (r.f || r.n)) && date <= today && !isOffDay(date) && activeBetween(w, parseYMD(date), 1)) miss++;
+    }
+    const gone = w.removedAt && w.removedAt <= ymd(hi.end);
+    return `<button class="prow" data-act="open-person" data-wid="${wid}">
+      <div class="who"><b><bdi>${esc(w.name)}</bdi></b><span>${esc(w.job || "")}</span>
+      <div class="meta"><span class="tag ${n ? "ok" : ""}">${n} يوم متسجل</span>${miss ? `<span class="tag todo">ناقص ${miss} يوم</span>` : ""}${notes ? `<span class="tag bad">${notes} ملحوظة</span>` : ""}${gone ? '<span class="tag bad">اتشال</span>' : ""}</div></div>
+      <span class="chev">${ICON_NEXT}</span></button>`;
+  }).join("");
+  const [ym] = S.people.half.split("|"), [y, m] = ym.split("-").map(Number);
+  const h1 = `${ym}|1`, h2 = `${ym}|2`;
+  return {
+    title: "العمال", sub: hi.label,
+    html: `<div class="halfnav">
+        <div class="monthrow"><button class="iconbtn" data-act="half-prev" aria-label="الشهر اللي قبله">${ICON_PREV}</button><b>${AR_MONTHS[m-1]} ${y}</b><button class="iconbtn" data-act="half-next" aria-label="الشهر اللي بعده">${ICON_NEXT}</button></div>
+        <div class="seg" role="group" aria-label="نص الشهر">
+          <button data-act="half-set" data-k="${h1}" aria-pressed="${S.people.half === h1}">النصف الأول<small>1 لـ 15${h1 === cur ? " · الحالي" : ""}</small></button>
+          <button data-act="half-set" data-k="${h2}" aria-pressed="${S.people.half === h2}">النصف التاني<small>16 لـ ${daysIn(y, m)}${h2 === cur ? " · الحالي" : ""}</small></button>
+        </div>
+      </div>
+      ${all.length > 6 ? `<input type="text" class="search" id="q" placeholder="دوّر على اسم" aria-label="دوّر على اسم" value="${esc(S.q)}" autocomplete="off">` : ""}
+      ${list.length ? `<div class="plist">${rows}</div>` : `<div class="empty">${all.length ? "مفيش اسم بالشكل ده." : "مفيش عمال في نص الشهر ده."}</div>`}
+      <p class="hint">دوس على أي اسم علشان تشوف أيامه وتعدّل فيها.</p>`
+  };
+}
+function screenPerson(){
+  const wid = S.people.wid, w = S.workers[wid], hi = halfInfo(S.people.half || halfKeyOf(todayStr()));
+  const gone = w.removedAt && w.removedAt <= ymd(hi.end);
+  let rows = "";
+  for(let i = 0; i < hi.len; i++){
+    const date = ymd(addDays(hi.start, i)), d = parseYMD(date), r = dayRec(wid, date) || {}, idp = `d-${wid}-${date}`;
+    rows += `<div class="dr rr ${isOffDay(date) ? "fri" : ""} ${date === todayStr() ? "today" : ""}" data-wid="${wid}" data-date="${date}">
+      <div class="dl"><b>${AR_DAYS[d.getDay()]}${isHoliday(date) ? " (عيد)" : ""}</b><span>${d.getDate()}/${d.getMonth()+1}</span></div>
+      <label class="fld tf"><span>حضر</span>${timeBox(idp + "-f", showFrom(r.f), "ص", "حضر")}</label>
+      <label class="fld tt"><span>مشي</span>${timeBox(idp + "-t", showTo(r.t), "م", "مشي")}</label>
+      <input type="text" class="note" id="${idp}-n" placeholder="ملحوظة" aria-label="ملحوظة" value="${esc(r.n || "")}" autocomplete="off">
+      ${statHtml(wid, date, idp)}
+    </div>`;
+  }
+  const foot = gone
+    ? `<span class="pill bad">اتشال من الشغل يوم ${esc(w.removedAt)}</span><button class="btn small" data-act="restore" data-wid="${wid}">رجّعه تاني</button>`
+    : S.people.confirm
+      ? `<div class="confirm"><span>هيتشال <bdi>${esc(w.name)}</bdi> من النهاردة، وأيامه اللي فاتت هتفضل متسجلة.</span><button class="btn small danger" data-act="remove-yes" data-wid="${wid}">أيوه، شيله</button><button class="btn small" data-act="remove-no">لأ</button></div>`
+      : `<p class="hint">الحفظ أوتوماتيك أول ما تسيب الخانة. الساعة بتتكتب رقم بس (8 مش 08).</p><button class="btn small danger" data-act="remove">إزالة من الشغل</button>`;
+  return {
+    title: `<bdi>${esc(w.name)}</bdi>`, sub: `${esc(w.job || "")}، ${hi.label}`, back: true,
+    html: `<div class="days">${rows}</div><div class="pfoot">${foot}</div>`
+  };
+}
+
+/* ===================== إضافة شخص ===================== */
+function screenAdd(){
+  const date = S.tab === "day" && S.day ? S.day : todayStr();
+  return {
+    title: "شخص جديد", sub: "يتضاف لكشف الحضور من اليوم اللي تختاره", back: true,
+    html: `<form class="form" id="addForm" novalidate>
+      <label class="fld"><span>الاسم</span><input type="text" id="addName" autocomplete="off" placeholder="مثلاً: محمود سيد"></label>
+      <div class="fld"><span>المهنة</span><div class="jobs" role="radiogroup" aria-label="المهنة">${JOBS.map((j, i) => `<label><input type="radio" name="addJob" value="${j}" id="job${i}"><span>${j}</span></label>`).join("")}</div></div>
+      <label class="fld"><span>اليوم</span><input type="date" id="addDate" value="${date}"></label>
+      <div class="wtimes">
+        <label class="fld"><span>حضر الساعة</span>${timeBox("add-f", ["",""], "صباحاً", "حضر")}</label>
+        <label class="fld"><span>مشي الساعة</span>${timeBox("add-t", ["",""], "مساءً", "مشي")}</label>
+      </div>
+      <label class="fld"><span>ملحوظة (لو فيه)</span><input type="text" id="addNote" autocomplete="off"></label>
+      <div class="quick">${NOTE_CHIPS.map(c => `<button type="button" class="chip" data-act="chip" data-v="${c}">${c}</button>`).join("")}</div>
+      <p class="err" id="addErr" hidden></p>
+      <div class="actions"><button class="btn primary" type="submit">حفظ الشخص</button><button class="btn" type="button" data-act="add-cancel">إلغاء</button></div>
+    </form>`,
+    after(){ const n = $("#addName"); if(n && !n.value && !("ontouchstart" in window)) n.focus(); }
+  };
+}
+function newId(){ return "w" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+async function submitAdd(){
+  const err = $("#addErr"); err.hidden = true;
+  const name = $("#addName").value.trim().replace(/\s+/g, " ");
+  const jobEl = document.querySelector('input[name="addJob"]:checked'), job = jobEl ? jobEl.value : "";
+  const date = $("#addDate").value || todayStr();
+  const f = readTime("add-f", false), t = readTime("add-t", true), note = $("#addNote").value.trim();
+  const fail = m => { err.textContent = m; err.hidden = false; };
+  if(!name) return fail("اكتب اسم الشخص.");
+  if(!job) return fail("اختار المهنة.");
+  if(Object.values(S.workers).some(w => String(w.name).trim().toLowerCase() === name.toLowerCase() && !w.removedAt)) return fail("الاسم ده موجود بالفعل. لو شخص تاني، زوّد اسم الأب أو اسم العيلة.");
+  if(f.bad || t.bad) return fail(f.bad || t.bad);
+  if(f.empty !== t.empty) return fail(f.empty ? "ناقص ميعاد الحضور." : "ناقص ميعاد الانصراف.");
+  const rec = {}; if(!f.empty){ rec.f = f.v; rec.t = t.v; const c = calcDay(date, rec.f, rec.t, isHoliday(date)); if(c.err) return fail(c.err); }
+  if(note) rec.n = note;
+  const wid = newId(), order = Math.max(0, ...Object.values(S.workers).map(w => w.order || 0)) + 1;
+  const added = date < todayStr() ? date : todayStr();
+  const ok = await safeWrite(async () => {
+    await DB.doc("workers/" + wid).set({name, job, order, addedAt: added, removedAt: null, hist: {}});
+    if(Object.keys(rec).length){ const ym = ymOf(date); await upsert(`att/${wid}__${ym}`, {days: {[date.slice(8)]: rec}}, {wid, ym}); }
+  }, `اتضاف ${name}`);
+  if(ok){ S.adding = false; S.tab = "people"; S.people.half = halfKeyOf(date); S.people.wid = wid; render(); window.scrollTo(0, 0); }
+}
+
+/* ===================== تاب التقفيل (المدير) ===================== */
+function screenBooks(){
+  const today = todayStr(), items = [];
+  for(const ym of mgrMonths()){
+    for(const half of [2, 1]){
+      if(half === 2 && ym === ymOf(today) && +today.slice(8) < 16){ const has = Object.keys(S.att).some(k => k.endsWith("__" + ym) && Object.keys(S.att[k].days || {}).some(dd => +dd >= 16 && S.att[k].days[dd])); if(!has) continue; }
+      const sheets = bookSheets(ym, half === 1 ? "view1" : "view2");
+      const need = sheets.filter(s => eff(s.w, "rate", ym) === undefined).length;
+      items.push(`<button class="gitem" data-act="open-book" data-k="${ym}|${half}"><span class="t"><b>${esc(fileTitle(ym, half === 1 ? "p1" : "p2"))}</b>
+        <span class="meta">${sheets.length} شيت${need ? ` <span class="pill warn">${need} محتاج يومية</span>` : ""}</span></span><span class="chev">${ICON_NEXT}</span></button>`);
+    }
+  }
+  return {
+    title: "تقفيل الـ <bdi>time sheet</bdi>", sub: "شيت لكل عامل بنفس شكل ومعادلات الإكسيل",
+    html: `<p class="hint">المتعينين من 26 الشهر اللي قبله لحد 25، واليومية من 1 لآخر الشهر.</p><div class="glist">${items.join("") || '<div class="empty">مفيش بيانات لسه.</div>'}</div>`
+  };
+}
+function screenBook(){
+  const {ym, half, sheets} = curBook();
+  if(!sheets.find(s => s.wid === S.mgr.sheet)) S.mgr.sheet = sheets[0] ? sheets[0].wid : null;
+  const sh = sheets.find(s => s.wid === S.mgr.sheet);
+  const pk = half === 1 ? "p1" : "p2";
+  const need = sheets.filter(s => eff(s.w, "rate", ym) === undefined);
+  const alerts = need.length ? `<div class="alerts"><h3>عمال جداد محتاجين يومية (${need.length})</h3>
+    <div style="font-size:14px;margin-bottom:6px">اليومية بتتكتب مرة واحدة وبتفضل ثابتة في كل الشهور الجاية. لو اتغيرت بعدين، عدّل خانة <bdi>C8</bdi> في شيت الشهر اللي التغيير بيبدأ منه.</div>
+    ${need.map(s => `<div class="arow" data-wid="${s.wid}"><span class="nm"><bdi>${esc(s.w.name)}</bdi> <span class="pill">${esc(s.w.job || "")}</span></span>
+      <label>النوع <select class="a-type"><option value="daily" ${s.type === "daily" ? "selected" : ""}>يومية</option><option value="staff" ${s.type === "staff" ? "selected" : ""}>متعيّن</option></select></label>
+      <label>اليومية <input type="number" class="a-rate" min="0" step="5" placeholder="EGP"></label>
+      <label>المسمى <input type="text" class="a-title" value="${esc(eff(s.w, "title", ym) || JOB_EN[s.w.job] || "")}" style="width:120px" dir="ltr"></label>
+      <button class="btn small primary" data-act="set-rate" data-wid="${s.wid}">حفظ</button></div>`).join("")}</div>` : "";
+  const allNotes = []; sheets.forEach(s => s.notes.forEach(n => allNotes.push(Object.assign({wid: s.wid, name: s.name}, n))));
+  allNotes.sort((a, b) => a.date < b.date ? -1 : 1);
+  const hols = Object.keys(S.cfg.holidays || {}).filter(d => S.cfg.holidays[d]).sort();
+  const panels = `<div class="panels">
+    <details class="pn" ${allNotes.length ? "open" : ""}><summary>ملحوظات العمال (${allNotes.length})</summary>
+      ${allNotes.length ? `<ul class="nlist">${allNotes.map(n => `<li><button data-act="goto" data-wid="${n.wid}" data-ref="${n.ref}"><span class="d">${+n.date.slice(8)}/${+n.date.slice(5,7)}</span><bdi>${esc(n.name)}</bdi><span class="t ${noteIsGood(n.text) ? "green" : "red"}">${esc(n.text)}</span></button></li>`).join("")}</ul>
+      <div style="font-size:13px;color:var(--muted);margin-top:6px">القرار بيتكتب في الشيت: الخصومات بالجنيه في <bdi>D32</bdi> أو <bdi>N32</bdi>، وأيام المكافأة في <bdi>F33</bdi> أو <bdi>P33</bdi> (عدد الأيام بيتضرب في اليومية).</div>` : '<div style="color:var(--muted);font-size:14px;margin-top:6px">مفيش ملحوظات في الفترة دي.</div>'}</details>
+    <details class="pn"><summary>أيام الأعياد (${hols.length})</summary>
+      <div style="font-size:14px;color:var(--muted);margin-top:6px">أي يوم عيد بيتحسب زي الجمعة: ساعاته كلها في خانة الجمعة والأعياد.</div>
+      <div class="hols">${hols.map(d => `<span class="pill">${d} <button class="btn ghost small" data-act="hol-del" data-d="${d}" aria-label="شيل ${d}">×</button></span>`).join("")}
+        <input type="date" id="holNew" aria-label="يوم العيد"><button class="btn small" data-act="hol-add">إضافة</button></div></details>
+  </div>`;
+  const dls = `<div class="dls">
+    <button class="dl-btn" data-act="dl" data-kind="${pk}" title="${esc(fileTitle(ym, pk))}.xlsx">${ICON_DL}<span><b>نص الشهر</b><small>اليومية بس</small></span></button>
+    <button class="dl-btn" data-act="dl" data-kind="staff" title="${esc(fileTitle(ym, "staff"))}.xlsx">${ICON_DL}<span><b>الشهر كامل</b><small>المتعينين بس</small></span></button>
+    <button class="dl-btn" data-act="dl" data-kind="all" title="${esc(fileTitle(ym, "all"))}.xlsx">${ICON_DL}<span><b>الشهر كامل</b><small>الكل</small></span></button>
+  </div>`;
+  let xl = '<div class="empty">مفيش شيتات في الفترة دي.</div>';
+  if(sh){
+    const sel = S.mgr.sel, raw = rawOf(sh, sel);
+    const autoV = sh.auto[sel] ? (sh.auto[sel].f != null ? "=" + sh.auto[sel].f : fmtVal(sh.auto[sel].v ?? null, (TPL.styles[sh.auto[sel].s] || {}).nf)) : "";
+    xl = `<div class="xl">
+      <div class="wsbar"><span>الشيت: <b><bdi>${esc(sh.name)}</bdi></b></span>
+        <label>نوع العامل من الشهر ده: <select id="wsType" data-wid="${sh.wid}"><option value="daily" ${sh.type === "daily" ? "selected" : ""}>يومية (1-15 و16-آخر الشهر)</option><option value="staff" ${sh.type === "staff" ? "selected" : ""}>متعيّن (26 لـ 25)</option></select></label>
+        <span style="color:#666">المثلث البرتقالي معناه إن الخانة اتعدّلت بإيدك.</span></div>
+      <div class="fbar"><input class="ref" id="fRef" value="${sel}" aria-label="الخانة"><span class="fx">fx</span>
+        <input class="fin" id="fIn" aria-label="محتوى الخانة" value="${esc(raw)}" autocomplete="off">
+        <button class="btn" data-act="cell-reset" ${sh.ovrRefs.has(sel) ? "" : "disabled"} title="رجّع القيمة الأوتوماتيك">↺ أوتوماتيك</button>
+        ${sh.ovrRefs.has(sel) ? `<span class="hint">متعدلة بإيدك. الأوتوماتيك: <bdi>${esc(autoV || "فاضية")}</bdi></span>` : ""}</div>
+      <div class="gridwrap" id="gw" tabindex="0" aria-label="الشيت">${gridHtml(sh)}</div>
+      <div class="tabs" role="tablist">${sheets.map(s => `<button class="tab ${s.wid === sh.wid ? "on" : ""}" role="tab" aria-selected="${s.wid === sh.wid}" data-act="tab" data-wid="${s.wid}" style="border-bottom-color:#${s.tab.slice(2)}">${esc(s.name)}</button>`).join("")}</div>
+    </div>
+    <div class="legend"><span><i style="background:#FF0000"></i>لحام</span><span><i style="background:#FFC000"></i>حجار</span><span><i style="background:#0070C0"></i>مساعد</span><span><i style="background:#7030A0"></i>براد</span><span><i style="background:#00B0F0"></i>مشرف</span><span><i style="background:#92D050"></i>متعيّن</span></div>`;
+  }
+  const gwOld = $("#gw"), sx = gwOld ? gwOld.scrollLeft : 0, sy = gwOld ? gwOld.scrollTop : 0, hadFocus = document.activeElement === gwOld;
+  return {
+    title: `<span class="en">${esc(fileTitle(ym, pk))}</span>`, sub: half === 1 ? "اليومية من 1 لـ 15، والمتعينين الشهر كامل" : "اليومية والمتعينين: الشهر كامل", back: true, wide: true,
+    html: `${alerts}${dls}${xl}${panels}`,
+    after(){ const gw = $("#gw"); if(gw){ gw.scrollLeft = sx; gw.scrollTop = sy; if(hadFocus) gw.focus({preventScroll:true}); } }
+  };
+}
+
+/* ===================== قسم تقفيل الـ time sheet ===================== */
+function mgrMonths(){
+  const cur = ymOf(todayStr()); let min = cur, max = cur;
+  for(const w of Object.values(S.workers)) if(w.addedAt){ const t = wType(w, ymOf(w.addedAt)); let m = ymOf(w.addedAt); if(t === "staff" && +w.addedAt.slice(8) >= 26) m = addMonths(m, 1); if(m < min) min = m; }
+  for(const d of Object.values(S.att)) if(d.days && Object.values(d.days).some(Boolean)){ if(d.ym < min) min = d.ym; if(d.ym > max) max = d.ym; }
+  for(const o of Object.values(S.ovr)) if(o.ym && o.ym > max) max = o.ym;
+  const out = []; let m = min, g = 0; while(m <= max && g++ < 240){ out.push(m); m = addMonths(m, 1); }
+  return out.reverse();
+}
+function cssOf(s){
+  const st = TPL.styles[s] || {}; let c = "";
+  if(st.bg) c += `background:${st.bg};`;
+  c += `color:${st.fc || "#000"};font-size:${st.sz || 11}pt;font-family:'${st.ff || "Calibri"}',Calibri,Carlito,'Segoe UI',sans-serif;`;
+  if(st.b) c += "font-weight:700;"; if(st.i) c += "font-style:italic;"; if(st.u) c += "text-decoration:underline;";
+  return c;
+}
+const borderOf = (s, side) => (TPL.styles[s] || {})[side] || "";
+let MERGE = null;
+function mergeMap(){
+  if(MERGE) return MERGE;
+  MERGE = {top:{}, covered:{}};
+  for(const m of TPL.merges){
+    const [a, b] = m.split(":"), [ca, ra] = splitRef(a), [cb, rb] = splitRef(b);
+    MERGE.top[a] = {rs: rb - ra + 1, cs: colNum(cb) - colNum(ca) + 1, a, b, tr: cb + ra, bl: ca + rb};
+    for(let r = ra; r <= rb; r++) for(let c = colNum(ca); c <= colNum(cb); c++){ const ref = colLet(c) + r; if(ref !== a) MERGE.covered[ref] = a; }
+  }
+  return MERGE;
+}
+function gridHtml(sh){
+  const M = mergeMap(), cols = TPL.cols, nC = cols.length;
+  const isEmpty = ref => { const v = sh.vals[ref]; return (v === null || v === undefined || v === "") && !M.covered[ref] && !M.top[ref]; };
+  let h = `<table class="g" id="xlg" style="width:${36 + cols.reduce((a,b)=>a+b,0)}px"><colgroup><col style="width:36px">${cols.map(w => `<col style="width:${w}px">`).join("")}</colgroup>`;
+  h += `<thead><tr><th class="corner"></th>${COLS.slice(0, nC).map(L => `<th>${L}</th>`).join("")}</tr></thead><tbody>`;
+  for(let r = 1; r <= TPL.nrows; r++){
+    const ht = TPL.rows[r] || 20;
+    h += `<tr style="height:${ht}px"><th class="rh">${r}</th>`;
+    for(let ci = 1; ci <= nC; ci++){
+      const L = colLet(ci), ref = L + r;
+      if(M.covered[ref]) continue;
+      const c = sh.cells[ref] || {s:0}, s = c.s || 0, st = TPL.styles[s] || {}, mg = M.top[ref];
+      let span = "", wpx = cols[ci-1], hpx = ht;
+      const bt = borderOf(s, "bt"), bl = borderOf(s, "bl");
+      let br = borderOf(s, "br"), bb = borderOf(s, "bb");
+      if(mg){
+        span = ` rowspan="${mg.rs}" colspan="${mg.cs}"`;
+        const trs = (sh.cells[mg.tr] || {}).s || 0, bls = (sh.cells[mg.bl] || {}).s || 0;
+        br = borderOf(trs, "br") || br; bb = borderOf(bls, "bb") || bb;
+        wpx = 0; for(let k = 0; k < mg.cs; k++) wpx += cols[ci-1+k];
+        hpx = 0; for(let k = 0; k < mg.rs; k++) hpx += TPL.rows[r+k] || 20;
+      }
+      let bcss = ""; if(bt) bcss += `border-top:${bt};`; if(br) bcss += `border-right:${br};`; if(bb) bcss += `border-bottom:${bb};`; if(bl) bcss += `border-left:${bl};`;
+      const v = sh.vals[ref], txt = fmtVal(v, st.nf);
+      const isNum = typeof v === "number", isErr = v instanceof XErr;
+      let ha = st.ha || (isNum ? "right" : isErr || typeof v === "boolean" ? "center" : "left");
+      const va = st.va === "center" ? "center" : st.va === "top" ? "flex-start" : "flex-end";
+      let left = 0, width = wpx;
+      if(txt && !isNum && !st.wrap && !mg && (ha === "left" || ha === "general" || ha === "center" || ha === "right")){
+        let er = 0, el = 0;
+        for(let k = ci + 1; k <= nC && isEmpty(colLet(k) + r); k++) er += cols[k-1];
+        for(let k = ci - 1; k >= 1 && isEmpty(colLet(k) + r); k--) el += cols[k-1];
+        if(ha === "center"){ const x = Math.min(er, el); left = -x; width = wpx + 2*x; }
+        else if(ha === "right"){ left = -el; width = wpx + el; }
+        else width = wpx + er;
+      }
+      const jc = ha === "center" || ha === "centerContinuous" ? "center" : ha === "right" ? "flex-end" : "flex-start";
+      const cls = [st.bg ? "fill" : "", sh.ovrRefs.has(ref) ? "ovr" : "", S.mgr.sel === ref ? "sel" : ""].join(" ").trim();
+      h += `<td data-ref="${ref}"${span}${cls ? ` class="${cls}"` : ""} style="${st.bg ? `background:${st.bg};` : ""}${bcss}">` +
+        (txt ? `<div class="v${st.wrap ? " wrap" : ""}" style="${cssOf(s)}left:${left}px;width:${width}px;justify-content:${jc};align-items:${va};${st.wrap ? `text-align:${jc === "center" ? "center" : jc === "flex-end" ? "right" : "left"};` : ""}${st.wrap ? "" : ""}">${esc(txt)}</div>` : "") + `</td>`;
+    }
+    h += "</tr>";
+  }
+  return h + "</tbody></table>";
+}
+function rawOf(sh, ref){
+  if(ref === "C8"){ const r = eff(sh.w, "rate", sh.ym); return r === undefined ? "" : String(r); }
+  const o = S.ovr[sh.wid + "__" + sh.ym];
+  if(o && o.cells && o.cells[ref] !== null && o.cells[ref] !== undefined) return String(o.cells[ref]);
+  const c = sh.cells[ref]; if(!c) return "";
+  if(c.f != null) return "=" + c.f;
+  if(c.v === undefined || c.v === null) return "";
+  if(typeof c.v === "number" && /ddd|yy/.test((TPL.styles[c.s] || {}).nf || "")){ const d = fromSerial(c.v); return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`; }
+  return String(c.v);
+}
+function curBook(){ const [ym, h] = S.mgr.group.split("|"); return {ym, half:+h, sheets: bookSheets(ym, h === "1" ? "view1" : "view2")}; }
+function selectCell(ref, focusGrid){
+  S.mgr.sel = ref; render();
+  const gw = $("#gw"); if(!gw) return;
+  const td = gw.querySelector(`td[data-ref="${ref}"]`);
+  if(td){ const r = td.getBoundingClientRect(), g = gw.getBoundingClientRect();
+    if(r.right > g.right) gw.scrollLeft += r.right - g.right + 20; if(r.left < g.left + 36) gw.scrollLeft -= g.left + 36 - r.left + 20;
+    if(r.bottom > g.bottom) gw.scrollTop += r.bottom - g.bottom + 10; if(r.top < g.top + 20) gw.scrollTop -= g.top + 20 - r.top + 10; }
+  if(focusGrid) gw.focus({preventScroll:true});
+}
+async function commitCell(raw){
+  const {ym, sheets} = curBook(); const sh = sheets.find(s => s.wid === S.mgr.sheet); if(!sh) return;
+  const ref = S.mgr.sel;
+  if(ref === "C8"){
+    const n = Number(String(raw).replace(/[^\d.]/g, ""));
+    if(raw.trim() !== "" && (isNaN(n) || n <= 0)){ toast("اليومية لازم تكون رقم."); return; }
+    await safeWrite(() => DB.doc("workers/" + sh.wid).update({hist: {rate: {[ym]: raw.trim() === "" ? null : n}}}), "اليومية اتحفظت من الشهر ده وطالع");
+    return;
+  }
+  if(ref === "G6"){ await safeWrite(() => DB.doc("workers/" + sh.wid).update({hist: {title: {[ym]: raw.trim() || null}}}), "المسمى الوظيفي اتحفظ من الشهر ده وطالع"); return; }
+  if(raw === rawOf(sh, ref)) return;
+  if(raw.startsWith("=")){ try{ parseFormula(raw.slice(1)); }catch(e){ toast("المعادلة فيها غلط: " + (e.e || "")); return; } }
+  await safeWrite(() => upsert(`ovr/${sh.wid}__${ym}`, {cells: {[ref]: raw}}, {wid: sh.wid, ym}));
+}
+async function resetCell(){
+  const {ym} = curBook(); const wid = S.mgr.sheet, ref = S.mgr.sel;
+  await safeWrite(() => upsert(`ovr/${wid}__${ym}`, {cells: {[ref]: null}}, {wid, ym}), "رجعت للقيمة الأوتوماتيك");
+}
+function moveSel(dr, dc){
+  const M = mergeMap(); let [c, r] = splitRef(S.mgr.sel); let ci = colNum(c);
+  const mg = M.top[S.mgr.sel];
+  if(mg){ if(dc > 0) ci += mg.cs - 1; if(dr > 0) r += mg.rs - 1; }
+  r = Math.min(TPL.nrows, Math.max(1, r + dr)); ci = Math.min(TPL.cols.length, Math.max(1, ci + dc));
+  let ref = colLet(ci) + r; if(M.covered[ref]) ref = M.covered[ref];
+  selectCell(ref, true);
+}
+
+/* ===================== الأحداث ===================== */
+view().addEventListener("click", async e => {
+  const t = e.target.closest("[data-act]"); if(!t) return;
+  const a = t.dataset.act;
+  if(a === "quick"){ const row = t.closest(".rr"); if(row) quickFill(row, t.dataset.kind); }
+  else if(a === "add"){ S.adding = true; render(); window.scrollTo(0, 0); }
+  else if(a === "add-cancel"){ goBack(); }
+  else if(a === "chip"){ const n = $("#addNote"); n.value = n.value ? n.value + " - " + t.dataset.v : t.dataset.v; }
+  else if(a === "day-prev" || a === "day-next"){ S.day = ymd(addDays(parseYMD(S.day || todayStr()), a === "day-prev" ? -1 : 1)); render(); }
+  else if(a === "day-today"){ S.day = todayStr(); render(); }
+  else if(a === "half-prev" || a === "half-next"){ const [ym, h] = (S.people.half || halfKeyOf(todayStr())).split("|"); S.people.half = `${addMonths(ym, a === "half-prev" ? -1 : 1)}|${h}`; render(); }
+  else if(a === "half-set"){ S.people.half = t.dataset.k; render(); }
+  else if(a === "open-person"){ S.people.wid = t.dataset.wid; S.people.confirm = false; render(); window.scrollTo(0, 0); }
+  else if(a === "remove"){ S.people.confirm = true; render(); }
+  else if(a === "remove-no"){ S.people.confirm = false; render(); }
+  else if(a === "remove-yes"){ const wid = t.dataset.wid; S.people.confirm = false; await safeWrite(() => DB.doc("workers/" + wid).update({removedAt: todayStr()}), "اتشال من الشغل"); }
+  else if(a === "restore"){ await safeWrite(() => DB.doc("workers/" + t.dataset.wid).update({removedAt: null}), "رجع تاني"); }
+  else if(a === "open-book"){ S.mgr.group = t.dataset.k; S.mgr.sheet = null; S.mgr.sel = "A1"; render(); window.scrollTo(0, 0); }
+  else if(a === "tab"){ S.mgr.sheet = t.dataset.wid; render(); }
+  else if(a === "dl"){ t.disabled = true; try{ await download(curBook().ym, t.dataset.kind); } finally { t.disabled = false; } }
+  else if(a === "goto"){ S.mgr.sheet = t.dataset.wid; selectCell(t.dataset.ref, true); const gw = $("#gw"); if(gw) gw.scrollIntoView({block:"nearest"}); }
+  else if(a === "cell-reset"){ await resetCell(); }
+  else if(a === "set-rate"){
+    const row = t.closest(".arow"), wid = t.dataset.wid, ym = curBook().ym;
+    const rate = Number(row.querySelector(".a-rate").value), type = row.querySelector(".a-type").value, title = row.querySelector(".a-title").value.trim();
+    if(!(rate > 0)){ toast("اكتب اليومية بالجنيه."); row.querySelector(".a-rate").focus(); return; }
+    const w = S.workers[wid], hist = {rate: {[ym]: rate}, type: {[ym]: type}};
+    if(title && title !== (JOB_EN[w.job] || "")) hist.title = {[ym]: title};
+    await safeWrite(() => DB.doc("workers/" + wid).update({hist}), `اتحفظت يومية ${w.name}`);
+  }
+  else if(a === "hol-add"){ const d = $("#holNew").value; if(!d){ toast("اختار التاريخ الأول."); return; } await safeWrite(() => upsert("cfg/main", {holidays: {[d]: true}}, {}), "اليوم اتسجل عيد"); }
+  else if(a === "hol-del"){ const d = t.dataset.d; await safeWrite(() => upsert("cfg/main", {holidays: {[d]: null}}, {}), "اتشال من الأعياد"); }
+});
+view().addEventListener("mousedown", e => {
+  const td = e.target.closest("table.g td[data-ref]"); if(!td) return;
+  e.preventDefault(); selectCell(td.dataset.ref, true);
+});
+view().addEventListener("dblclick", e => {
+  const td = e.target.closest("table.g td[data-ref]"); if(!td) return;
+  const fi = $("#fIn"); if(fi){ fi.focus(); fi.setSelectionRange(fi.value.length, fi.value.length); }
+});
+view().addEventListener("submit", e => { if(e.target.id === "addForm"){ e.preventDefault(); submitAdd(); } });
+view().addEventListener("input", e => {
+  const el = e.target;
+  if(el.id === "q"){ S.q = el.value; const pos = el.selectionStart; render(); const s = $("#q"); if(s){ s.focus(); s.setSelectionRange(pos, pos); } return; }
+  if(el.classList.contains("hh") || el.classList.contains("mm")) el.value = el.value.replace(/[^\d]/g, "").slice(0, 2);
+  // الساعة لما تتكتب رقمين (أو رقم أكبر من 2) نروح للدقايق على طول
+  if(el.classList.contains("hh") && (/^\d{2}$/.test(el.value) || /^[3-9]$/.test(el.value)) && document.activeElement === el){
+    const m = el.parentElement.querySelector(".mm"); if(m){ padHourInput(el); m.focus(); m.select(); }
+  }
+});
+view().addEventListener("change", e => {
+  const el = e.target;
+  if(el.id === "dayPick"){ if(el.value){ S.day = el.value; render(); } return; }
+  if(el.id === "wsType"){ const ym = curBook().ym; safeWrite(() => DB.doc("workers/" + el.dataset.wid).update({hist: {type: {[ym]: el.value}}}), "نوع العامل اتغير من الشهر ده"); return; }
+  const row = el.closest(".rr");
+  if(row){ if(el.classList.contains("hh")) padHourInput(el); if(el.classList.contains("mm") && /^\d$/.test(el.value.trim())) el.value = "0" + el.value.trim(); saveDayRow(row); }
+});
+view().addEventListener("focusout", e => {
+  const el = e.target;
+  if(el.classList && el.classList.contains("hh")) padHourInput(el);
+  if(el.classList && el.classList.contains("mm") && /^\d$/.test(el.value.trim())) el.value = "0" + el.value.trim();
+});
+view().addEventListener("keydown", e => {
+  const el = e.target;
+  if(el.closest && el.closest(".rr") && e.key === "Enter"){ e.preventDefault(); el.blur(); return; }
+  if(el.id === "fIn"){
+    if(e.key === "Enter"){ e.preventDefault(); const v = el.value; S.mgr.editing = false; $("#gw").focus({preventScroll:true}); commitCell(v).then(() => moveSel(1, 0)); }
+    else if(e.key === "Escape"){ e.preventDefault(); render(); $("#gw") && $("#gw").focus({preventScroll:true}); }
+    else if(e.key === "Tab"){ e.preventDefault(); const v = el.value; $("#gw").focus({preventScroll:true}); commitCell(v).then(() => moveSel(0, e.shiftKey ? -1 : 1)); }
+    return;
+  }
+  if(el.id === "fRef" && e.key === "Enter"){ e.preventDefault(); const r = el.value.trim().toUpperCase(); if(/^[A-U]([1-9]|[1-3]\d|40)$/.test(r)){ const M = mergeMap(); selectCell(M.covered[r] || r, true); } else toast("اكتب خانة زي B10"); return; }
+  if(el.id === "gw"){
+    const k = e.key;
+    if(k === "ArrowDown"){ e.preventDefault(); moveSel(1, 0); }
+    else if(k === "ArrowUp"){ e.preventDefault(); moveSel(-1, 0); }
+    else if(k === "ArrowRight"){ e.preventDefault(); moveSel(0, 1); }
+    else if(k === "ArrowLeft"){ e.preventDefault(); moveSel(0, -1); }
+    else if(k === "Enter"){ e.preventDefault(); moveSel(1, 0); }
+    else if(k === "Tab"){ e.preventDefault(); moveSel(0, e.shiftKey ? -1 : 1); }
+    else if(k === "F2"){ e.preventDefault(); const fi = $("#fIn"); fi.focus(); fi.setSelectionRange(fi.value.length, fi.value.length); }
+    else if(k === "Delete" || k === "Backspace"){ e.preventDefault(); commitCell(""); }
+    else if(k.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey){ e.preventDefault(); const fi = $("#fIn"); fi.value = k; fi.focus(); }
+  }
+});
+
+/* ===================== التشغيل ===================== */
+(async function boot(){
+  try{ const l = +sessionStorage.getItem("me_lvl"); if(l === 1 || l === 2){ S.tab = l === 2 ? "close" : "day"; S.level = l; } }catch(e){}
+  if(window.ME_API){
+    DB = makeGasDB(apiCall(window.ME_API)); DL = anchorDownloads;
+  } else if(window.google && google.script && google.script.run){
+    DB = makeGasDB(); DL = anchorDownloads;
+  } else if(window.claude && typeof window.claude.use === "function"){
+    const [db, dl] = await Promise.all([window.claude.use("db").catch(() => null), window.claude.use("downloads").catch(() => null)]);
+    DB = db; DL = dl;
+    if(!DB){ showBanner("bad", "التسجيل مش هيتحفظ: لازم تكون عامل تسجيل دخول والصفحة متشاركة معاك."); S.readOnly = true; DB = makeMemDB(); MEM = true; }
+  } else { DB = makeMemDB(); MEM = true; DL = anchorDownloads; showBanner("warn", "وضع تجربة: البيانات مش بتتحفظ."); }
+  subscribe();
+  render();
+  /* زرار التثبيت (لو التطبيق مش متثبت) */
+  if(window.ME_API){
+    const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+    let deferred = null;
+    window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; $("#installBtn").hidden = false; });
+    $("#installBtn").addEventListener("click", async () => { if(!deferred) return; deferred.prompt(); try{ await deferred.userChoice; }catch(e){} deferred = null; $("#installBtn").hidden = true; });
+    window.addEventListener("appinstalled", () => { $("#installBtn").hidden = true; toast("التطبيق اتثبت"); });
+    if(!standalone && /iphone|ipad|ipod/i.test(navigator.userAgent)) $("#iosHint").hidden = false;
+  }
+  /* التطبيق (PWA): service worker + تحديث أوتوماتيك لما ننشر نسخة جديدة */
+  if(window.ME_API && "serviceWorker" in navigator){
+    let had = !!navigator.serviceWorker.controller, reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if(!had){ had = true; return; }
+      if(reloading) return;
+      const go = () => { if(!reloading){ reloading = true; location.reload(); } };
+      if(isEditing()) document.addEventListener("focusout", () => setTimeout(() => { if(!isEditing()) go(); }, 400)); else go();
+    });
+    navigator.serviceWorker.register("sw.js").then(reg => {
+      document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") reg.update().catch(() => {}); });
+    }).catch(() => {});
+  }
+  if(MEM && (location.hostname === "localhost" || location.hostname === "127.0.0.1")){
+    window.__dev = {S, DB, buildSheet, bookSheets, buildXlsx, calcDay, evalSheet, fmtVal, render, setLevel};
+    S.readOnly = false;
+  }
+})();
+</script>
+
+</body></html>
