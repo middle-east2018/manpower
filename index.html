@@ -85,6 +85,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bar-title{flex:1;min-width:0}
 .bar-title h1{margin:0;font-size:18px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar-title p{margin:0;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.syncpill{flex:none;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600;background:rgba(255,255,255,.16);color:var(--shell-ink);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.syncpill.wait{background:#F5C36B;color:#3A2600}
+.syncpill i{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
 .bar-in .mark{width:36px;height:36px;border-radius:10px;font-size:13px}
 
 /* المحتوى */
@@ -309,6 +312,7 @@ table.g td.ovr::after{content:"";position:absolute;top:0;right:0;border-top:6px 
       <button class="iconbtn" id="backBtn" hidden aria-label="رجوع"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="mark" id="barMark" aria-hidden="true">ME</div>
       <div class="bar-title"><h1 id="barTitle"></h1><p id="barSub"></p></div>
+      <span class="syncpill" id="syncPill" hidden role="status"></span>
       <button class="iconbtn" id="lockBtn" aria-label="قفل الصفحة" title="قفل الصفحة"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
     </div></header>
     <main id="view" class="page" aria-live="polite"></main>
@@ -439,8 +443,11 @@ function apiCall(url){
   return async (fn, ...a) => {
     const body = fn === "dbSync" ? {fn, since: a[0]} : fn === "file" ? {fn, name: a[0]} : {fn, ops: a[0]};
     let r;
-    try{ r = await fetch(url, {method:"POST", body: JSON.stringify(body), redirect:"follow"}); }
+    const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const tm = ctl ? setTimeout(() => ctl.abort(), fn === "file" ? 90000 : 30000) : null;
+    try{ r = await fetch(url, {method:"POST", body: JSON.stringify(body), redirect:"follow", signal: ctl ? ctl.signal : undefined}); }
     catch(e){ throw {code:"unavailable", message:"network"}; }
+    finally{ if(tm) clearTimeout(tm); }
     if(!r.ok) throw {code:"unavailable", message:"http " + r.status};
     const j = await r.json().catch(() => null);
     if(!j) throw {code:"unavailable", message:"bad response"};
@@ -448,26 +455,83 @@ function apiCall(url){
     return j.res;
   };
 }
+/* قاعدة بيانات بتشتغل من غير نت (offline-first):
+   - آخر نسخة من البيانات متخزنة على الموبايل (localStorage)، فالتطبيق بيفتح ويعرض حتى من غير نت.
+   - أي تسجيل بيتحفظ على الموبايل الأول ويدخل "طابور" (outbox)، وبيتبعت للسيرفر بالترتيب أول ما النت يرجع.
+   - العمليات كلها (set / upsert / update / delete) لو اتبعتت مرتين النتيجة واحدة، فإعادة الإرسال آمنة. */
 function makeGasDB(transport){
-  let ver = null, docs = {}, first = true;
-  const ls = new Set();
+  const KEY = "me_store_v1_" + (window.ME_API ? "app" : "gas");
+  let ver = null, base = {}, docs = {}, outbox = [], first = true, online = navigator.onLine !== false, syncing = false, busy = false;
+  const ls = new Set(), sls = new Set();
   const clone = o => o === undefined ? undefined : JSON.parse(JSON.stringify(o));
   const collOf = p => p.split("/").slice(0,-1).join("/");
-  const snap = p => { const d = docs[p]; return {id:p.split("/").pop(), exists:!!d, data:()=>clone(d), metadata:{fromCache:false, hasPendingWrites:false}}; };
+  const snap = p => { const d = docs[p]; return {id:p.split("/").pop(), exists:!!d, data:()=>clone(d), metadata:{fromCache:!online, hasPendingWrites:outbox.length > 0}}; };
   const fire = l => {
     if(l.doc){ l.cb(snap(l.doc)); return; }
     const ds = Object.keys(docs).filter(k => collOf(k) === l.coll).sort().map(snap);
-    l.cb({docs:ds, size:ds.length, empty:!ds.length, docChanges:()=>[], metadata:{fromCache:false, hasPendingWrites:false}});
+    l.cb({docs:ds, size:ds.length, empty:!ds.length, docChanges:()=>[], metadata:{fromCache:!online, hasPendingWrites:outbox.length > 0}});
   };
+  const status = () => ({pending: outbox.reduce((n, o) => n + o.ops.length, 0), online, syncing: syncing || busy, ready: !first});
+  const notify = () => { const st = status(); for(const f of sls){ try{ f(st); }catch(e){} } };
+  const save = () => { try{ localStorage.setItem(KEY, JSON.stringify({ver, base, outbox})); }catch(e){ console.warn("store", e); } };
+  const load = () => { try{ const j = JSON.parse(localStorage.getItem(KEY) || "null"); if(j && j.base){ ver = j.ver; base = j.base; outbox = j.outbox || []; return true; } }catch(e){} return false; };
+  const merge = (a, b) => { for(const k in b){ const v = b[k]; if(v && typeof v === "object" && !Array.isArray(v) && a[k] && typeof a[k] === "object" && !Array.isArray(a[k])) merge(a[k], v); else a[k] = v === undefined ? null : clone(v); } return a; };
+  function applyOps(t, ops){
+    for(const op of ops){
+      let cur = t[op.path] || null;
+      if(op.op === "set") cur = clone(op.data || {});
+      else if(op.op === "update") cur = merge(cur || {}, op.data || {});
+      else if(op.op === "upsert") cur = cur ? merge(cur, op.data || {}) : merge(clone(op.base || {}), op.data || {});
+      else if(op.op === "delete") cur = null;
+      if(cur === null) delete t[op.path]; else t[op.path] = cur;
+    }
+  }
+  function rebuild(){ docs = clone(base); for(const o of outbox) applyOps(docs, o.ops); first = false; for(const l of ls) fire(l); notify(); }
   const call = transport || ((fn, ...a) => new Promise((res, rej) => google.script.run.withSuccessHandler(res)
     .withFailureHandler(e => rej({code: /bad|missing|large/.test(String(e && e.message)) ? "invalid_argument" : "unavailable", message: String(e && e.message || e)}))[fn](...a)));
-  const apply = r => { if(!r || r.same) return; ver = r.ver; docs = r.docs || {}; first = false; for(const l of ls) fire(l); };
-  let syncing = false;
-  async function sync(){ if(syncing) return; syncing = true; try{ apply(await call("dbSync", ver)); }catch(e){ console.warn(e); if(first) for(const l of ls) l.err && l.err(e); } finally{ syncing = false; } }
-  const write = async ops => { apply(await call("dbWrite", ops)); };
-  setInterval(() => { if(document.visibilityState === "visible") sync(); }, 20000);
+  async function flush(){
+    if(busy || !outbox.length) return;
+    busy = true; notify();
+    try{
+      while(outbox.length){
+        const batch = outbox.slice(0, 15), ops = [].concat(...batch.map(o => o.ops));
+        let r;
+        try{ r = await call("dbWrite", ops); online = true; }
+        catch(e){
+          if(e && e.code === "invalid_argument"){ // عملية السيرفر رفضها: نشيلها علشان ما توقفش الباقي
+            const bad = outbox.shift(); console.warn("dropped", bad, e); save(); rebuild();
+            try{ toast("فيه تعديل السيرفر رفضه ومش هيتبعت."); }catch(x){}
+            continue;
+          }
+          online = false; break;
+        }
+        outbox.splice(0, batch.length);
+        if(r){ ver = r.ver; base = r.docs || {}; }
+        save(); rebuild();
+      }
+    } finally { busy = false; notify(); }
+  }
+  async function sync(){
+    if(syncing) return; syncing = true; notify();
+    try{
+      await flush();
+      if(outbox.length) return;
+      const r = await call("dbSync", ver); online = true;
+      if(r && !r.same){ ver = r.ver; base = r.docs || {}; save(); rebuild(); }
+      else if(first) rebuild();
+    }catch(e){
+      online = false; console.warn(e);
+      if(first) for(const l of ls) l.err && l.err(e);
+    }finally{ syncing = false; notify(); }
+  }
+  const write = async ops => { outbox.push({ops, t: Date.now()}); save(); rebuild(); flush(); };
+  if(load()) rebuild();
+  setInterval(() => { if(document.visibilityState === "visible" || outbox.length) sync(); }, 20000);
   document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") sync(); });
+  window.addEventListener("online", () => { online = true; sync(); });
+  window.addEventListener("offline", () => { online = false; notify(); });
   setTimeout(sync, 0);
+  try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
   const api = {
     doc(p){ return { path:p, id:p.split("/").pop(),
       get: async () => snap(p),
@@ -478,6 +542,7 @@ function makeGasDB(transport){
     collection(c){ return { path:c, doc: id => api.doc(c + "/" + id),
       onSnapshot(cb, err){ const l = {coll:c, cb, err}; ls.add(l); if(!first) queueMicrotask(() => fire(l)); return () => ls.delete(l); } }; },
     upsert: (p, partial, base) => write([{op:"upsert", path:p, data:partial, base:base || {}}]),
+    onStatus(f){ sls.add(f); f(status()); return () => sls.delete(f); },
     sync
   };
   return api;
@@ -516,7 +581,7 @@ async function safeWrite(fn, okMsg){
 function subscribe(){
   const slowTimer = setTimeout(() => { if(!allLoaded()){ S.slow = true; requestRender(); } }, 10000);
   const done = k => { S.loaded[k] = true; if(allLoaded()){ clearTimeout(slowTimer); S.slow = false; } requestRender(); };
-  const onErr = k => e => { console.error(k, e); S.loaded[k] = true; showBanner("bad", "البيانات مش واصلة دلوقتي. افتح الصفحة تاني بعد شوية."); requestRender(); };
+  const onErr = k => e => { console.error(k, e); S.loaded[k] = true; showBanner("bad", "مفيش نت دلوقتي. أول مرة التطبيق بيتفتح لازم يكون فيه نت علشان أسامي العمال تنزل، وبعد كده بيشتغل عادي من غيره."); requestRender(); };
   const coll = (name, target, k) => DB.collection(name).onSnapshot(snap => {
     const o = {}; snap.docs.forEach(d => { if(d.exists) o[d.id] = d.data(); }); S[target] = o; done(k);
   }, onErr(k));
@@ -866,7 +931,7 @@ let toastT = null;
 function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3500); }
 function showBanner(kind, msg){ const b = $("#dbBanner"); b.className = kind; b.textContent = msg; b.hidden = false; }
 /* ما نرسمش الصفحة من جديد والمستخدم بيكتب أو بينقل بين الخانات (Tab) — وإلا التركيز يضيع */
-let lastBlurAt = 0;
+let lastBlurAt = -1e9;
 function isEditing(){
   const a = document.activeElement;
   if(a && a.closest && a.closest("#view") && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return true;
@@ -1470,6 +1535,25 @@ function moveSel(dr, dc){
   selectCell(ref, true);
 }
 
+/* مؤشر الاتصال: "مفيش نت" أو "مستني يتبعت (n)" */
+let syncDoneT = null;
+function updateSyncUI(st){
+  const el = $("#syncPill"); if(!el) return;
+  if(st.ready && st.online){ const b = $("#dbBanner"); if(b && b.className === "bad" && /مفيش نت/.test(b.textContent)) b.hidden = true; }
+  clearTimeout(syncDoneT);
+  if(st.pending > 0){
+    el.hidden = false; el.className = "syncpill wait";
+    el.innerHTML = st.online ? `<i></i>بيبعت ${st.pending}…` : `<i></i>مستني نت: ${st.pending} تسجيل`;
+    el.title = "التسجيلات متحفظة على الموبايل وهتتبعت لوحدها أول ما النت يرجع";
+    el.dataset.had = "1";
+  } else if(!st.online){
+    el.hidden = false; el.className = "syncpill"; el.innerHTML = "<i></i>مفيش نت"; el.title = "بتشتغل عادي، وأي تسجيل هيتبعت لما النت يرجع";
+  } else if(el.dataset.had === "1"){
+    el.hidden = false; el.className = "syncpill"; el.innerHTML = "✓ اتبعت"; el.dataset.had = "";
+    syncDoneT = setTimeout(() => { el.hidden = true; }, 2500);
+  } else el.hidden = true;
+}
+
 /* ===================== الأحداث ===================== */
 view().addEventListener("click", async e => {
   const t = e.target.closest("[data-act]"); if(!t) return;
@@ -1580,6 +1664,7 @@ view().addEventListener("keydown", e => {
     if(!DB){ showBanner("bad", "التسجيل مش هيتحفظ: لازم تكون عامل تسجيل دخول والصفحة متشاركة معاك."); S.readOnly = true; DB = makeMemDB(); MEM = true; }
   } else { DB = makeMemDB(); MEM = true; DL = anchorDownloads; showBanner("warn", "وضع تجربة: البيانات مش بتتحفظ."); }
   subscribe();
+  if(DB.onStatus) DB.onStatus(updateSyncUI);
   render();
   /* زرار التثبيت (لو التطبيق مش متثبت) */
   if(window.ME_API){
