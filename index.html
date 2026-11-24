@@ -971,7 +971,7 @@ function statusOf(wid, date){
     if(c.fri != null) return {cls:"ok", t:`${hol ? "عيد" : "جمعة"}: ${c.fri} ساعة`};
     return {cls:"ok", t: c.ot ? `${c.basic} + ${c.ot} إضافي` : `${c.basic} ساعات`};
   }
-  if(r.n) return {cls: noteIsGood(r.n) ? "ok" : "bad", t: r.n};
+  if(r.n) return {cls: r.n === "إجازة" ? "off" : noteIsGood(r.n) ? "ok" : "bad", t: r.n};
   if(dow === 5) return {cls:"off", t:"جمعة"};
   if(hol) return {cls:"off", t:"عيد"};
   if(date > todayStr()) return {cls:"off", t:"لسه"};
@@ -1024,7 +1024,7 @@ function quickFill(row, kind){
     set("-f-h", "08"); set("-f-m", "00"); set("-t-h", kind === "full5" ? "05" : thu ? "01" : "08"); set("-t-m", "00");
   } else {
     set("-f-h", ""); set("-f-m", ""); set("-t-h", ""); set("-t-m", "");
-    set("-n", kind === "absent" ? "غياب بدون إذن" : "غياب بإذن");
+    set("-n", kind === "leave" ? "إجازة" : kind === "absent" ? "غياب بدون إذن" : "غياب بإذن");
   }
   saveDayRow(row);
 }
@@ -1155,7 +1155,7 @@ function screenDay(){
         <label class="fld tt"><span>مشي الساعة</span>${timeBox(idp + "-t", showTo(r.t), "مساءً", "مشي")}</label>
       </div>
       <input type="text" class="note" id="${idp}-n" placeholder="ملحوظة: دوس هنا تختار أو تكتب" aria-label="ملحوظة" value="${esc(r.n || "")}" autocomplete="off">
-      ${off ? "" : `<div class="quick" ${r.f || r.n ? "hidden" : ""}><button class="chip go" data-act="quick" data-kind="full">حضر من 8 لـ ${thu ? "1" : "8"}</button>${thu ? "" : `<button class="chip go" data-act="quick" data-kind="full5">حضر من 8 لـ 5</button>`}</div>`}
+      ${off ? "" : `<div class="quick" ${r.f || r.n ? "hidden" : ""}><button class="chip go" data-act="quick" data-kind="full">حضر من 8 لـ ${thu ? "1" : "8"}</button>${thu ? "" : `<button class="chip go" data-act="quick" data-kind="full5">حضر من 8 لـ 5</button>`}<button class="chip" data-act="quick" data-kind="leave">إجازة</button></div>`}
     </div>`;
   }).join("");
   const pct = all.length ? Math.round(done * 100 / all.length) : 0;
