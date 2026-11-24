@@ -148,6 +148,11 @@ body.wide .page{max-width:1180px}
 .quick{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:500}
 .chip.go{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+/* سياسة المصنع */
+.polbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:sticky;top:calc(var(--bar) + env(safe-area-inset-top,0px) + 8px);z-index:5}
+.polbar .btn{padding:12px;font-size:16px;box-shadow:var(--card-shadow)}
+.polpages{display:flex;flex-direction:column;gap:12px}
+.polpages canvas{width:100%;height:auto;background:#fff;border-radius:6px;box-shadow:var(--card-shadow);display:block}
 /* اختيارات الملحوظة */
 .npick{display:flex;flex-direction:column;gap:10px;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:10px;grid-column:1/-1}
 .nseg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -294,7 +299,8 @@ table.g td.ovr::after{content:"";position:absolute;top:0;right:0;border-top:6px 
         <button class="btn primary" type="submit">دخول</button>
         <p class="err" id="pwErr" hidden>كلمة السر مش صح، جرّب تاني.</p>
       </form>
-      <button class="btn" id="installBtn" type="button" hidden style="margin-top:14px;width:100%">ثبّت التطبيق على الموبايل</button>
+      <button class="btn" id="policyBtn" type="button" style="margin-top:14px;width:100%"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>اقرا سياسة المصنع</button>
+      <button class="btn" id="installBtn" type="button" hidden style="margin-top:10px;width:100%">ثبّت التطبيق على الموبايل</button>
       <p class="lock-sub" id="iosHint" hidden style="margin-top:12px;font-size:13px">علشان تثبّته على الآيفون: دوس زرار المشاركة في Safari، وبعدها "Add to Home Screen".</p>
     </div>
   </section>
@@ -309,6 +315,7 @@ table.g td.ovr::after{content:"";position:absolute;top:0;right:0;border-top:6px 
     <nav class="tabbar" id="tabbar" aria-label="الأقسام">
       <button data-tab="day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M9 15l2 2 4-4"/></svg><span>اليوم</span></button>
       <button data-tab="people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.3 3-5 6-5s5.4 1.7 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg><span>العمال</span></button>
+      <button data-tab="policy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg><span>السياسة</span></button>
       <button data-tab="close" id="tabClose" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 9h17M3.5 14.5h17M9.5 3.5v17"/></svg><span>التقفيل</span></button>
     </nav>
   </div>
@@ -430,7 +437,7 @@ function makeMemDB(){
 /* نسخة التطبيق (PWA): نفس الكلام بس بيكلم السيرفر بـ fetch على لينك الـ API */
 function apiCall(url){
   return async (fn, ...a) => {
-    const body = fn === "dbSync" ? {fn, since: a[0]} : {fn, ops: a[0]};
+    const body = fn === "dbSync" ? {fn, since: a[0]} : fn === "file" ? {fn, name: a[0]} : {fn, ops: a[0]};
     let r;
     try{ r = await fetch(url, {method:"POST", body: JSON.stringify(body), redirect:"follow"}); }
     catch(e){ throw {code:"unavailable", message:"network"}; }
@@ -880,6 +887,7 @@ S.people = {half: null, wid: null, confirm: false};
 function setLevel(l){
   S.level = l;
   try{ if(l) sessionStorage.setItem("me_lvl", String(l)); else sessionStorage.removeItem("me_lvl"); }catch(e){}
+  S.guestPolicy = false;
   if(!l){ S.tab = null; S.adding = false; S.people.wid = null; S.mgr.group = null; }
   else if(!S.tab || (S.tab === "close" && l < 2)) S.tab = l === 2 ? "close" : "day";
   render(); window.scrollTo(0, 0);
@@ -902,17 +910,21 @@ $("#tabbar").addEventListener("click", e => {
   }
   S.tab = b.dataset.tab; S.adding = false; S.people.confirm = false; render(); window.scrollTo(0, 0);
 });
+$("#policyBtn").addEventListener("click", () => { S.guestPolicy = true; render(); window.scrollTo(0, 0); });
 function goBack(){
-  if(S.adding) S.adding = false;
+  if(!S.level && S.guestPolicy) S.guestPolicy = false;
+  else if(S.adding) S.adding = false;
   else if(S.tab === "people" && S.people.wid){ S.people.wid = null; S.people.confirm = false; }
   else if(S.tab === "close" && S.mgr.group) S.mgr.group = null;
   render(); window.scrollTo(0, 0);
 }
 
 function render(){
-  const locked = !S.level;
-  $("#lock").hidden = !locked; $("#shell").hidden = locked;
-  if(locked){ setTimeout(() => { const p = $("#pw"); if(p && document.activeElement !== p) p.focus({preventScroll:true}); }, 0); return; }
+  const locked = !S.level, guest = locked && S.guestPolicy;
+  $("#lock").hidden = !locked || guest; $("#shell").hidden = locked && !guest;
+  $("#tabbar").hidden = guest; $("#lockBtn").hidden = guest;
+  if(guest){ const scr = screenPolicy(); $("#barTitle").innerHTML = scr.title; $("#barSub").innerHTML = scr.sub; $("#backBtn").hidden = false; $("#barMark").hidden = true; document.body.classList.remove("wide"); view().innerHTML = scr.html; scr.after(); return; }
+  if(locked){ setTimeout(() => { const p = $("#pw"); if(p && document.activeElement !== p && !("ontouchstart" in window)) p.focus({preventScroll:true}); }, 0); return; }
   $("#tabClose").hidden = S.level < 2;
   document.querySelectorAll("#tabbar button[data-tab]").forEach(b => { if(b.dataset.tab === S.tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
   const v = view();
@@ -923,6 +935,7 @@ function render(){
   else if(S.adding) scr = screenAdd();
   else if(S.tab === "day") scr = screenDay();
   else if(S.tab === "people") scr = S.people.wid && S.workers[S.people.wid] ? screenPerson() : screenPeople();
+  else if(S.tab === "policy") scr = screenPolicy();
   else scr = S.mgr.group ? screenBook() : screenBooks();
   $("#barTitle").innerHTML = scr.title; $("#barSub").innerHTML = scr.sub || "";
   $("#backBtn").hidden = !scr.back; $("#barMark").hidden = !!scr.back;
@@ -1014,6 +1027,90 @@ function quickFill(row, kind){
     set("-n", kind === "absent" ? "غياب بدون إذن" : "غياب بإذن");
   }
   saveDayRow(row);
+}
+
+/* ===================== سياسة المصنع (الملف متخزن على سيرفر الشركة، مش على GitHub) ===================== */
+const ICON_SHARE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>';
+let POL = null, POL_EL = null, POL_LOADING = null;
+async function fetchServerFile(name){
+  if(window.ME_API) return apiCall(window.ME_API)("file", name);
+  if(window.google && google.script && google.script.run) return new Promise((res, rej) => google.script.run.withSuccessHandler(res).withFailureHandler(rej).fileGet(name));
+  const buf = new Uint8Array(await (await fetch("/manpower/files/" + name + ".pdf")).arrayBuffer());
+  let s = ""; for(let i = 0; i < buf.length; i += 32768) s += String.fromCharCode.apply(null, buf.subarray(i, i + 32768));
+  return {name: "سياسة المصنع.pdf", mime: "application/pdf", hash: "dev", b64: btoa(s)};
+}
+function b64Blob(b64, mime){ const bin = atob(b64), u = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], {type: mime}); }
+async function getPolicy(){
+  if(POL) return POL;
+  if(POL_LOADING) return POL_LOADING;
+  POL_LOADING = (async () => {
+    let cache = null; try{ cache = await caches.open("me-files"); }catch(e){}
+    const fromCache = async () => { if(!cache) return null; const r = await cache.match("policy.pdf"); return r ? {blob: await r.blob(), name: "سياسة المصنع.pdf", hash: r.headers.get("x-hash") || ""} : null; };
+    const cached = await fromCache();
+    const refresh = (async () => {
+      const f = await fetchServerFile("policy");
+      if(cached && cached.hash === f.hash) return null;
+      const blob = b64Blob(f.b64, f.mime);
+      if(cache){ try{ await cache.put("policy.pdf", new Response(blob, {headers: {"content-type": f.mime, "x-hash": f.hash}})); }catch(e){} }
+      return {blob, name: f.name, hash: f.hash};
+    })();
+    if(cached){ refresh.then(n => { if(n){ POL = n; POL_EL = null; if(S.tab === "policy" || S.guestPolicy) requestRender(); } }).catch(() => {}); return cached; }
+    return await refresh;
+  })();
+  try{ POL = await POL_LOADING; return POL; } finally { POL_LOADING = null; }
+}
+let pdfjsP = null;
+function loadPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(!pdfjsP) pdfjsP = new Promise((res, rej) => {
+    const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+    s.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; res(window.pdfjsLib); };
+    s.onerror = () => { pdfjsP = null; rej(new Error("pdfjs")); }; document.head.appendChild(s);
+  });
+  return pdfjsP;
+}
+function screenPolicy(){
+  return {
+    title: "سياسة المصنع", sub: "مواعيد العمل والمكافآت والجزاءات", back: !S.level,
+    html: `<div class="polbar"><button class="btn primary" data-act="pol-share">${ICON_SHARE}مشاركة</button><button class="btn" data-act="pol-dl">${ICON_DL}تحميل</button></div><div id="polSlot"><div class="loading">بيحمّل الملف…</div></div>`,
+    after(){ mountPolicy(); }
+  };
+}
+async function mountPolicy(){
+  const slot = $("#polSlot"); if(!slot) return;
+  if(POL_EL){ slot.replaceWith(POL_EL); return; }
+  try{
+    const p = await getPolicy();
+    const lib = await loadPdfJs();
+    const doc = await lib.getDocument({data: new Uint8Array(await p.blob.arrayBuffer())}).promise;
+    const wrap = document.createElement("div"); wrap.className = "polpages"; wrap.id = "polSlot";
+    const w = Math.min(900, (document.querySelector(".page") || document.body).clientWidth - 32), dpr = Math.min(2, window.devicePixelRatio || 1);
+    for(let i = 1; i <= doc.numPages; i++){
+      const page = await doc.getPage(i), v0 = page.getViewport({scale: 1}), vp = page.getViewport({scale: (w / v0.width) * dpr});
+      const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height; c.setAttribute("aria-label", `صفحة ${i}`); c.setAttribute("role", "img");
+      // intent "print": الرسم بيخلص من غير requestAnimationFrame (بيشتغل حتى لو الصفحة في الخلفية)
+      await page.render({canvasContext: c.getContext("2d"), viewport: vp, intent: "print"}).promise;
+      wrap.appendChild(c);
+    }
+    POL_EL = wrap;
+    const cur = $("#polSlot"); if(cur) cur.replaceWith(wrap);
+  }catch(e){
+    console.error(e);
+    const cur = $("#polSlot"); if(cur) cur.innerHTML = `<div class="empty">الملف ما اتفتحش. اتأكد إن النت شغال وجرّب تاني، أو دوس "تحميل".</div>`;
+  }
+}
+async function policyShare(){
+  if(!POL){ toast("استنى الملف يحمّل الأول."); getPolicy().catch(() => {}); return; }
+  const file = new File([POL.blob], POL.name, {type: "application/pdf"});
+  if(navigator.canShare && navigator.canShare({files: [file]})){
+    try{ await navigator.share({files: [file], title: "سياسة المصنع"}); }catch(e){ if(e && e.name !== "AbortError") toast("المشاركة ما نجحتش."); }
+  } else { toast("المشاركة مش متاحة هنا، هننزّل الملف بدلها."); policyDownload(); }
+}
+async function policyDownload(){
+  try{
+    const p = POL || await getPolicy();
+    await (DL || anchorDownloads).save({filename: p.name, data: p.blob});
+  }catch(e){ if(!(e && e.code === "declined")) toast("التحميل ما نجحش. اتأكد إن النت شغال."); }
 }
 
 /* ===================== اختيارات الملحوظة (بتظهر لما تدوس على خانة الملحوظة) ===================== */
@@ -1380,6 +1477,8 @@ view().addEventListener("click", async e => {
   if(a === "quick"){ const row = t.closest(".rr"); if(row) quickFill(row, t.dataset.kind); }
   else if(a === "add"){ S.adding = true; render(); window.scrollTo(0, 0); }
   else if(a === "add-cancel"){ goBack(); }
+  else if(a === "pol-share"){ policyShare(); }
+  else if(a === "pol-dl"){ policyDownload(); }
   else if(a === "nkind"){ const p = t.closest(".npick"); p.dataset.kind = t.dataset.k; p.innerHTML = pickerInner(t.dataset.k); }
   else if(a === "nopt"){ applyNote(t.closest(".npick"), t.dataset.v); }
   else if(a === "day-prev" || a === "day-next"){ S.day = ymd(addDays(parseYMD(S.day || todayStr()), a === "day-prev" ? -1 : 1)); render(); }
