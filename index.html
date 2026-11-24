@@ -19,7 +19,8 @@
 /* Layout: تطبيق موبايل — شاشة دخول لوحدها، وبعدها شريط علوي ثابت (رجوع + عنوان) ومحتوى وتابات تحت.
    اللون الأساسي هو أزرق شيت الإكسيل بتاع الشركة. شيت الإكسيل نفسه أبيض دايماً زي الأصل. */
 :root{
-  --bg:#ECEFF3; --surface:#FFFFFF; --surface2:#F4F6F8; --ink:#16202B; --muted:#5A6776; --line:#D8DEE5; --line2:#E6EAEE;
+  --bg:#DDE3EA; --surface:#FFFFFF; --surface2:#F3F5F8; --ink:#16202B; --muted:#56636F; --line:#C9D2DC; --line2:#E4E8ED;
+  --card-shadow:0 1px 2px rgba(16,32,52,.10),0 3px 10px rgba(16,32,52,.07);
   --accent:#2D5B8C; --accent-ink:#FFFFFF; --accent-soft:#E2EBF5;
   --ok:#1B7A47; --ok-soft:#DFF2E7; --warn:#8F5A00; --warn-soft:#FFF0D2; --bad:#B42318; --bad-soft:#FDE6E3; --fri:#FFF6E2;
   --shell:#2D5B8C; --shell-ink:#FFFFFF; --shell-sub:#C9DAEC;
@@ -27,11 +28,11 @@
   --bar:58px; --tabs:64px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0E1319; --surface:#161E28; --surface2:#1C2631; --ink:#E6EBF1; --muted:#9AA6B5; --line:#2A3644; --line2:#222C38;
+  --bg:#090C11; --surface:#18222D; --surface2:#202B38; --ink:#E6EBF1; --muted:#9AA6B5; --line:#344353; --line2:#273340; --card-shadow:0 1px 2px rgba(0,0,0,.5),0 3px 10px rgba(0,0,0,.35);
   --accent:#86B2DE; --accent-ink:#0E1319; --accent-soft:#1C3047;
   --ok:#67C892; --ok-soft:#14301F; --warn:#EDBA5E; --warn-soft:#352812; --bad:#F2918A; --bad-soft:#3A1B18; --fri:#272111; --shell:#1A3350; --shell-ink:#EAF1F8; --shell-sub:#9FB6CE; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0E1319; --surface:#161E28; --surface2:#1C2631; --ink:#E6EBF1; --muted:#9AA6B5; --line:#2A3644; --line2:#222C38;
+  --bg:#090C11; --surface:#18222D; --surface2:#202B38; --ink:#E6EBF1; --muted:#9AA6B5; --line:#344353; --line2:#273340; --card-shadow:0 1px 2px rgba(0,0,0,.5),0 3px 10px rgba(0,0,0,.35);
   --accent:#86B2DE; --accent-ink:#0E1319; --accent-soft:#1C3047;
   --ok:#67C892; --ok-soft:#14301F; --warn:#EDBA5E; --warn-soft:#352812; --bad:#F2918A; --bad-soft:#3A1B18; --fri:#272111; --shell:#1A3350; --shell-ink:#EAF1F8; --shell-sub:#9FB6CE; color-scheme:dark}
 *{box-sizing:border-box}
@@ -101,7 +102,7 @@ body.wide .page{max-width:1180px}
 .fab{position:fixed;z-index:19;inset-inline-start:max(16px,env(safe-area-inset-right,0px));bottom:calc(var(--tabs) + 14px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--accent-ink);border:0;border-radius:16px;padding:14px 20px;font-weight:600;font-size:16px;box-shadow:0 6px 18px rgba(20,40,70,.25);display:flex;align-items:center;gap:8px}
 
 /* اختيار اليوم */
-.daynav{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px}
+.daynav{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:var(--card-shadow)}
 .daynav .iconbtn{background:var(--surface2)}
 .datepick{flex:1;position:relative;text-align:center;border-radius:12px;padding:6px 4px;cursor:pointer}
 .datepick:hover{background:var(--surface2)}
@@ -121,7 +122,7 @@ body.wide .page{max-width:1180px}
 
 /* صف عامل في يوم */
 .roster{display:flex;flex-direction:column;gap:10px}
-.wrow{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.wrow{background:var(--surface);border:1px solid var(--line);box-shadow:var(--card-shadow);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
 .wrow.fri{background:var(--fri)}
 .wtop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .who{min-width:0}
@@ -147,9 +148,23 @@ body.wide .page{max-width:1180px}
 .quick{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:500}
 .chip.go{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+/* اختيارات الملحوظة */
+.npick{display:flex;flex-direction:column;gap:10px;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:10px;grid-column:1/-1}
+.nseg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nseg button{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:9px;font-weight:600}
+.nseg button.pos{color:var(--ok)}
+.nseg button.neg{color:var(--bad)}
+.nseg button.pos[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.nseg button.neg[aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:#fff}
+.nopts{display:flex;flex-wrap:wrap;gap:8px}
+.nopt{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;font-size:14px;text-align:right;line-height:1.4}
+.nopt.pos{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.nopt.neg{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.nopt:hover{background:var(--surface2)}
+.nhint{font-size:13px;color:var(--muted)}
 
 /* العمال */
-.halfnav{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px}
+.halfnav{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:var(--card-shadow)}
 .monthrow{display:flex;align-items:center;gap:8px}
 .monthrow b{flex:1;text-align:center;font-size:18px;font-weight:600}
 .monthrow .iconbtn{background:var(--surface2)}
@@ -157,7 +172,7 @@ body.wide .page{max-width:1180px}
 .seg button{border:0;background:transparent;border-radius:9px;padding:9px 6px;font-weight:500;color:var(--muted);line-height:1.3}
 .seg button small{display:block;font-size:12px;font-weight:400}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.plist{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.plist{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--card-shadow)}
 .prow{width:100%;display:flex;align-items:center;gap:12px;padding:13px 14px;border:0;border-bottom:1px solid var(--line2);background:transparent;text-align:right}
 .prow:last-child{border-bottom:0}
 .prow:hover{background:var(--surface2)}
@@ -169,9 +184,9 @@ body.wide .page{max-width:1180px}
 .tag.ok{background:var(--ok-soft);color:var(--ok)}.tag.todo{background:var(--warn-soft);color:var(--warn)}.tag.bad{background:var(--bad-soft);color:var(--bad)}
 
 /* صفحة عامل */
-.phead{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+.phead{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between;box-shadow:var(--card-shadow)}
 .phead .who b{font-size:20px}
-.days{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.days{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--card-shadow)}
 .dr{display:grid;grid-template-columns:92px 1fr 1fr;grid-template-areas:"dl f t" "dl n s";gap:8px 10px;padding:12px;border-bottom:1px solid var(--line2);align-items:center}
 .dr:last-child{border-bottom:0}
 .dr.fri{background:var(--fri)}
@@ -192,7 +207,7 @@ body.wide .page{max-width:1180px}
 .confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--bad-soft);color:var(--bad);border-radius:12px;padding:10px 12px}
 
 /* إضافة شخص */
-.form{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.form{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--card-shadow)}
 .form .fld > span{font-size:14px;color:var(--ink);font-weight:500}
 .form input[type=text],.form select,.form input[type=date]{width:100%;padding:12px}
 .jobs{display:flex;flex-wrap:wrap;gap:8px}
@@ -206,7 +221,7 @@ body.wide .page{max-width:1180px}
 
 /* المدير */
 .glist{display:flex;flex-direction:column;gap:10px}
-.gitem{text-align:right;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.gitem{text-align:right;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--card-shadow)}
 .gitem:hover{border-color:var(--accent)}
 .gitem .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .gitem b{font-weight:600;direction:ltr;text-align:right;unicode-bidi:plaintext}
@@ -322,7 +337,9 @@ const AR_MONTHS = ["يناير","فبراير","مارس","أبريل","مايو
 const EN_MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const AR_DAYS = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
 const EN_DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-const NOTE_CHIPS = ["غياب بدون إذن","غياب بإذن","تأخير بدون إذن","مكافأة"];
+/* اختيارات الملحوظات (باسم 2026-11-24). الإيجابي بيتلوّن أخضر في الشيت، والسلبي أحمر */
+const NOTE_POS = ["مكافأة التفاني في أداء المهام المطلوبة","مكافأة إصلاح معدات الإنتاج","مكافأة إتمام المهام في وقت قياسي وبجودة عالية","مكافأة الالتزام بمعدات السلامة","مكافأة حسن الخلق"];
+const NOTE_NEG = ["خصم تأخير","خصم إجازة بدون إذن","خصم ترك مكان العمل بدون إذن","خصم تقصير في المهام المطلوبة","خصم إتلاف معدات","خصم مشادة كلامية","خصم التلفظ بألفاظ خارجة","فصل بسبب سب الدين","فصل بسبب التعدي بالضرب على زملائه","فصل بسبب تعاطي مواد مخدرة","فصل بسبب ترويج شائعات","خصم بسبب إهمال معدات السلامة"];
 
 /* ===================== أدوات التواريخ ===================== */
 const pad2 = n => String(n).padStart(2, "0");
@@ -999,6 +1016,31 @@ function quickFill(row, kind){
   saveDayRow(row);
 }
 
+/* ===================== اختيارات الملحوظة (بتظهر لما تدوس على خانة الملحوظة) ===================== */
+function pickerInner(kind){
+  const seg = `<div class="nseg" role="group" aria-label="نوع الملحوظة">
+    <button type="button" class="pos" data-act="nkind" data-k="pos" aria-pressed="${kind === "pos"}">إيجابي</button>
+    <button type="button" class="neg" data-act="nkind" data-k="neg" aria-pressed="${kind === "neg"}">سلبي</button></div>`;
+  const list = kind
+    ? (kind === "pos" ? NOTE_POS : NOTE_NEG).map(v => `<button type="button" class="nopt ${kind}" data-act="nopt" data-v="${esc(v)}">${esc(v)}</button>`).join("")
+    : `<span class="nhint">اختار نوع الملحوظة، أو اكتب اللي إنت عايزه في الخانة على طول.</span>`;
+  return seg + `<div class="nopts">${list}</div>`;
+}
+function closePicker(){ document.querySelectorAll(".npick").forEach(p => p.remove()); }
+function openPicker(input){
+  const nx = input.nextElementSibling;
+  if(nx && nx.classList.contains("npick")) return;
+  closePicker();
+  const p = document.createElement("div"); p.className = "npick"; p.innerHTML = pickerInner(null);
+  input.insertAdjacentElement("afterend", p);
+}
+function applyNote(p, v){
+  const input = p && p.previousElementSibling; if(!input) return;
+  input.value = v; closePicker();
+  const row = input.closest(".rr");
+  if(row){ input.blur(); saveDayRow(row); }
+}
+
 /* ===================== تاب اليوم ===================== */
 function screenDay(){
   if(!S.day) S.day = todayStr();
@@ -1015,12 +1057,8 @@ function screenDay(){
         <label class="fld tf"><span>حضر الساعة</span>${timeBox(idp + "-f", showFrom(r.f), "صباحاً", "حضر")}</label>
         <label class="fld tt"><span>مشي الساعة</span>${timeBox(idp + "-t", showTo(r.t), "مساءً", "مشي")}</label>
       </div>
-      <input type="text" class="note" id="${idp}-n" placeholder="ملحوظة (لو فيه)" aria-label="ملحوظة" value="${esc(r.n || "")}" autocomplete="off">
-      <div class="quick" ${r.f || r.n ? "hidden" : ""}>
-        ${off ? "" : `<button class="chip go" data-act="quick" data-kind="full">حضر من 8 لـ ${thu ? "1" : "8"}</button>`}
-        <button class="chip" data-act="quick" data-kind="absent">غياب بدون إذن</button>
-        <button class="chip" data-act="quick" data-kind="absent-ok">غياب بإذن</button>
-      </div>
+      <input type="text" class="note" id="${idp}-n" placeholder="ملحوظة: دوس هنا تختار أو تكتب" aria-label="ملحوظة" value="${esc(r.n || "")}" autocomplete="off">
+      ${off ? "" : `<div class="quick" ${r.f || r.n ? "hidden" : ""}><button class="chip go" data-act="quick" data-kind="full">حضر من 8 لـ ${thu ? "1" : "8"}</button></div>`}
     </div>`;
   }).join("");
   const pct = all.length ? Math.round(done * 100 / all.length) : 0;
@@ -1112,8 +1150,7 @@ function screenAdd(){
         <label class="fld"><span>حضر الساعة</span>${timeBox("add-f", ["",""], "صباحاً", "حضر")}</label>
         <label class="fld"><span>مشي الساعة</span>${timeBox("add-t", ["",""], "مساءً", "مشي")}</label>
       </div>
-      <label class="fld"><span>ملحوظة (لو فيه)</span><input type="text" id="addNote" autocomplete="off"></label>
-      <div class="quick">${NOTE_CHIPS.map(c => `<button type="button" class="chip" data-act="chip" data-v="${c}">${c}</button>`).join("")}</div>
+      <div class="fld"><label for="addNote" style="font-size:14px;font-weight:500">ملحوظة (لو فيه)</label><input type="text" id="addNote" class="note" placeholder="دوس هنا تختار أو تكتب" autocomplete="off"></div>
       <p class="err" id="addErr" hidden></p>
       <div class="actions"><button class="btn primary" type="submit">حفظ الشخص</button><button class="btn" type="button" data-act="add-cancel">إلغاء</button></div>
     </form>`,
@@ -1343,7 +1380,8 @@ view().addEventListener("click", async e => {
   if(a === "quick"){ const row = t.closest(".rr"); if(row) quickFill(row, t.dataset.kind); }
   else if(a === "add"){ S.adding = true; render(); window.scrollTo(0, 0); }
   else if(a === "add-cancel"){ goBack(); }
-  else if(a === "chip"){ const n = $("#addNote"); n.value = n.value ? n.value + " - " + t.dataset.v : t.dataset.v; }
+  else if(a === "nkind"){ const p = t.closest(".npick"); p.dataset.kind = t.dataset.k; p.innerHTML = pickerInner(t.dataset.k); }
+  else if(a === "nopt"){ applyNote(t.closest(".npick"), t.dataset.v); }
   else if(a === "day-prev" || a === "day-next"){ S.day = ymd(addDays(parseYMD(S.day || todayStr()), a === "day-prev" ? -1 : 1)); render(); }
   else if(a === "day-today"){ S.day = todayStr(); render(); }
   else if(a === "half-prev" || a === "half-next"){ const [ym, h] = (S.people.half || halfKeyOf(todayStr())).split("|"); S.people.half = `${addMonths(ym, a === "half-prev" ? -1 : 1)}|${h}`; render(); }
@@ -1369,6 +1407,13 @@ view().addEventListener("click", async e => {
   else if(a === "hol-add"){ const d = $("#holNew").value; if(!d){ toast("اختار التاريخ الأول."); return; } await safeWrite(() => upsert("cfg/main", {holidays: {[d]: true}}, {}), "اليوم اتسجل عيد"); }
   else if(a === "hol-del"){ const d = t.dataset.d; await safeWrite(() => upsert("cfg/main", {holidays: {[d]: null}}, {}), "اتشال من الأعياد"); }
 });
+view().addEventListener("focusin", e => { if(e.target.classList && e.target.classList.contains("note")) openPicker(e.target); });
+view().addEventListener("click", e => { if(e.target.classList && e.target.classList.contains("note")) openPicker(e.target); });
+view().addEventListener("focusout", e => {
+  if(!(e.target.classList && e.target.classList.contains("note"))) return;
+  setTimeout(() => { const a = document.activeElement; if(!(a && a.classList && a.classList.contains("note"))) closePicker(); }, 150);
+});
+view().addEventListener("mousedown", e => { if(e.target.closest(".npick")) e.preventDefault(); });
 view().addEventListener("mousedown", e => {
   const td = e.target.closest("table.g td[data-ref]"); if(!td) return;
   e.preventDefault(); selectCell(td.dataset.ref, true);
