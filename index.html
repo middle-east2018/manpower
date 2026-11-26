@@ -151,6 +151,46 @@ body.wide .page{max-width:1180px}
 .quick{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:500}
 .chip.go{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+/* صفحة العامل */
+.wkstate{border-radius:12px;padding:10px 14px;background:var(--warn-soft);color:var(--warn);font-weight:500;font-size:14px}
+.wkstate.ok{background:var(--ok-soft);color:var(--ok)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);box-shadow:var(--card-shadow);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.kpi span{font-size:13px;color:var(--muted)}
+.kpi b{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.money{background:var(--surface);border:1px solid var(--line);box-shadow:var(--card-shadow);border-radius:14px;padding:6px 14px}
+.mrow{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.mrow span{color:var(--muted);font-size:14px}
+.mrow b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.mrow.sm b{font-size:14px;font-weight:500}
+.mrow.g b{color:var(--ok)} .mrow.b b{color:var(--bad)}
+.mdue{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 8px}
+.mdue span{font-weight:600}
+.mdue b{font-size:24px;color:var(--accent);font-variant-numeric:tabular-nums}
+.mlock{padding:12px 0;color:var(--muted);font-size:14px}
+.wh2{font-size:17px;margin:6px 0 0;font-weight:600}
+.wdays{background:var(--surface);border:1px solid var(--line);box-shadow:var(--card-shadow);border-radius:14px;overflow:hidden}
+.wd{display:grid;grid-template-columns:78px 1fr;gap:4px 10px;padding:10px 12px;border-bottom:1px solid var(--line2);align-items:center}
+.wd:last-child{border-bottom:0}
+.wd.fri{background:var(--fri)}
+.wd.today{box-shadow:inset 3px 0 0 var(--accent)}
+.wd .dl{display:flex;flex-direction:column;line-height:1.25}
+.wd .dl b{font-weight:600}
+.wd .dl span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wmid{display:flex;flex-direction:column;gap:1px;font-size:15px}
+.wmid .mut{color:var(--muted)}
+.wtime{font-size:12px;color:var(--muted)}
+.wn{grid-column:1/-1;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:500}
+.wn.g{background:var(--ok-soft);color:var(--ok)} .wn.b{background:var(--bad-soft);color:var(--bad)} .wn.o{background:var(--surface2);color:var(--muted)}
+/* المدير: الاعتماد والأكواد */
+.apprbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border-radius:14px;padding:10px 14px;background:var(--warn-soft);color:var(--warn);box-shadow:var(--card-shadow)}
+.apprbar.ok{background:var(--ok-soft);color:var(--ok)}
+.apprbar small{display:block;font-size:12px;opacity:.85}
+.pinbox{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;border-right:1px solid #ddd;padding-right:10px}
+.pinshow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;background:#E8F4EC;color:#14502E;border-bottom:1px solid #cfe5d6;direction:rtl}
+.pinshow b{font-size:26px;letter-spacing:4px;font-family:"Segoe UI",Tahoma,sans-serif}
+.pinshow small{flex-basis:100%;font-size:12px}
+.pinshow .btn{background:#fff;color:#14502E;border-color:#b9d9c4}
 /* سياسة المصنع */
 .polbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:sticky;top:calc(var(--bar) + env(safe-area-inset-top,0px) + 8px);z-index:5}
 .polbar .btn{padding:12px;font-size:16px;box-shadow:var(--card-shadow)}
@@ -297,10 +337,20 @@ table.g td.ovr::after{content:"";position:absolute;top:0;right:0;border-top:6px 
       <h1 id="lockTitle">عمالة <bdi>Middle East</bdi></h1>
       <p class="lock-sub">حضور وغياب العمالة وتقفيل الـ <bdi>time sheet</bdi></p>
       <form id="pwForm" class="pin" autocomplete="off">
-        <label for="pw">ادخل كلمة السر</label>
+        <label for="pw">كلمة سر المهندسين</label>
         <input id="pw" type="password" inputmode="numeric" autocomplete="off" aria-describedby="pwErr">
         <button class="btn primary" type="submit">دخول</button>
         <p class="err" id="pwErr" hidden>كلمة السر مش صح، جرّب تاني.</p>
+      </form>
+      <button class="btn primary" id="workerBtn" type="button" hidden style="width:100%;margin-top:14px">أنا عامل: افتح الـ <bdi>time sheet</bdi> بتاعي</button>
+      <form id="wForm" class="pin" hidden autocomplete="off" style="margin-top:6px">
+        <label for="wSel">اختار اسمك</label>
+        <select id="wSel" style="width:100%;padding:12px;border-radius:12px;font-size:17px"><option value="">بيحمّل الأسامي…</option></select>
+        <label for="wPin">الكود (6 أرقام من المهندس)</label>
+        <input id="wPin" type="password" inputmode="numeric" maxlength="6" autocomplete="off">
+        <button class="btn primary" type="submit">دخول</button>
+        <button class="btn" type="button" id="wBack">رجوع</button>
+        <p class="err" id="wErr" hidden></p>
       </form>
       <button class="btn" id="policyBtn" type="button" style="margin-top:14px;width:100%"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>اقرا سياسة المصنع</button>
       <button class="btn" id="installBtn" type="button" hidden style="margin-top:10px;width:100%">ثبّت التطبيق على الموبايل</button>
@@ -339,7 +389,8 @@ window.addEventListener("error", function(e){
 <script>
 "use strict";
 /* ===================== ثوابت ===================== */
-const PW_REC = "505152", PW_MGR = "707172";
+/* كلمات السر دي للتجربة على الجهاز بس (وضع الذاكرة). في التطبيق الحقيقي الدخول بيتعمل من السيرفر، ومفيش أي كلمة سر في الكود */
+const PW_REC = "1111", PW_MGR = "2222";
 const JOBS = ["مساعد","حجار","براد","لحام","مشرف"];
 const JOB_EN = {"مساعد":"Helper","حجار":"Grinder","براد":"Fitter","لحام":"Welder","مشرف":"Supervisor"};
 const TAB_COLOR = {"لحام":"FFFF0000","حجار":"FFFFC000","مساعد":"FF0070C0","براد":"FF7030A0","مشرف":"FF00B0F0"};
@@ -408,7 +459,7 @@ function showTo(s){ if(!s) return ["",""]; let [h,m] = s.split(":").map(Number);
    cfg/main: {holidays:{"YYYY-MM-DD":true}} */
 const S = {
   level: 0, sec: null, workers: {}, att: {}, ovr: {}, cfg: {holidays:{}},
-  loaded: {workers:false, att:false, ovr:false, cfg:false}, slow:false,
+  loaded: {workers:false, att:false, ovr:false, cfg:false, appr:false}, slow:false, appr: {},
   rec: {group:null, open:new Set(), adding:false, q:"", confirm:null},
   mgr: {group:null, sheet:null, sel:"A1", editing:false},
   pending:false, readOnly:false
@@ -439,9 +490,22 @@ function makeMemDB(){
 
 /* نسخة Google Apps Script: البيانات في Google Sheet، والمتصفح بيسأل عن الجديد كل 20 ثانية */
 /* نسخة التطبيق (PWA): نفس الكلام بس بيكلم السيرفر بـ fetch على لينك الـ API */
+/* الدخول: token من السيرفر متخزن على الموبايل. مفيش أي كلمة سر متخزنة */
+const AUTH_KEY = "me_auth";
+function getAuth(){ try{ return JSON.parse(localStorage.getItem(AUTH_KEY) || "null"); }catch(e){ return null; } }
+function setAuth(a){ try{ localStorage.setItem(AUTH_KEY, JSON.stringify(a)); }catch(e){} }
+function clearAuth(){ try{ localStorage.removeItem(AUTH_KEY); }catch(e){} }
+let authLost = false;
+function onAuthLost(){
+  if(authLost) return; authLost = true;
+  clearAuth();
+  try{ sessionStorage.setItem("me_msg", "الدخول انتهى أو كلمة السر اتغيرت. ادخل تاني."); }catch(e){}
+  location.reload();
+}
 function apiCall(url){
   return async (fn, ...a) => {
-    const body = fn === "dbSync" ? {fn, since: a[0]} : fn === "file" ? {fn, name: a[0]} : {fn, ops: a[0]};
+    const body = fn === "dbSync" ? {fn, since: a[0]} : fn === "dbWrite" ? {fn, ops: a[0]} : fn === "file" ? {fn, name: a[0]} : Object.assign({fn}, a[0] || {});
+    const au = getAuth(); if(au && au.token && fn !== "login" && fn !== "wlogin") body.token = au.token;
     let r;
     const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
     const tm = ctl ? setTimeout(() => ctl.abort(), fn === "file" ? 90000 : 30000) : null;
@@ -451,7 +515,12 @@ function apiCall(url){
     if(!r.ok) throw {code:"unavailable", message:"http " + r.status};
     const j = await r.json().catch(() => null);
     if(!j) throw {code:"unavailable", message:"bad response"};
-    if(!j.ok) throw {code: /bad|missing|large/.test(j.error || "") ? "invalid_argument" : "unavailable", message: j.error};
+    if(!j.ok){
+      const er = String(j.error || "");
+      if(er === "auth") throw {code:"auth", message:er};
+      if(/^(wrong|locked|busy|nopw|nopin)$/.test(er)) throw {code:er, message:er};
+      throw {code: /bad|missing|large|forbidden/.test(er) ? "invalid_argument" : "unavailable", message: er};
+    }
     return j.res;
   };
 }
@@ -459,8 +528,8 @@ function apiCall(url){
    - آخر نسخة من البيانات متخزنة على الموبايل (localStorage)، فالتطبيق بيفتح ويعرض حتى من غير نت.
    - أي تسجيل بيتحفظ على الموبايل الأول ويدخل "طابور" (outbox)، وبيتبعت للسيرفر بالترتيب أول ما النت يرجع.
    - العمليات كلها (set / upsert / update / delete) لو اتبعتت مرتين النتيجة واحدة، فإعادة الإرسال آمنة. */
-function makeGasDB(transport){
-  const KEY = "me_store_v1_" + (window.ME_API ? "app" : "gas");
+function makeGasDB(transport, role){
+  const KEY = "me_store_v1_" + (window.ME_API ? "app_" + (role || "x") : "gas");
   let ver = null, base = {}, docs = {}, outbox = [], first = true, online = navigator.onLine !== false, syncing = false, busy = false;
   const ls = new Set(), sls = new Set();
   const clone = o => o === undefined ? undefined : JSON.parse(JSON.stringify(o));
@@ -474,7 +543,14 @@ function makeGasDB(transport){
   const status = () => ({pending: outbox.reduce((n, o) => n + o.ops.length, 0), online, syncing: syncing || busy, ready: !first});
   const notify = () => { const st = status(); for(const f of sls){ try{ f(st); }catch(e){} } };
   const save = () => { try{ localStorage.setItem(KEY, JSON.stringify({ver, base, outbox})); }catch(e){ console.warn("store", e); } };
-  const load = () => { try{ const j = JSON.parse(localStorage.getItem(KEY) || "null"); if(j && j.base){ ver = j.ver; base = j.base; outbox = j.outbox || []; return true; } }catch(e){} return false; };
+  const load = () => {
+    // نسخة ما قبل كلمات السر (2026-11-26) كانت متخزنة على "me_store_v1_app": ناخد منها التسجيلات اللي لسه ما اتبعتتش بس، ونمسحها
+    try{
+      const old = window.ME_API && JSON.parse(localStorage.getItem("me_store_v1_app") || "null");
+      if(old){ if(old.outbox && old.outbox.length){ const cur = JSON.parse(localStorage.getItem(KEY) || "null") || {ver: null, base: {}, outbox: []}; cur.outbox = (cur.outbox || []).concat(old.outbox); localStorage.setItem(KEY, JSON.stringify(cur)); } localStorage.removeItem("me_store_v1_app"); }
+    }catch(e){}
+    try{ const j = JSON.parse(localStorage.getItem(KEY) || "null"); if(j && j.base){ ver = j.ver; base = j.base; outbox = j.outbox || []; return true; } }catch(e){} return false;
+  };
   const merge = (a, b) => { for(const k in b){ const v = b[k]; if(v && typeof v === "object" && !Array.isArray(v) && a[k] && typeof a[k] === "object" && !Array.isArray(a[k])) merge(a[k], v); else a[k] = v === undefined ? null : clone(v); } return a; };
   function applyOps(t, ops){
     for(const op of ops){
@@ -498,6 +574,7 @@ function makeGasDB(transport){
         let r;
         try{ r = await call("dbWrite", ops); online = true; }
         catch(e){
+          if(e && e.code === "auth"){ onAuthLost(); break; } // التسجيلات بتفضل في الطابور لحد ما يدخل تاني
           if(e && e.code === "invalid_argument"){ // عملية السيرفر رفضها: نشيلها علشان ما توقفش الباقي
             const bad = outbox.shift(); console.warn("dropped", bad, e); save(); rebuild();
             try{ toast("فيه تعديل السيرفر رفضه ومش هيتبعت."); }catch(x){}
@@ -520,6 +597,7 @@ function makeGasDB(transport){
       if(r && !r.same){ ver = r.ver; base = r.docs || {}; save(); rebuild(); }
       else if(first) rebuild();
     }catch(e){
+      if(e && e.code === "auth"){ onAuthLost(); return; }
       online = false; console.warn(e);
       if(first) for(const l of ls) l.err && l.err(e);
     }finally{ syncing = false; notify(); }
@@ -568,7 +646,7 @@ async function upsert(path, partial, base){
 }
 function dbErr(e){
   const c = e && e.code;
-  if(c === "invalid_argument") return "التعديل ما اتحفظش: غالباً حسابك ما عندوش صلاحية تعديل. اطلب من صاحب الصفحة يخليك Contributor.";
+  if(c === "invalid_argument") return "التعديل ده مش مسموح بيه بكلمة السر اللي داخل بيها.";
   if(c === "quota_exceeded") return "مساحة التخزين اتملت. كلّم المسؤول.";
   return "التعديل ما اتحفظش، جرّب تاني بعد شوية.";
 }
@@ -588,6 +666,7 @@ function subscribe(){
   coll("workers", "workers", "workers");
   coll("att", "att", "att");
   coll("ovr", "ovr", "ovr");
+  coll("appr", "appr", "appr");
   DB.doc("cfg/main").onSnapshot(s => { S.cfg = (s.exists && s.data()) || {holidays:{}}; if(!S.cfg.holidays) S.cfg.holidays = {}; done("cfg"); }, onErr("cfg"));
 }
 const allLoaded = () => Object.values(S.loaded).every(Boolean);
@@ -957,15 +1036,66 @@ function setLevel(l){
   else if(!S.tab || (S.tab === "close" && l < 2)) S.tab = l === 2 ? "close" : "day";
   render(); window.scrollTo(0, 0);
 }
+const LOGIN_ERR = {wrong:"كلمة السر مش صح، جرّب تاني.", locked:"محاولات غلط كتير. جرّب بعد ربع ساعة.", busy:"محاولات غلط كتير على التطبيق. جرّب بعد ساعة.", nopw:"كلمات سر المهندسين لسه ما اتعملتش.", nopin:"لسه ما اتعملكش كود. اطلبه من المهندس."};
+async function staffLogin(pw){
+  const err = $("#pwErr"), btn = $("#pwForm button[type=submit]");
+  err.hidden = true; if(!pw) return;
+  btn.disabled = true;
+  try{
+    const r = await apiCall(window.ME_API)("login", {password: pw});
+    setAuth({token: r.token, role: r.role}); $("#pw").value = "";
+    startStaff(getAuth());
+  }catch(e){ err.textContent = LOGIN_ERR[e.code] || "لازم يكون فيه نت علشان تدخل أول مرة."; err.hidden = false; }
+  finally{ btn.disabled = false; }
+}
+function startStaff(a){
+  DB = makeGasDB(apiCall(window.ME_API), a.role);
+  subscribe(); DB.onStatus(updateSyncUI);
+  S.tab = a.role === "mgr" ? "close" : "day";
+  setLevel(a.role === "mgr" ? 2 : 1);
+  if(a.role === "mgr") loadPins();
+}
+async function signOut(){
+  const a = getAuth();
+  if(a && a.token){ try{ await apiCall(window.ME_API)("logout"); }catch(e){} }
+  if(a && a.role === "worker"){ try{ localStorage.removeItem("me_worker_" + a.wid); }catch(e){} }
+  clearAuth(); location.reload();
+}
+/* العامل: يختار اسمه ويكتب الكود */
+async function loadWList(){
+  const sel = $("#wSel"), err = $("#wErr"); let list = null;
+  try{ list = await apiCall(window.ME_API)("wlist"); try{ localStorage.setItem("me_wlist", JSON.stringify(list)); }catch(e){} }
+  catch(e){ try{ list = JSON.parse(localStorage.getItem("me_wlist") || "null"); }catch(x){} }
+  if(!list){ sel.innerHTML = '<option value="">مفيش نت</option>'; err.textContent = "لازم نت علشان أسامي العمال تنزل."; err.hidden = false; return; }
+  sel.innerHTML = '<option value="">اختار اسمك…</option>' + list.map(w => `<option value="${esc(w.id)}">${esc(w.name)}${w.job ? " (" + esc(w.job) + ")" : ""}</option>`).join("");
+}
+$("#workerBtn").addEventListener("click", () => { $("#pwForm").hidden = true; $("#workerBtn").hidden = true; $("#wForm").hidden = false; $("#wErr").hidden = true; loadWList(); });
+$("#wBack").addEventListener("click", () => { $("#pwForm").hidden = false; $("#workerBtn").hidden = false; $("#wForm").hidden = true; });
+$("#wPin").addEventListener("input", e => { e.target.value = e.target.value.replace(/\D/g, "").slice(0, 6); $("#wErr").hidden = true; });
+$("#wForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = $("#wErr"), wid = $("#wSel").value, pin = $("#wPin").value.trim(), btn = $("#wForm button[type=submit]");
+  err.hidden = true;
+  if(!wid){ err.textContent = "اختار اسمك الأول."; err.hidden = false; return; }
+  if(!/^\d{6}$/.test(pin)){ err.textContent = "الكود 6 أرقام."; err.hidden = false; return; }
+  btn.disabled = true;
+  try{
+    const r = await apiCall(window.ME_API)("wlogin", {wid, pin});
+    setAuth({token: r.token, role: "worker", wid: r.wid, name: r.name}); $("#wPin").value = "";
+    startWorker(getAuth());
+  }catch(x){ err.textContent = x.code === "wrong" ? "الكود مش صح، جرّب تاني." : x.code === "locked" ? "محاولات غلط كتير على الاسم ده. جرّب بعد ربع ساعة." : (LOGIN_ERR[x.code] || "لازم يكون فيه نت علشان تدخل أول مرة."); err.hidden = false; }
+  finally{ btn.disabled = false; }
+});
 $("#pwForm").addEventListener("submit", e => {
   e.preventDefault();
   const v = $("#pw").value.trim(); $("#pwErr").hidden = true;
+  if(window.ME_API){ staffLogin(v); return; }
   if(v === PW_MGR){ $("#pw").value = ""; S.tab = "close"; setLevel(2); }
   else if(v === PW_REC){ $("#pw").value = ""; S.tab = "day"; setLevel(1); }
-  else { $("#pwErr").hidden = false; $("#pw").select(); }
+  else { $("#pwErr").textContent = "كلمة السر مش صح، جرّب تاني."; $("#pwErr").hidden = false; $("#pw").select(); }
 });
 $("#pw").addEventListener("input", () => $("#pwErr").hidden = true);
-$("#lockBtn").addEventListener("click", () => setLevel(0));
+$("#lockBtn").addEventListener("click", () => { if(window.ME_API) signOut(); else setLevel(0); });
 $("#backBtn").addEventListener("click", goBack);
 $("#tabbar").addEventListener("click", e => {
   const b = e.target.closest("button[data-tab]"); if(!b || b.hidden) return;
@@ -977,7 +1107,8 @@ $("#tabbar").addEventListener("click", e => {
 });
 $("#policyBtn").addEventListener("click", () => { S.guestPolicy = true; render(); window.scrollTo(0, 0); });
 function goBack(){
-  if(!S.level && S.guestPolicy) S.guestPolicy = false;
+  if(S.mode === "worker"){ S.wk.policy = false; }
+  else if(!S.level && S.guestPolicy) S.guestPolicy = false;
   else if(S.adding) S.adding = false;
   else if(S.tab === "people" && S.people.wid){ S.people.wid = null; S.people.confirm = false; }
   else if(S.tab === "close" && S.mgr.group) S.mgr.group = null;
@@ -985,6 +1116,7 @@ function goBack(){
 }
 
 function render(){
+  if(S.mode === "worker") return renderWorker();
   const locked = !S.level, guest = locked && S.guestPolicy;
   $("#lock").hidden = !locked || guest; $("#shell").hidden = locked && !guest;
   $("#tabbar").hidden = guest; $("#lockBtn").hidden = guest;
@@ -1009,6 +1141,150 @@ function render(){
   v.innerHTML = scr.html + (fab ? `<button class="fab" data-act="add"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>شخص جديد</button>` : "");
   if(scr.after) scr.after();
   if(fid){ const el = document.getElementById(fid); if(el && document.activeElement !== el){ el.focus({preventScroll:true}); try{ if(selA != null) el.setSelectionRange(selA, selB); }catch(e){} } }
+}
+
+/* ===================== صفحة العامل (للقراية بس، بياناته هو بس جاية من السيرفر) ===================== */
+let wkTimer = null;
+function startWorker(a){
+  S.mode = "worker"; S.level = 0;
+  S.wk = {wid: a.wid, name: a.name || "", per: null, at: null, err: null, policy: false, has: false};
+  try{ const c = JSON.parse(localStorage.getItem("me_worker_" + a.wid) || "null"); if(c && c.data){ applyWorker(c.data); S.wk.at = c.at; } }catch(e){}
+  render(); refreshWorker();
+  if(!wkTimer){
+    wkTimer = setInterval(() => { if(document.visibilityState === "visible") refreshWorker(); }, 60000);
+    document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") refreshWorker(); });
+    window.addEventListener("online", refreshWorker);
+  }
+}
+async function refreshWorker(){
+  try{
+    const d = await apiCall(window.ME_API)("me");
+    applyWorker(d); S.wk.at = Date.now(); S.wk.err = null;
+    try{ localStorage.setItem("me_worker_" + S.wk.wid, JSON.stringify({data: d, at: S.wk.at})); }catch(e){}
+  }catch(e){
+    if(e && e.code === "auth") return onAuthLost();
+    S.wk.err = "offline";
+  }
+  requestRender();
+}
+function applyWorker(d){
+  const wid = S.wk.wid;
+  S.workers = {[wid]: d.worker}; S.att = d.att || {}; S.ovr = d.ovr || {};
+  S.cfg = d.cfg || {holidays:{}}; if(!S.cfg.holidays) S.cfg.holidays = {};
+  S.appr = d.appr || {}; S.wk.has = true; if(d.worker && d.worker.name) S.wk.name = d.worker.name;
+}
+function wkCurrent(w){
+  const t = todayStr(), ym = ymOf(t), d = +t.slice(8);
+  if(wType(w, ym) === "staff") return {ym: d >= 26 ? addMonths(ym, 1) : ym};
+  return {ym, half: d <= 15 ? 1 : 2};
+}
+function wkStep(w, p, dir){
+  if(wType(w, p.ym) === "staff") return {ym: addMonths(p.ym, dir)};
+  const h = p.half || 1;
+  if(dir > 0) return h === 1 ? {ym: p.ym, half: 2} : {ym: addMonths(p.ym, 1), half: 1};
+  return h === 2 ? {ym: p.ym, half: 1} : {ym: addMonths(p.ym, -1), half: 2};
+}
+const pKey = p => p.ym + "|" + (p.half || 0);
+const fmtH = x => (Math.round(x * 100) / 100).toString();
+const egp = x => "EGP " + group(x, 2);
+function screenWorker(){
+  const wid = S.wk.wid, w = S.workers[wid];
+  if(!w) return {title: esc(S.wk.name || "الـ time sheet بتاعي"), sub: "", html: `<div class="loading">${S.wk.err ? "مفيش نت. أول مرة لازم يكون فيه نت علشان بياناتك تنزل." : "بيحمّل بياناتك…"}</div>`};
+  const cur = wkCurrent(w);
+  let p = S.wk.per || cur;
+  const type = wType(w, p.ym);
+  if(type === "staff") p = {ym: p.ym}; else if(!p.half) p = {ym: p.ym, half: 1};
+  const per = sheetPeriod(type, p.ym), sh = buildSheet(wid, p.ym, {});
+  const v = r => typeof sh.vals[r] === "number" ? sh.vals[r] : 0;
+  const useL = type === "staff" || p.half === 1, useR = type === "staff" || p.half === 2;
+  const days = [];
+  for(let i = 0; i < per.len; i++){
+    const left = i < 15;
+    if((left && !useL) || (!left && !useR)) continue;
+    const date = ymd(addDays(per.start, i)), row = 10 + (left ? i : i - 15);
+    const [cb, cc, cd, cn] = left ? ["B","C","D","F"] : ["L","M","N","P"];
+    const rec = dayRec(wid, date) || {};
+    const noteCell = sh.vals[cn + row];
+    days.push({date, rec, basic: v(cb + row), ot: v(cc + row), fri: v(cd + row), note: rec.n || (typeof noteCell === "string" ? noteCell : "")});
+  }
+  const T = (l, r) => (useL ? v(l) : 0) + (useR ? v(r) : 0);
+  const basic = T("B27", "L27"), ot = T("C27", "M27"), fri = T("D27", "N27");
+  const worked = days.filter(d => d.basic > 0 || d.fri > 0).length;
+  const a = S.appr[p.ym] || {}, approved = type === "staff" ? !!a.p2 : !!a["p" + p.half];
+  const rate = eff(w, "rate", p.ym);
+  const [y, m] = p.ym.split("-").map(Number);
+  const label = type === "staff" ? `شهر ${AR_MONTHS[m-1]} ${y}` : `${AR_MONTHS[m-1]} ${y}، ${p.half === 1 ? "النصف الأول" : "النصف التاني"}`;
+  const first = days[0] ? parseYMD(days[0].date) : per.start, last = days.length ? parseYMD(days[days.length - 1].date) : per.start;
+  const range = `من ${first.getDate()} ${AR_MONTHS[first.getMonth()]} لـ ${last.getDate()} ${AR_MONTHS[last.getMonth()]}`;
+  const isCur = pKey(p) === pKey(cur);
+  // يرجع لحد الفترة اللي اتضاف فيها بس
+  const ad = w.addedAt || "", adP = !ad ? null : type === "staff" ? {ym: +ad.slice(8) >= 26 ? addMonths(ymOf(ad), 1) : ymOf(ad)} : {ym: ymOf(ad), half: +ad.slice(8) <= 15 ? 1 : 2};
+  const canPrev = !adP || pKey(wkStep(w, p, -1)) >= pKey(adP);
+  const today = todayStr();
+  const rows = days.map(d => {
+    const dt = parseYMD(d.date), off = isOffDay(d.date);
+    let h;
+    if(d.fri > 0) h = `<b>${off && dt.getDay() !== 5 ? "عيد" : "جمعة"}: ${fmtH(d.fri)} ساعة</b>`;
+    else if(d.basic > 0) h = `<b>${fmtH(d.basic)} ساعات</b>${d.ot > 0 ? ` + <b>${fmtH(d.ot)}</b> إضافي` : ""}`;
+    else if(d.date > today) h = `<span class="mut">لسه</span>`;
+    else if(off) h = `<span class="mut">${dt.getDay() === 5 ? "جمعة" : "عيد"}</span>`;
+    else h = `<span class="mut">مفيش ساعات</span>`;
+    const t = d.rec.f ? `<span class="wtime">من <bdi>${showFrom(d.rec.f).join(":")}</bdi> ص لـ <bdi>${showTo(d.rec.t).join(":")}</bdi> م</span>` : "";
+    return `<div class="wd ${off ? "fri" : ""} ${d.date === today ? "today" : ""}">
+      <div class="dl"><b>${AR_DAYS[dt.getDay()]}</b><span>${dt.getDate()}/${dt.getMonth()+1}</span></div>
+      <div class="wmid"><span class="whrs">${h}</span>${t}</div>
+      ${d.note ? `<div class="wn ${d.note === "إجازة" ? "o" : noteIsGood(d.note) ? "g" : "b"}">${esc(d.note)}</div>` : ""}
+    </div>`;
+  }).join("");
+  const moneyRows = approved ? `
+      <div class="mrow"><span>الساعات بالفلوس</span><b>${egp(T("I29", "S29"))}</b></div>
+      ${T("D33", "N33") ? `<div class="mrow g"><span>مكافآت</span><b>+ ${egp(T("D33", "N33"))}</b></div>` : ""}
+      ${T("D32", "N32") ? `<div class="mrow b"><span>خصومات</span><b>− ${egp(T("D32", "N32"))}</b></div>` : ""}
+      <div class="mdue"><span>المستحق</span><b>${egp(T("D34", "N34"))}</b></div>`
+    : `<div class="mlock">المستحق والمكافآت والخصومات هيظهروا هنا بعد ما المدير يعتمد الفترة دي.</div>`;
+  const upd = S.wk.at ? new Date(S.wk.at) : null;
+  return {
+    title: esc(w.name), sub: `${esc(w.job || "")}${type === "staff" ? "، متعيّن" : "، يومية"}`,
+    html: `<div class="halfnav">
+        <div class="monthrow"><button class="iconbtn" data-act="wk-prev" aria-label="الفترة اللي قبلها" ${canPrev ? "" : "disabled"}>${ICON_PREV}</button><b>${label}</b><button class="iconbtn" data-act="wk-next" aria-label="الفترة اللي بعدها" ${isCur ? "disabled" : ""}>${ICON_NEXT}</button></div>
+        <span class="hint" style="text-align:center">${range}${isCur ? " (الفترة الحالية)" : ""}</span>
+      </div>
+      <div class="wkstate ${approved ? "ok" : ""}">${approved ? "✓ الفترة دي اتعتمدت من المدير" : "الفترة دي لسه بتتراجع، والأرقام ممكن تتغير"}</div>
+      <div class="kpis">
+        <div class="kpi"><span>أيام الشغل</span><b>${worked}</b></div>
+        <div class="kpi"><span>ساعات أساسي</span><b>${fmtH(basic)}</b></div>
+        <div class="kpi"><span>ساعات إضافي</span><b>${fmtH(ot)}</b></div>
+        <div class="kpi"><span>جمعة وأعياد</span><b>${fmtH(fri)}</b></div>
+      </div>
+      <div class="money">
+        <div class="mrow"><span>اليومية</span><b>${rate === undefined ? "لسه ما اتحددتش" : egp(Number(rate))}</b></div>
+        ${rate === undefined ? "" : `<div class="mrow sm"><span>سعر الساعة الأساسي</span><b>${egp(v("B28"))}</b></div><div class="mrow sm"><span>سعر الساعة الإضافي</span><b>${egp(v("C28"))}</b></div><div class="mrow sm"><span>سعر ساعة الجمعة والأعياد</span><b>${egp(v("D28"))}</b></div>`}
+        ${moneyRows}
+      </div>
+      <h2 class="wh2">الأيام</h2>
+      <div class="wdays">${rows || '<div class="empty">مفيش أيام في الفترة دي.</div>'}</div>
+      <p class="hint">${upd ? `آخر تحديث: ${upd.getDate()}/${upd.getMonth()+1} الساعة ${pad2(upd.getHours())}:${pad2(upd.getMinutes())}` : ""}${S.wk.err ? " (مفيش نت دلوقتي، ودي آخر نسخة نزلت عندك)" : ""}</p>
+      <button class="btn" data-act="wk-policy" style="align-self:stretch">اقرا سياسة المصنع</button>`
+  };
+}
+function renderWorker(){
+  $("#lock").hidden = true; $("#shell").hidden = false; $("#tabbar").hidden = true;
+  $("#lockBtn").hidden = false; $("#lockBtn").title = "خروج"; $("#lockBtn").setAttribute("aria-label", "خروج");
+  const scr = S.wk.policy ? screenPolicy() : screenWorker();
+  $("#barTitle").innerHTML = scr.title; $("#barSub").innerHTML = scr.sub || "";
+  $("#backBtn").hidden = !S.wk.policy; $("#barMark").hidden = !!S.wk.policy;
+  document.body.classList.remove("wide");
+  view().innerHTML = scr.html; if(scr.after) scr.after();
+}
+
+/* ===================== المدير: أكواد العمال ===================== */
+S.pins = null; S.pinAsk = null; S.pinShow = null;
+async function loadPins(){ try{ S.pins = await apiCall(window.ME_API)("pinStatus"); requestRender(); }catch(e){} }
+async function makePin(wid){
+  try{
+    const r = await apiCall(window.ME_API)("setPin", {wid});
+    S.pinShow = {wid, pin: r.pin}; S.pins = Object.assign({}, S.pins || {}, {[wid]: true}); S.pinAsk = null; render();
+  }catch(e){ if(e && e.code === "auth") return onAuthLost(); toast("لازم يكون فيه نت علشان تعمل كود."); }
 }
 
 /* ===================== تسجيل الحضور: أدوات مشتركة ===================== */
@@ -1397,7 +1673,11 @@ function screenBook(){
     xl = `<div class="xl">
       <div class="wsbar"><span>الشيت: <b><bdi>${esc(sh.name)}</bdi></b></span>
         <label>نوع العامل من الشهر ده: <select id="wsType" data-wid="${sh.wid}"><option value="daily" ${sh.type === "daily" ? "selected" : ""}>يومية (1-15 و16-آخر الشهر)</option><option value="staff" ${sh.type === "staff" ? "selected" : ""}>متعيّن (26 لـ 25)</option></select></label>
-        <span style="color:#666">المثلث البرتقالي معناه إن الخانة اتعدّلت بإيدك.</span></div>
+        <span style="color:#666">المثلث البرتقالي معناه إن الخانة اتعدّلت بإيدك.</span>
+        ${window.ME_API ? (S.pinAsk === sh.wid
+          ? `<span class="pinbox">الكود القديم هيبطل على موبايل العامل. متأكد؟ <button class="btn small" data-act="pin-yes" data-wid="${sh.wid}">أيوه، كود جديد</button><button class="btn small" data-act="pin-no">لأ</button></span>`
+          : `<span class="pinbox">كود دخول العامل: <b>${S.pins == null ? "…" : S.pins[sh.wid] ? "متعمل" : "لسه"}</b> <button class="btn small" data-act="pin" data-wid="${sh.wid}">${S.pins && S.pins[sh.wid] ? "كود جديد" : "اعمل كود"}</button></span>`) : ""}</div>
+      ${S.pinShow && S.pinShow.wid === sh.wid ? `<div class="pinshow"><span>كود <bdi>${esc(sh.name)}</bdi>:</span><b class="en">${S.pinShow.pin.slice(0,3)} ${S.pinShow.pin.slice(3)}</b><button class="btn small" data-act="pin-copy">انسخ</button><button class="btn small" data-act="pin-hide">خلاص</button><small>الكود ده بيظهر مرة واحدة بس. ابعته للعامل أو اكتبهوله على ورقة.</small></div>` : ""}
       <div class="fbar"><input class="ref" id="fRef" value="${sel}" aria-label="الخانة"><span class="fx">fx</span>
         <input class="fin" id="fIn" aria-label="محتوى الخانة" value="${esc(raw)}" autocomplete="off">
         <button class="btn" data-act="cell-reset" ${sh.ovrRefs.has(sel) ? "" : "disabled"} title="رجّع القيمة الأوتوماتيك">↺ أوتوماتيك</button>
@@ -1407,10 +1687,12 @@ function screenBook(){
     </div>
     <div class="legend"><span><i style="background:#FF0000"></i>لحام</span><span><i style="background:#FFC000"></i>حجار</span><span><i style="background:#0070C0"></i>مساعد</span><span><i style="background:#7030A0"></i>براد</span><span><i style="background:#00B0F0"></i>مشرف</span><span><i style="background:#92D050"></i>متعيّن</span></div>`;
   }
+  const akey = half === 1 ? "p1" : "p2", approved = !!(S.appr[ym] || {})[akey];
+  const apprbar = `<div class="apprbar ${approved ? "ok" : ""}"><div><b>${approved ? "✓ معتمد: العمال شايفين المستحق بتاع الفترة دي" : "العمال مش شايفين المستحق لحد ما تعتمد الفترة دي"}</b><small>${half === 1 ? "الاعتماد ده لليومية من 1 لـ 15" : "الاعتماد ده لليومية من 16 لآخر الشهر، وللمتعينين (الشهر كامل)"}</small></div><button class="btn small ${approved ? "" : "primary"}" data-act="appr" data-v="${approved ? 0 : 1}">${approved ? "إلغاء الاعتماد" : "اعتمد للعمال"}</button></div>`;
   const gwOld = $("#gw"), sx = gwOld ? gwOld.scrollLeft : 0, sy = gwOld ? gwOld.scrollTop : 0, hadFocus = document.activeElement === gwOld;
   return {
     title: `<span class="en">${esc(fileTitle(ym, pk))}</span>`, sub: half === 1 ? "اليومية من 1 لـ 15، والمتعينين الشهر كامل" : "اليومية والمتعينين: الشهر كامل", back: true, wide: true,
-    html: `${alerts}${dls}${xl}${panels}`,
+    html: `${alerts}${apprbar}${dls}${xl}${panels}`,
     after(){ const gw = $("#gw"); if(gw){ gw.scrollLeft = sx; gw.scrollTop = sy; if(hadFocus) gw.focus({preventScroll:true}); } }
   };
 }
@@ -1561,6 +1843,14 @@ view().addEventListener("click", async e => {
   if(a === "quick"){ const row = t.closest(".rr"); if(row) quickFill(row, t.dataset.kind); }
   else if(a === "add"){ S.adding = true; render(); window.scrollTo(0, 0); }
   else if(a === "add-cancel"){ goBack(); }
+  else if(a === "wk-prev" || a === "wk-next"){ const w = S.workers[S.wk.wid]; S.wk.per = wkStep(w, S.wk.per || wkCurrent(w), a === "wk-prev" ? -1 : 1); render(); window.scrollTo(0, 0); }
+  else if(a === "wk-policy"){ S.wk.policy = true; render(); window.scrollTo(0, 0); }
+  else if(a === "appr"){ const {ym, half} = curBook(), key = half === 1 ? "p1" : "p2"; await safeWrite(() => upsert(`appr/${ym}`, {[key]: t.dataset.v === "1" ? true : null}, {}), t.dataset.v === "1" ? "اتعتمدت: العمال هيشوفوا المستحق" : "الاعتماد اتلغى"); }
+  else if(a === "pin"){ const wid = t.dataset.wid; if(S.pins && S.pins[wid]){ S.pinAsk = wid; render(); } else makePin(wid); }
+  else if(a === "pin-yes"){ makePin(t.dataset.wid); }
+  else if(a === "pin-no"){ S.pinAsk = null; render(); }
+  else if(a === "pin-hide"){ S.pinShow = null; render(); }
+  else if(a === "pin-copy"){ try{ await navigator.clipboard.writeText(S.pinShow.pin); toast("الكود اتنسخ"); }catch(e){ toast("انسخ الكود بإيدك: " + S.pinShow.pin); } }
   else if(a === "pol-share"){ policyShare(); }
   else if(a === "pol-dl"){ policyDownload(); }
   else if(a === "nkind"){ const p = t.closest(".npick"); p.dataset.kind = t.dataset.k; p.innerHTML = pickerInner(t.dataset.k); }
@@ -1653,10 +1943,17 @@ view().addEventListener("keydown", e => {
 
 /* ===================== التشغيل ===================== */
 (async function boot(){
-  try{ const l = +sessionStorage.getItem("me_lvl"); if(l === 1 || l === 2){ S.tab = l === 2 ? "close" : "day"; S.level = l; } }catch(e){}
   if(window.ME_API){
-    DB = makeGasDB(apiCall(window.ME_API)); DL = anchorDownloads;
-  } else if(window.google && google.script && google.script.run){
+    DL = anchorDownloads;
+    $("#workerBtn").hidden = false;
+    try{ const m = sessionStorage.getItem("me_msg"); if(m){ $("#pwErr").textContent = m; $("#pwErr").hidden = false; sessionStorage.removeItem("me_msg"); } }catch(e){}
+    const a = getAuth();
+    if(a && (a.role === "rec" || a.role === "mgr")) startStaff(a);
+    else if(a && a.role === "worker") startWorker(a);
+    else render();
+  } else {
+  try{ const l = +sessionStorage.getItem("me_lvl"); if(l === 1 || l === 2){ S.tab = l === 2 ? "close" : "day"; S.level = l; } }catch(e){}
+  if(window.google && google.script && google.script.run){
     DB = makeGasDB(); DL = anchorDownloads;
   } else if(window.claude && typeof window.claude.use === "function"){
     const [db, dl] = await Promise.all([window.claude.use("db").catch(() => null), window.claude.use("downloads").catch(() => null)]);
@@ -1666,6 +1963,7 @@ view().addEventListener("keydown", e => {
   subscribe();
   if(DB.onStatus) DB.onStatus(updateSyncUI);
   render();
+  }
   /* زرار التثبيت (لو التطبيق مش متثبت) */
   if(window.ME_API){
     const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
