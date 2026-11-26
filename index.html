@@ -1069,8 +1069,14 @@ async function loadWList(){
   if(!list){ sel.innerHTML = '<option value="">مفيش نت</option>'; err.textContent = "لازم نت علشان أسامي العمال تنزل."; err.hidden = false; return; }
   sel.innerHTML = '<option value="">اختار اسمك…</option>' + list.map(w => `<option value="${esc(w.id)}">${esc(w.name)}${w.job ? " (" + esc(w.job) + ")" : ""}</option>`).join("");
 }
-$("#workerBtn").addEventListener("click", () => { $("#pwForm").hidden = true; $("#workerBtn").hidden = true; $("#wForm").hidden = false; $("#wErr").hidden = true; loadWList(); });
-$("#wBack").addEventListener("click", () => { $("#pwForm").hidden = false; $("#workerBtn").hidden = false; $("#wForm").hidden = true; });
+function setWForm(on){
+  S.wform = !!on;
+  $("#pwForm").hidden = on; $("#workerBtn").hidden = on || !window.ME_API; $("#wForm").hidden = !on;
+  if(on){ $("#wErr").hidden = true; loadWList(); }
+  syncHistory();
+}
+$("#workerBtn").addEventListener("click", () => setWForm(true));
+$("#wBack").addEventListener("click", () => setWForm(false));
 $("#wPin").addEventListener("input", e => { e.target.value = e.target.value.replace(/\D/g, "").slice(0, 6); $("#wErr").hidden = true; });
 $("#wForm").addEventListener("submit", async e => {
   e.preventDefault();
@@ -1106,16 +1112,42 @@ $("#tabbar").addEventListener("click", e => {
   S.tab = b.dataset.tab; S.adding = false; S.people.confirm = false; render(); window.scrollTo(0, 0);
 });
 $("#policyBtn").addEventListener("click", () => { S.guestPolicy = true; render(); window.scrollTo(0, 0); });
+/* الرجوع: زرار الرجوع اللي فوق، وكمان زرار/سحبة الرجوع بتاعة الموبايل (history) بيرجعوا خطوة جوه التطبيق.
+   من الشاشة الرئيسية بس زرار الموبايل بيقفل التطبيق زي أي تطبيق. */
+const homeTab = () => S.level === 2 ? "close" : "day";
+function canGoBack(){
+  if(S.wform) return true;
+  if(S.mode === "worker") return !!(S.wk && S.wk.policy);
+  if(!S.level) return !!S.guestPolicy;
+  return !!(S.adding || (S.tab === "people" && S.people.wid) || (S.tab === "close" && S.mgr.group) || S.people.confirm || S.pinAsk || S.tab !== homeTab());
+}
+let ignorePop = false;
+function syncHistory(){
+  try{
+    const want = canGoBack(), has = !!(history.state && history.state.meSub);
+    if(want && !has) history.pushState({meSub: true}, "");
+    else if(!want && has){ ignorePop = true; history.back(); }
+  }catch(e){}
+}
+window.addEventListener("popstate", () => {
+  if(ignorePop){ ignorePop = false; return; }
+  if(canGoBack()) goBack();
+});
 function goBack(){
-  if(S.mode === "worker"){ S.wk.policy = false; }
+  if(S.wform){ setWForm(false); return; }
+  if(S.mode === "worker"){ if(S.wk.policy) S.wk.policy = false; }
   else if(!S.level && S.guestPolicy) S.guestPolicy = false;
+  else if(S.people.confirm) S.people.confirm = false;
+  else if(S.pinAsk) S.pinAsk = null;
   else if(S.adding) S.adding = false;
   else if(S.tab === "people" && S.people.wid){ S.people.wid = null; S.people.confirm = false; }
   else if(S.tab === "close" && S.mgr.group) S.mgr.group = null;
+  else if(S.level && S.tab !== homeTab()){ S.tab = homeTab(); S.adding = false; }
   render(); window.scrollTo(0, 0);
 }
 
-function render(){
+function render(){ renderInner(); syncHistory(); }
+function renderInner(){
   if(S.mode === "worker") return renderWorker();
   const locked = !S.level, guest = locked && S.guestPolicy;
   $("#lock").hidden = !locked || guest; $("#shell").hidden = locked && !guest;
