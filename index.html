@@ -51,7 +51,7 @@ bdi{unicode-bidi:isolate}
 .btn.small{padding:5px 12px;font-size:14px}
 .btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
-input[type=text],input[type=password],input[type=date],input[type=number],select{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+input[type=text],input[type=password],input[type=date],input[type=number],input[type=tel],select{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
 .err{color:var(--bad);font-size:14px;margin:6px 0 0}
 #dbBanner{margin:10px max(16px,env(safe-area-inset-left,0px)) 0;border-radius:10px;padding:10px 14px;font-size:14px}
 #dbBanner.warn{background:var(--warn-soft);color:var(--warn)}
@@ -81,6 +81,36 @@ input[type=text],input[type=password],input[type=date],input[type=number],select
 .choice .chev{flex:none;opacity:.7}
 .pin .back{background:var(--surface2)}
 #startMsg{margin:0 0 4px;width:100%;text-align:right}
+/* بيانات العامل */
+.ltr{direction:ltr;unicode-bidi:isolate;text-align:left}
+input.ltr{text-align:left}
+.profcard{display:flex;align-items:center;flex-wrap:wrap;gap:10px;border-radius:14px;padding:12px 14px;font-weight:500;border:1px solid var(--line)}
+.profcard span{flex:1;min-width:180px}
+.profcard.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.profcard.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.profcard.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.paywarn{margin:0;color:var(--bad);font-weight:600;font-size:14px}
+.profcard svg{flex:none}
+.idrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.idpick{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:130px;border:2px dashed var(--line);border-radius:14px;background:var(--surface2);color:var(--accent);font-weight:600;text-align:center;padding:10px;cursor:pointer;overflow:hidden}
+.idpick img{width:100%;max-height:200px;object-fit:contain;border-radius:8px}
+.idpick .again{font-size:13px;color:var(--muted);font-weight:500}
+.idpick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--card-shadow)}
+.kvs{padding:4px 16px}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line2)}
+.kv:last-child{border-bottom:0}
+.kv > span{color:var(--muted);font-size:14px}
+.kv b{font-weight:600;font-size:17px}
+.kv a{color:var(--accent)}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+a.btn{text-decoration:none;color:inherit}
+.acts .btn{flex:1;min-width:130px;padding:12px}
+.idview{min-height:120px;border:1px solid var(--line);border-radius:14px;background:var(--surface);display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;color:var(--muted);text-align:center;white-space:normal}
+.idview img{width:100%;border-radius:8px}
+.idview.empty{border-style:dashed}
+.fsec{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line2);padding-top:12px}
+.fsec b{font-size:16px}
 .themebtn{margin-top:14px;width:100%}
 
 /* الشريط العلوي */
@@ -399,6 +429,7 @@ table.g td.ovr::after{content:"";position:absolute;top:0;right:0;border-top:6px 
       <button data-tab="people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.3 3-5 6-5s5.4 1.7 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg><span>العمال</span></button>
       <button data-tab="policy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg><span>السياسة</span></button>
       <button data-tab="close" id="tabClose" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 9h17M3.5 14.5h17M9.5 3.5v17"/></svg><span>التقفيل</span></button>
+      <button data-tab="data" id="tabData" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.5-1.4 1.6-2 3-2s2.5.6 3 2M14 10h4M14 13h3"/></svg><span>البيانات</span></button>
     </nav>
   </div>
 </div>
@@ -541,7 +572,7 @@ function apiCall(url, slot){
     const au = slot ? readAuth(slot) : getAuth(); if(au && au.token && fn !== "login" && fn !== "wlogin") body.token = au.token;
     let r;
     const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
-    const tm = ctl ? setTimeout(() => ctl.abort(), fn === "file" ? 90000 : 30000) : null;
+    const tm = ctl ? setTimeout(() => ctl.abort(), fn === "file" || fn === "profSave" || fn === "profImg" ? 90000 : 30000) : null;
     try{ r = await fetch(url, {method:"POST", body: JSON.stringify(body), redirect:"follow", signal: ctl ? ctl.signal : undefined}); }
     catch(e){ throw {code:"unavailable", message:"network"}; }
     finally{ if(tm) clearTimeout(tm); }
@@ -551,7 +582,7 @@ function apiCall(url, slot){
     if(!j.ok){
       const er = String(j.error || "");
       if(er === "auth") throw {code:"auth", message:er};
-      if(/^(wrong|locked|busy|nopw|nopin)$/.test(er)) throw {code:er, message:er};
+      if(/^(wrong|locked|busy|nopw|nopin|exists)$/.test(er)) throw {code:er, message:er};
       throw {code: /bad|missing|large|forbidden/.test(er) ? "invalid_argument" : "unavailable", message: er};
     }
     return j.res;
@@ -1111,7 +1142,9 @@ function ensureStaffDB(a){
   Object.keys(S.loaded).forEach(k => S.loaded[k] = false);
   DB = makeGasDB(apiCall(window.ME_API, "s"), a.role);
   subscribe(); DB.onStatus(updateSyncUI);
+  DB.onStatus(st => { if(st.online && !st.pending && profQ().length) flushProfQ(); });
   if(a.role === "mgr") loadPins();
+  loadProfStat();
 }
 function enterStaff(a){
   if(S.mode === "worker"){ S.mode = null; S.wk = null; S.workers = {}; S.att = {}; S.ovr = {}; S.appr = {}; }
@@ -1190,7 +1223,11 @@ $("#tabbar").addEventListener("click", e => {
   if(S.tab === b.dataset.tab){ // دوسة تانية على نفس التاب = يرجع لأوله
     if(S.tab === "people") S.people.wid = null;
     if(S.tab === "close") S.mgr.group = null;
+    if(S.tab === "data") S.prof.wid = null;
   }
+  if(b.dataset.tab === "data" || b.dataset.tab === "people") loadProfStat();
+  if(b.dataset.tab === "data" && S.prof.list) loadProfList(); // تحديث في الخلفية (أول مرة بيتحمّل من الشاشة)
+  S.prof.edit = null;
   S.tab = b.dataset.tab; S.adding = false; S.people.confirm = false; render(); window.scrollTo(0, 0);
 });
 $("#policyBtn").addEventListener("click", () => { S.guestPolicy = true; render(); window.scrollTo(0, 0); });
@@ -1219,10 +1256,12 @@ function goBack(){
     if(S.form){ S.form = null; $("#pwErr").hidden = true; $("#wErr").hidden = true; }
     else if(S.guestPolicy) S.guestPolicy = false;
   }
-  else if(S.mode === "worker"){ if(S.wk && S.wk.policy) S.wk.policy = false; else return goStart(); }
+  else if(S.mode === "worker"){ if(S.wk && S.wk.policy) S.wk.policy = false; else if(S.wk && S.wk.photo){ S.wk.photo = false; clearDraft("pfp"); } else return goStart(); }
   else if(S.people.confirm) S.people.confirm = false;
   else if(S.pinAsk) S.pinAsk = null;
-  else if(S.adding) S.adding = false;
+  else if(S.prof.edit){ S.prof.edit = null; clearDraft("pfe"); }
+  else if(S.adding){ S.adding = false; clearDraft("add"); clearDraft("pfa"); }
+  else if(S.tab === "data" && S.prof.wid) S.prof.wid = null;
   else if(S.tab === "people" && S.people.wid){ S.people.wid = null; S.people.confirm = false; }
   else if(S.tab === "close" && S.mgr.group) S.mgr.group = null;
   else if(S.tab !== homeTab()){ S.tab = homeTab(); S.adding = false; }
@@ -1251,14 +1290,16 @@ function renderInner(){
   if(S.mode === "worker") return renderWorker();
   $("#lock").hidden = true; $("#shell").hidden = false;
   $("#tabbar").hidden = false; $("#lockBtn").hidden = false;
-  $("#tabClose").hidden = S.level < 2;
+  $("#tabClose").hidden = S.level < 2; $("#tabData").hidden = S.level < 2 || !window.ME_API;
   document.querySelectorAll("#tabbar button[data-tab]").forEach(b => { if(b.dataset.tab === S.tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
   const v = view();
   const ae = document.activeElement, fid = ae && ae.id && v.contains(ae) && ae.id !== "gw" ? ae.id : null;
   let selA = null, selB = null; try{ selA = ae.selectionStart; selB = ae.selectionEnd; }catch(e){}
   let scr;
   if(!allLoaded()) scr = {title:"عمالة <bdi>Middle East</bdi>", sub:"", html:`<div class="loading">${S.slow ? "البيانات بتاخد وقت أطول من العادي…" : "بيحمّل البيانات…"}</div>`};
+  else if(S.prof.edit) scr = screenProfEdit();
   else if(S.adding) scr = screenAdd();
+  else if(S.tab === "data") scr = S.prof.wid ? screenDataOne() : screenData();
   else if(S.tab === "day") scr = screenDay();
   else if(S.tab === "people") scr = S.people.wid && S.workers[S.people.wid] ? screenPerson() : screenPeople();
   else if(S.tab === "policy") scr = screenPolicy();
@@ -1266,7 +1307,7 @@ function renderInner(){
   $("#barTitle").innerHTML = scr.title; $("#barSub").innerHTML = scr.sub || "";
   $("#backBtn").hidden = false; $("#barMark").hidden = true; // زرار الرجوع ظاهر دايماً (آخر رجوع = شاشة البداية)
   document.body.classList.toggle("wide", !!scr.wide);
-  const fab = !S.adding && (S.tab === "day" || (S.tab === "people" && !S.people.wid)) && allLoaded();
+  const fab = !S.adding && !S.prof.edit && (S.tab === "day" || (S.tab === "people" && !S.people.wid)) && allLoaded();
   v.innerHTML = scr.html + (fab ? `<button class="fab" data-act="add"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>شخص جديد</button>` : "");
   if(scr.after) scr.after();
   if(fid){ const el = document.getElementById(fid); if(el && document.activeElement !== el){ el.focus({preventScroll:true}); try{ if(selA != null) el.setSelectionRange(selA, selB); }catch(e){} } }
@@ -1304,7 +1345,7 @@ function applyWorker(d){
   const wid = S.wk.wid;
   S.workers = {[wid]: d.worker}; S.att = d.att || {}; S.ovr = d.ovr || {};
   S.cfg = d.cfg || {holidays:{}}; if(!S.cfg.holidays) S.cfg.holidays = {};
-  S.appr = d.appr || {}; S.wk.has = true; if(d.worker && d.worker.name) S.wk.name = d.worker.name;
+  S.appr = d.appr || {}; S.wk.has = true; S.wk.prof = d.prof || {missing: []}; if(d.worker && d.worker.name) S.wk.name = d.worker.name;
 }
 function wkCurrent(w){
   const t = todayStr(), ym = ymOf(t), d = +t.slice(8);
@@ -1323,6 +1364,8 @@ const egp = x => "EGP " + group(x, 2);
 function screenWorker(){
   const wid = S.wk.wid, w = S.workers[wid];
   if(!w) return {title: esc(S.wk.name || "الـ time sheet بتاعي"), sub: "", html: `<div class="loading">${S.wk.err ? "مفيش نت. أول مرة لازم يكون فيه نت علشان بياناتك تنزل." : "بيحمّل بياناتك…"}</div>`};
+  if(S.wk.prof && S.wk.prof.missing && S.wk.prof.missing.length) return screenWorkerProf();
+  if(S.wk.photo) return screenWorkerPhoto();
   const cur = wkCurrent(w);
   let p = S.wk.per || cur;
   const type = wType(w, p.ym);
@@ -1397,6 +1440,7 @@ function screenWorker(){
       <h2 class="wh2">الأيام</h2>
       <div class="wdays">${rows || '<div class="empty">مفيش أيام في الفترة دي.</div>'}</div>
       <p class="hint">${upd ? `آخر تحديث: ${upd.getDate()}/${upd.getMonth()+1} الساعة ${pad2(upd.getHours())}:${pad2(upd.getMinutes())}` : ""}${S.wk.err ? " (مفيش نت دلوقتي، ودي آخر نسخة نزلت عندك)" : ""}</p>
+      ${window.ME_API && S.wk.prof ? `<button class="btn" data-act="wk-photo" style="align-self:stretch">${S.wk.prof.hasP ? "غيّر صورتك الشخصية" : "ضيف صورتك الشخصية (اختياري)"}</button>` : ""}
       <button class="btn" data-act="wk-policy" style="align-self:stretch">اقرا سياسة المصنع</button>`
   };
 }
@@ -1418,6 +1462,351 @@ async function makePin(wid){
     const r = await apiCall(window.ME_API, "s")("setPin", {wid});
     S.pinShow = {wid, pin: r.pin}; S.pins = Object.assign({}, S.pins || {}, {[wid]: true}); S.pinAsk = null; render();
   }catch(e){ if(e && e.code === "auth") return onAuthLost("s"); toast("لازم يكون فيه نت علشان تعمل كود."); }
+}
+
+/* ===================== بروفايل العامل (الرقم القومي + صور البطاقة + التليفون + التحويل) =====================
+   - المشرف: مسؤول عن الرقم القومي وصور البطاقة وتليفون الاتصال لأي شخص جديد (إجباري)، ويكمّل الناقص منهم لأي عامل.
+     ما بيكتبش رقم التحويل، وما يشوفش بيانات حد.
+   - الموظف: بيكتب رقم التحويل بتاعه بنفسه (إجباري، ومن غيره المرتب ما يتحوّلش)، وصورة شخصية (اختياري).
+     والموظف القديم بيكمّل كمان أي خانة ناقصة مرة واحدة. بعدها التعديل من المهندس بس (غير الصورة الشخصية).
+   - المهندس: تاب "البيانات" يشوف ويعدّل كل حاجة، وينزّلها Excel.
+   - السيرفر هو اللي بيحكم في كل ده (مش التطبيق). الصور بتتصغّر على الموبايل قبل الرفع. */
+S.prof = {stat: null, list: null, listErr: null, loading: false, img: {}, edit: null, wid: null, q: "", filter: "all", saving: false};
+const PROF_LABEL = {nid: "الرقم القومي", idF: "صورة البطاقة (وش)", idB: "صورة البطاقة (ضهر)", phone: "رقم التليفون", pay: "رقم تحويل الفلوس", idP: "الصورة الشخصية"};
+const PROF_ALL = ["nid", "idF", "idB", "phone", "pay"];
+const REC_FIELDS = ["nid", "idF", "idB", "phone"]; // اللي المشرف مسؤول عنه
+const PAY_WARN = "لو ما كتبتش رقم يتحوّل عليه، المرتب مش هيتحوّل لحد ما تكتبه.";
+const PAY_LABEL = {instapay: "InstaPay", wallet: "محفظة"};
+const PROF_ERR = {
+  "bad nid": "الرقم القومي لازم يكون 14 رقم ويبدأ بـ 2 أو 3.",
+  "bad phone": "رقم التليفون لازم يكون 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015.",
+  "bad pay": "رقم التحويل مش صح: المحفظة رقم موبايل، والـ InstaPay رقم موبايل أو عنوان بيخلص بـ @instapay.",
+  "bad image": "الصورة مش مقبولة، صوّرها تاني.",
+  "exists": "البيانات دي متسجلة قبل كده، وتعديلها من المهندس بس.",
+  "bad wid": "العامل لسه ما اتسجلش على السيرفر. استنى النت يرجع."
+};
+const profErrMsg = e => PROF_ERR[e && e.message] || PROF_ERR[e && e.code] || "لازم يكون فيه نت علشان البيانات تتحفظ.";
+const ICON_ID = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.5-1.4 1.6-2 3-2s2.5.6 3 2M14 10h4M14 13h3"/></svg>';
+const ICON_CAM = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+const toEnDigits = s => String(s || "").replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+const PHONE_OK = s => /^01[0125]\d{8}$/.test(s);
+const fmtAt = iso => { if(!iso) return ""; const d = new Date(iso); return isNaN(d) ? "" : `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`; };
+
+async function loadProfStat(){
+  if(!window.ME_API) return;
+  try{ S.prof.stat = await apiCall(window.ME_API, "s")("profStatus"); requestRender(); }
+  catch(e){ if(e && e.code === "auth") onAuthLost("s"); }
+}
+async function loadProfList(){
+  if(!window.ME_API || S.prof.loading) return;
+  S.prof.loading = true;
+  try{ S.prof.list = await apiCall(window.ME_API, "s")("profList"); S.prof.listErr = null; }
+  catch(e){ if(e && e.code === "auth") return onAuthLost("s"); S.prof.listErr = "offline"; }
+  finally{ S.prof.loading = false; }
+  requestRender();
+}
+
+/* المسودة: اللي اتكتب في الفورم بيفضل محفوظ لو الشاشة اترسمت تاني (مثلاً لما بيانات جديدة توصل) */
+const DRAFT = {}, PIMG = {};
+const dv = (id, def) => DRAFT[id] !== undefined ? DRAFT[id] : (def || "");
+function clearDraft(fid){ Object.keys(DRAFT).forEach(k => { if(k.indexOf(fid) === 0) delete DRAFT[k]; }); Object.keys(PIMG).forEach(k => { if(k.indexOf(fid) === 0) delete PIMG[k]; }); }
+
+/* صورة: نصغّرها لـ 1600 بكسل JPEG قبل الرفع (حوالي 200 كيلو بدل 4 ميجا) */
+async function shrinkImage(file){
+  const url = URL.createObjectURL(file);
+  try{
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const k = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+    return c.toDataURL("image/jpeg", 0.78).split(",")[1];
+  } finally { URL.revokeObjectURL(url); }
+}
+function imgPickInner(key, side){
+  const b = PIMG[key];
+  const what = {F: "وش البطاقة", B: "ضهر البطاقة", P: "صورتك الشخصية"}[side];
+  return (b ? `<img src="data:image/jpeg;base64,${b}" alt="${what}"><span class="again">دوس علشان تصوّر تاني</span>`
+            : `${ICON_CAM}<span>دوس وصوّر ${what}</span>`)
+    + `<input type="file" accept="image/*" data-pimg="${key}">`;
+}
+/* الفورم: fid = اسم الفورم، fields = الخانات اللي تظهر، cur = القيم الحالية (للمهندس بس) */
+function profFormHtml(fid, fields, cur){
+  const has = k => fields.includes(k), c = cur || {};
+  let h = "";
+  if(has("nid")) h += `<label class="fld"><span>الرقم القومي (14 رقم)</span><input type="text" inputmode="numeric" maxlength="14" id="${fid}-nid" class="ltr" value="${esc(dv(fid + "-nid", c.nid))}" autocomplete="off" data-draft></label>`;
+  const sides = ["F", "B", "P"].filter(S2 => S2 === "P" ? has("photo") : has("id" + S2));
+  if(sides.length) h += `<div class="idrow">${sides.map(S2 => `<div class="fld"><span>${S2 === "P" ? "صورة شخصية (اختياري)" : PROF_LABEL["id" + S2]}${c["has" + S2] ? " (متسجلة، صوّر لو عايز تغيّرها)" : ""}</span><label class="idpick">${imgPickInner(fid + S2, S2)}</label></div>`).join("")}</div>`;
+  if(has("phone")) h += `<label class="fld"><span>رقم التليفون للاتصال</span><input type="tel" inputmode="numeric" maxlength="11" id="${fid}-phone" class="ltr" value="${esc(dv(fid + "-phone", c.phone))}" placeholder="01xxxxxxxxx" autocomplete="off" data-draft></label>`;
+  if(has("pay")){
+    const t = dv(fid + "-pt", c.payType);
+    h += `<div class="fld"><span>تحويل الفلوس على</span><div class="jobs" role="radiogroup" aria-label="تحويل الفلوس على">
+        <label><input type="radio" name="${fid}-pt" value="instapay" ${t === "instapay" ? "checked" : ""} data-draft><span><bdi>InstaPay</bdi></span></label>
+        <label><input type="radio" name="${fid}-pt" value="wallet" ${t === "wallet" ? "checked" : ""} data-draft><span>محفظة (فودافون كاش وغيرها)</span></label></div></div>
+      <label class="fld"><span>رقم التحويل</span><input type="text" id="${fid}-payNo" class="ltr" value="${esc(dv(fid + "-payNo", c.payNo))}" placeholder="01xxxxxxxxx أو name@instapay" autocomplete="off" data-draft></label>
+      <p class="paywarn">${PAY_WARN}</p>`;
+  }
+  return h;
+}
+/* قراية الفورم والتحقق. required = كل الخانات اللي ظاهرة لازم تتملي */
+function readProfForm(fid, fields, required, cur){
+  const out = {}, has = k => fields.includes(k), c = cur || {};
+  const val = id => { const el = document.getElementById(fid + "-" + id); return el ? el.value.trim() : ""; };
+  if(has("nid")){
+    const n = toEnDigits(val("nid")).replace(/\s+/g, "");
+    if(n){ if(!/^[23]\d{13}$/.test(n)) return {err: PROF_ERR["bad nid"]}; if(n !== c.nid) out.nid = n; }
+    else if(required) return {err: "اكتب الرقم القومي."};
+  }
+  for(const S2 of ["F", "B"]){
+    if(!has("id" + S2)) continue;
+    if(PIMG[fid + S2]) out["img" + S2] = PIMG[fid + S2];
+    else if(required) return {err: S2 === "F" ? "صوّر وش البطاقة." : "صوّر ضهر البطاقة."};
+  }
+  if(has("photo") && PIMG[fid + "P"]) out.imgP = PIMG[fid + "P"]; // اختياري
+  if(has("phone")){
+    const p = toEnDigits(val("phone")).replace(/\s+/g, "");
+    if(p){ if(!PHONE_OK(p)) return {err: PROF_ERR["bad phone"]}; if(p !== c.phone) out.phone = p; }
+    else if(required) return {err: "اكتب رقم التليفون."};
+  }
+  if(has("pay")){
+    const tEl = document.querySelector(`input[name="${fid}-pt"]:checked`), t = tEl ? tEl.value : "";
+    let no = val("payNo"); no = /@/.test(no) ? no.toLowerCase() : toEnDigits(no).replace(/\s+/g, "");
+    if(t || no){
+      if(!t) return {err: "اختار التحويل على InstaPay ولا محفظة."};
+      if(!no) return {err: "اكتب رقم التحويل."};
+      if(!(PHONE_OK(no) || (t === "instapay" && /^[a-z0-9._\-]{2,40}@instapay$/.test(no)))) return {err: PROF_ERR["bad pay"]};
+      if(t !== c.payType || no !== c.payNo){ out.payType = t; out.payNo = no; }
+    } else if(required) return {err: "اكتب رقم تحويل الفلوس. " + PAY_WARN};
+  }
+  return {data: out};
+}
+
+/* طابور رفع البيانات (للإدارة): البيانات بتتحفظ على الموبايل وبتترفع لوحدها، حتى لو النت قاطع وقت الإضافة */
+const PQ_KEY = "me_prof_q";
+const profQ = () => { try{ return JSON.parse(localStorage.getItem(PQ_KEY) || "[]"); }catch(e){ return []; } };
+const setProfQ = q => { try{ localStorage.setItem(PQ_KEY, JSON.stringify(q)); return true; }catch(e){ return false; } };
+const inProfQ = wid => profQ().some(x => x.wid === wid);
+function queueProf(wid, name, data){
+  const q = profQ(), i = q.findIndex(x => x.wid === wid);
+  if(i >= 0){ q[i].data = Object.assign({}, q[i].data, data); q[i].t = Date.now(); q[i].name = name; }
+  else q.push({wid, name, data, t: Date.now()});
+  return setProfQ(q);
+}
+let pqBusy = false;
+async function flushProfQ(){
+  if(pqBusy || !window.ME_API || ACTIVE !== "s") return;
+  if(!profQ().length) return;
+  pqBusy = true;
+  try{
+    for(;;){
+      const q = profQ(); if(!q.length) break;
+      const it = q[0];
+      try{
+        const r = await apiCall(window.ME_API, "s")("profSave", Object.assign({wid: it.wid}, it.data));
+        if(S.prof.stat) S.prof.stat[it.wid] = r.missing;
+        if(S.prof.list) S.prof.list = null; // تتحمّل تاني بالجديد
+      }catch(e){
+        if(e && e.code === "auth"){ onAuthLost("s"); return; }
+        if(e && e.code === "unavailable") break; // مفيش نت: نجرّب بعدين
+        if(e && e.message === "bad wid" && Date.now() - it.t < 7 * 864e5) break; // العامل لسه ما وصلش للسيرفر
+        toast(`بيانات ${it.name || ""} ما اتحفظتش: ${profErrMsg(e)}`);
+      }
+      setProfQ(profQ().filter(x => !(x.wid === it.wid && x.t === it.t)));
+    }
+  } finally { pqBusy = false; requestRender(); }
+}
+
+/* كارت البيانات في صفحة العامل (المشرف والمهندس) */
+function profCardHtml(wid){
+  if(!window.ME_API) return "";
+  if(inProfQ(wid)) return `<div class="profcard warn">${ICON_ID}<span>بياناته متحفظة على الموبايل وهتترفع أول ما النت يرجع.</span></div>`;
+  const miss = S.prof.stat && S.prof.stat[wid];
+  if(!miss) return "";
+  const mine = miss.filter(k => REC_FIELDS.includes(k)), noPay = miss.includes("pay");
+  const payNote = noPay ? `<div class="profcard bad">${ICON_ID}<span>لسه ما كتبش رقم التحويل. الموظف بيكتبه بنفسه من «أنا موظف»، ولحد ما يكتبه المرتب مش هيتحوّل.</span></div>` : "";
+  if(!mine.length) return `<div class="profcard ok">${ICON_ID}<span>البطاقة والتليفون متسجلين.</span>${S.level === 2 ? `<button class="btn small" data-act="prof-open" data-wid="${wid}">اعرض البيانات</button>` : ""}</div>${payNote}`;
+  return `<div class="profcard warn">${ICON_ID}<span>بياناته ناقصة: ${mine.map(k => PROF_LABEL[k]).join("، ")}</span><button class="btn small primary" data-act="prof-edit" data-wid="${wid}">كمّل البيانات</button></div>${payNote}`;
+}
+/* شاشة تكملة / تعديل البيانات (المشرف: الناقص بس. المهندس: كله) */
+function screenProfEdit(){
+  const wid = S.prof.edit, w = S.workers[wid] || {}, mgr = S.level === 2;
+  const cur = mgr && S.prof.list ? S.prof.list[wid] : null;
+  if(mgr && !S.prof.list){ loadProfList(); return {title: `<bdi>${esc(w.name || "")}</bdi>`, sub: "بيانات العامل", html: `<div class="loading">${S.prof.listErr ? "لازم يكون فيه نت علشان تفتح البيانات." : "بيحمّل البيانات…"}</div>`}; }
+  const fields = mgr ? PROF_ALL.concat("photo") : REC_FIELDS.filter(k => ((S.prof.stat && S.prof.stat[wid]) || REC_FIELDS).includes(k));
+  return {
+    title: `<bdi>${esc(w.name || "")}</bdi>`, sub: mgr ? "تعديل البيانات" : "تكملة البيانات الناقصة",
+    html: `<form class="form" id="profEditForm" novalidate>
+      ${mgr ? "" : `<p class="hint">اللي هتكتبه هنا ما ينفعش يتغيّر بعد كده غير من المهندس، فاتأكد منه كويس.</p>`}
+      ${profFormHtml("pfe", fields, cur)}
+      <p class="err" id="pfeErr" hidden></p>
+      <div class="actions"><button class="btn primary" type="submit">حفظ البيانات</button><button class="btn" type="button" data-act="prof-cancel">إلغاء</button></div>
+    </form>`
+  };
+}
+async function submitProfEdit(){
+  const wid = S.prof.edit, mgr = S.level === 2, err = $("#pfeErr"); err.hidden = true;
+  const cur = mgr && S.prof.list ? S.prof.list[wid] : null;
+  const fields = mgr ? PROF_ALL.concat("photo") : REC_FIELDS.filter(k => ((S.prof.stat && S.prof.stat[wid]) || REC_FIELDS).includes(k));
+  const r = readProfForm("pfe", fields, false, cur);
+  if(r.err){ err.textContent = r.err; err.hidden = false; return; }
+  if(!Object.keys(r.data).length){ err.textContent = mgr ? "مفيش حاجة اتغيرت." : "اكتب البيانات الأول."; err.hidden = false; return; }
+  const w = S.workers[wid] || {};
+  if(!queueProf(wid, w.name, r.data)){ err.textContent = "مساحة الموبايل مش كفاية علشان الصور تتحفظ. جرّب تاني والنت شغال."; err.hidden = false; return; }
+  clearDraft("pfe"); S.prof.edit = null;
+  await flushProfQ();
+  toast(inProfQ(wid) ? "البيانات اتحفظت على الموبايل وهتترفع أول ما النت يرجع" : `بيانات ${w.name || ""} اتحفظت`);
+  render(); window.scrollTo(0, 0);
+}
+
+/* ===== تاب "البيانات" (المهندس) ===== */
+function activeWorkers(){
+  return Object.entries(S.workers).filter(([, w]) => w && !w.removedAt)
+    .sort((a, b) => ((a[1].order || 0) - (b[1].order || 0)) || String(a[1].name).localeCompare(String(b[1].name)));
+}
+function profMissingOf(wid){
+  const p = S.prof.list && S.prof.list[wid];
+  if(p) return p.missing; return PROF_ALL;
+}
+function screenData(){
+  if(!S.prof.list){ loadProfList(); return {title: "بيانات العمال", sub: "", html: `<div class="loading">${S.prof.listErr ? "لازم يكون فيه نت علشان تفتح بيانات العمال." : "بيحمّل البيانات…"}</div>`}; }
+  const all = activeWorkers(), q = S.prof.q.trim().toLowerCase();
+  const done = all.filter(([wid]) => !profMissingOf(wid).length).length;
+  let list = all.filter(([wid, w]) => !q || String(w.name).toLowerCase().includes(q) || String((S.prof.list[wid] || {}).nid || "").includes(q) || String((S.prof.list[wid] || {}).phone || "").includes(q));
+  if(S.prof.filter === "miss") list = list.filter(([wid]) => profMissingOf(wid).length);
+  const rows = list.map(([wid, w]) => {
+    const m = profMissingOf(wid), qd = inProfQ(wid);
+    return `<button class="prow" data-act="prof-open" data-wid="${wid}"><div class="who"><b><bdi>${esc(w.name)}</bdi></b><span>${esc(w.job || "")}</span>
+      <div class="meta">${qd ? '<span class="tag todo">مستني النت</span>' : m.length ? `<span class="tag bad">ناقص: ${m.map(k => PROF_LABEL[k]).join("، ")}</span>` : '<span class="tag ok">كاملة</span>'}</div></div><span class="chev">${ICON_NEXT}</span></button>`;
+  }).join("");
+  return {
+    title: "بيانات العمال", sub: `${done} من ${all.length} بياناتهم كاملة`,
+    html: `<div class="seg" role="group" aria-label="عرض">
+        <button data-act="prof-filter" data-v="all" aria-pressed="${S.prof.filter === "all"}">الكل<small>${all.length}</small></button>
+        <button data-act="prof-filter" data-v="miss" aria-pressed="${S.prof.filter === "miss"}">ناقصين<small>${all.length - done}</small></button>
+      </div>
+      <input type="text" class="search" id="pq" placeholder="دوّر بالاسم أو الرقم القومي أو التليفون" aria-label="دوّر" value="${esc(S.prof.q)}" autocomplete="off">
+      ${list.length ? `<div class="plist">${rows}</div>` : `<div class="empty">${all.length ? "مفيش حد بالشكل ده." : "مفيش عمال."}</div>`}
+      <button class="btn" data-act="prof-xlsx">${ICON_DL}نزّل البيانات <bdi>Excel</bdi> (من غير الصور)</button>
+      <p class="hint">البيانات دي بيشوفها المهندس بس. صور البطايق متخزنة في فولدر خاص على <bdi>Google Drive</bdi> بتاع الشركة.</p>`
+  };
+}
+function screenDataOne(){
+  const wid = S.prof.wid, w = S.workers[wid] || {}, p = (S.prof.list && S.prof.list[wid]) || {missing: PROF_ALL};
+  const row = (k, v) => `<div class="kv"><span>${k}</span><b>${v || '<span class="tag bad">ناقص</span>'}</b></div>`;
+  const imgBox = S2 => {
+    const key = wid + S2, b = S.prof.img[key], has = p["has" + S2];
+    if(!has) return `<div class="idview empty">${PROF_LABEL["id" + S2]}: ${S2 === "P" ? "مفيش" : "ناقصة"}</div>`;
+    if(b === "loading") return `<div class="idview">بيحمّل الصورة…</div>`;
+    if(b) return `<div class="idview"><img src="data:image/jpeg;base64,${b}" alt="${PROF_LABEL["id" + S2]}"></div>`;
+    return `<button class="btn idview" data-act="prof-img" data-wid="${wid}" data-side="${S2}">${ICON_ID}اعرض ${PROF_LABEL["id" + S2]}</button>`;
+  };
+  const by = {mgr: "المهندس", rec: "المشرف", worker: "الموظف نفسه"};
+  const last = (p.log || []).slice(-1)[0];
+  return {
+    title: `<bdi>${esc(w.name || "")}</bdi>`, sub: esc(w.job || ""),
+    html: `${inProfQ(wid) ? '<div class="profcard warn">فيه تعديل متحفظ على الموبايل وهيترفع أول ما النت يرجع.</div>' : ""}
+      <div class="card kvs">
+        ${row("الرقم القومي", p.nid ? `<bdi class="ltr">${esc(p.nid)}</bdi>` : "")}
+        ${row("التليفون", p.phone ? `<a class="ltr" href="tel:${esc(p.phone)}">${esc(p.phone)}</a>` : "")}
+        ${row("التحويل على", p.payType ? PAY_LABEL[p.payType] : "")}
+        ${row("رقم التحويل", p.payNo ? `<bdi class="ltr">${esc(p.payNo)}</bdi>` : '<span class="tag bad">مش متسجل: المرتب متوقف</span>')}
+      </div>
+      <div class="acts">
+        ${p.phone ? `<a class="btn" href="tel:${esc(p.phone)}">اتصل</a>` : ""}
+        ${p.payNo ? `<button class="btn" data-act="copy" data-v="${esc(p.payNo)}">انسخ رقم التحويل</button>` : ""}
+        <button class="btn primary" data-act="prof-edit" data-wid="${wid}">تعديل البيانات</button>
+      </div>
+      <div class="idrow">${imgBox("P")}${imgBox("F")}${imgBox("B")}</div>
+      ${last ? `<p class="hint">آخر تعديل: ${fmtAt(last.at)} (${by[last.by] || ""})</p>` : ""}`
+  };
+}
+async function loadProfImg(wid, side){
+  const key = wid + side;
+  S.prof.img[key] = "loading"; render();
+  const slot = S.mode === "worker" ? "w" : "s";
+  try{ const r = await apiCall(window.ME_API, slot)("profImg", {wid, side}); S.prof.img[key] = r.b64; }
+  catch(e){ if(e && e.code === "auth") return onAuthLost(slot); delete S.prof.img[key]; toast("لازم يكون فيه نت علشان الصورة تتفتح."); }
+  requestRender();
+}
+async function exportProfXlsx(){
+  const x = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const rows = [["الاسم", "المهنة", "الرقم القومي", "التليفون", "التحويل على", "رقم التحويل", "صورة البطاقة", "الناقص"]];
+  for(const [wid, w] of activeWorkers()){
+    const p = (S.prof.list && S.prof.list[wid]) || {missing: PROF_ALL};
+    rows.push([w.name, w.job || "", p.nid || "", p.phone || "", p.payType ? PAY_LABEL[p.payType] : "", p.payNo || "مش متسجل (المرتب متوقف)",
+      p.hasF && p.hasB ? "موجودة" : (p.hasF || p.hasB ? "وش بس أو ضهر بس" : "ناقصة"), (p.missing || []).map(k => PROF_LABEL[k]).join("، ")]);
+  }
+  const col = i => String.fromCharCode(65 + i), W = [24, 10, 18, 15, 12, 24, 16, 40];
+  const H = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n', M = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+  const sheet = H + `<worksheet xmlns="${M}"><sheetViews><sheetView rightToLeft="1" workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>`
+    + `<cols>${W.map((w, i) => `<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>`
+    + rows.map((r, i) => `<row r="${i+1}">${r.map((v, j) => `<c r="${col(j)}${i+1}" t="inlineStr" s="${i ? 0 : 1}"><is><t>${x(v)}</t></is></c>`).join("")}</row>`).join("")
+    + `</sheetData></worksheet>`;
+  const zip = new JSZip(), R = "http://schemas.openxmlformats.org/package/2006/relationships", OR = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+  zip.file("[Content_Types].xml", H + `<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`);
+  zip.file("_rels/.rels", H + `<Relationships xmlns="${R}"><Relationship Id="rId1" Type="${OR}/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
+  zip.file("xl/workbook.xml", H + `<workbook xmlns="${M}" xmlns:r="${OR}"><bookViews><workbookView rightToLeft="1"/></bookViews><sheets><sheet name="بيانات العمال" sheetId="1" r:id="rId1"/></sheets></workbook>`);
+  zip.file("xl/_rels/workbook.xml.rels", H + `<Relationships xmlns="${R}"><Relationship Id="rId1" Type="${OR}/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="${OR}/styles" Target="styles.xml"/></Relationships>`);
+  zip.file("xl/styles.xml", H + `<styleSheet xmlns="${M}"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1F4E80"/></patternFill></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="2"><xf/><xf fontId="1" fillId="2" applyFont="1" applyFill="1"/></cellXfs></styleSheet>`);
+  zip.file("xl/worksheets/sheet1.xml", sheet);
+  const blob = await zip.generateAsync({type: "blob", compression: "DEFLATE"});
+  const t = todayStr();
+  await DL.save({filename: `بيانات العمال ${t}.xlsx`, data: blob});
+}
+
+/* ===== الموظف: لازم يكمّل الناقص مرة واحدة قبل ما يشوف الـ time sheet ===== */
+const wkFields = () => S.wk.prof.missing.concat(S.wk.prof.hasP ? [] : ["photo"]);
+function screenWorkerProf(){
+  const miss = S.wk.prof.missing, onlyPay = miss.length === 1 && miss[0] === "pay";
+  return {
+    title: esc(S.wk.name || ""), sub: onlyPay ? "رقم تحويل المرتب" : "كمّل بياناتك",
+    html: `<div class="profcard warn">${ICON_ID}<span>قبل ما تشوف الـ <bdi>time sheet</bdi> بتاعك، ${onlyPay ? "اكتب الرقم اللي المرتب هيتحوّل عليه" : "كمّل بياناتك مرة واحدة بس"}. البيانات دي بيشوفها المهندس بس، وما ينفعش تتغيّر بعد كده غير من عنده.</span></div>
+      ${miss.includes("pay") ? `<div class="profcard bad">${PAY_WARN}</div>` : ""}
+      <form class="form" id="profWForm" novalidate>
+        ${profFormHtml("pfw", wkFields(), null)}
+        <p class="err" id="pfwErr" hidden></p>
+        <div class="actions"><button class="btn primary" type="submit">حفظ بياناتي</button></div>
+      </form>`
+  };
+}
+async function submitWorkerProf(){
+  const err = $("#pfwErr"), btn = $("#profWForm button[type=submit]"); err.hidden = true;
+  const r = readProfForm("pfw", wkFields(), true, null);
+  if(r.err){ err.textContent = r.err; err.hidden = false; return; }
+  btn.disabled = true; btn.textContent = "بيحفظ…";
+  try{
+    const res = await apiCall(window.ME_API, "w")("profSave", Object.assign({wid: S.wk.wid}, r.data));
+    S.wk.prof = {missing: res.missing, hasP: !!res.hasP}; clearDraft("pfw");
+    try{ const c = JSON.parse(localStorage.getItem("me_worker_" + S.wk.wid) || "null"); if(c && c.data){ c.data.prof = S.wk.prof; localStorage.setItem("me_worker_" + S.wk.wid, JSON.stringify(c)); } }catch(x){}
+    toast(res.missing.length ? "اتحفظ، ولسه فيه حاجات ناقصة" : "بياناتك اتحفظت");
+    render(); window.scrollTo(0, 0);
+  }catch(e){
+    if(e && e.code === "auth") return onAuthLost("w");
+    if(e && e.message === "exists"){ refreshWorker(); }
+    err.textContent = profErrMsg(e); err.hidden = false;
+  }finally{ if(btn.isConnected){ btn.disabled = false; btn.textContent = "حفظ بياناتي"; } }
+}
+
+/* الموظف: يضيف أو يغيّر صورته الشخصية (اختياري) */
+function screenWorkerPhoto(){
+  return {
+    title: esc(S.wk.name || ""), sub: "صورتك الشخصية",
+    html: `<form class="form" id="profPForm" novalidate>
+        ${profFormHtml("pfp", ["photo"], null)}
+        <p class="err" id="pfpErr" hidden></p>
+        <div class="actions"><button class="btn primary" type="submit">حفظ الصورة</button><button class="btn" type="button" data-act="wk-photo-no">إلغاء</button></div>
+      </form>`
+  };
+}
+async function submitWorkerPhoto(){
+  const err = $("#pfpErr"), btn = $("#profPForm button[type=submit]"); err.hidden = true;
+  if(!PIMG.pfpP){ err.textContent = "صوّر نفسك الأول."; err.hidden = false; return; }
+  btn.disabled = true; btn.textContent = "بيحفظ…";
+  try{
+    const res = await apiCall(window.ME_API, "w")("profSave", {wid: S.wk.wid, imgP: PIMG.pfpP});
+    S.wk.prof = {missing: res.missing, hasP: !!res.hasP}; clearDraft("pfp"); S.wk.photo = false;
+    toast("صورتك اتحفظت"); render(); window.scrollTo(0, 0);
+  }catch(e){ if(e && e.code === "auth") return onAuthLost("w"); err.textContent = profErrMsg(e); err.hidden = false; }
+  finally{ if(btn.isConnected){ btn.disabled = false; btn.textContent = "حفظ الصورة"; } }
 }
 
 /* ===================== تسجيل الحضور: أدوات مشتركة ===================== */
@@ -1664,7 +2053,7 @@ function screenPeople(){
     const gone = w.removedAt && w.removedAt <= ymd(hi.end);
     return `<button class="prow" data-act="open-person" data-wid="${wid}">
       <div class="who"><b><bdi>${esc(w.name)}</bdi></b><span>${esc(w.job || "")}</span>
-      <div class="meta"><span class="tag ${n ? "ok" : ""}">${n} يوم متسجل</span>${miss ? `<span class="tag todo">ناقص ${miss} يوم</span>` : ""}${notes ? `<span class="tag bad">${notes} ملحوظة</span>` : ""}${gone ? '<span class="tag bad">اتشال</span>' : ""}</div></div>
+      <div class="meta"><span class="tag ${n ? "ok" : ""}">${n} يوم متسجل</span>${miss ? `<span class="tag todo">ناقص ${miss} يوم</span>` : ""}${notes ? `<span class="tag bad">${notes} ملحوظة</span>` : ""}${gone ? '<span class="tag bad">اتشال</span>' : ""}${!gone && (inProfQ(wid) || (S.prof.stat && S.prof.stat[wid] && S.prof.stat[wid].length)) ? `<span class="tag ${inProfQ(wid) ? "todo" : "bad"}">${inProfQ(wid) ? "بياناته مستنية النت" : "بيانات ناقصة"}</span>` : ""}</div></div>
       <span class="chev">${ICON_NEXT}</span></button>`;
   }).join("");
   const [ym] = S.people.half.split("|"), [y, m] = ym.split("-").map(Number);
@@ -1704,7 +2093,7 @@ function screenPerson(){
       : `<p class="hint">الحفظ أوتوماتيك أول ما تسيب الخانة. الساعة بتتكتب رقم بس (8 مش 08).</p><button class="btn small danger" data-act="remove">إزالة من الشغل</button>`;
   return {
     title: `<bdi>${esc(w.name)}</bdi>`, sub: `${esc(w.job || "")}، ${hi.label}`, back: true,
-    html: `<div class="days">${rows}</div><div class="pfoot">${foot}</div>`
+    html: `${profCardHtml(wid)}<div class="days">${rows}</div><div class="pfoot">${foot}</div>`
   };
 }
 
@@ -1714,14 +2103,15 @@ function screenAdd(){
   return {
     title: "شخص جديد", sub: "يتضاف لكشف الحضور من اليوم اللي تختاره", back: true,
     html: `<form class="form" id="addForm" novalidate>
-      <label class="fld"><span>الاسم</span><input type="text" id="addName" autocomplete="off" placeholder="مثلاً: محمود سيد"></label>
-      <div class="fld"><span>المهنة</span><div class="jobs" role="radiogroup" aria-label="المهنة">${JOBS.map((j, i) => `<label><input type="radio" name="addJob" value="${j}" id="job${i}"><span>${j}</span></label>`).join("")}</div></div>
-      <label class="fld"><span>اليوم</span><input type="date" id="addDate" value="${date}"></label>
+      <label class="fld"><span>الاسم</span><input type="text" id="addName" autocomplete="off" placeholder="مثلاً: محمود سيد" value="${esc(dv("addName"))}" data-draft></label>
+      <div class="fld"><span>المهنة</span><div class="jobs" role="radiogroup" aria-label="المهنة">${JOBS.map((j, i) => `<label><input type="radio" name="addJob" value="${j}" id="job${i}" ${dv("addJob") === j ? "checked" : ""} data-draft><span>${j}</span></label>`).join("")}</div></div>
+      ${window.ME_API ? `<div class="fsec"><b>بيانات الشخص (إجباري)</b><span class="hint">المشرف مسؤول إنها تتكتب صح، وما ينفعش تتغيّر بعد كده غير من المهندس. رقم تحويل المرتب بيكتبه الموظف بنفسه من «أنا موظف».</span></div>${profFormHtml("pfa", REC_FIELDS, null)}<div class="fsec"><b>أول يوم شغل</b></div>` : ""}
+      <label class="fld"><span>اليوم</span><input type="date" id="addDate" value="${esc(dv("addDate", date))}" data-draft></label>
       <div class="wtimes">
         <label class="fld"><span>حضر الساعة</span>${timeBox("add-f", ["",""], "صباحاً", "حضر")}</label>
         <label class="fld"><span>مشي الساعة</span>${timeBox("add-t", ["",""], "مساءً", "مشي")}</label>
       </div>
-      <div class="fld"><label for="addNote" style="font-size:14px;font-weight:500">ملحوظة (لو فيه)</label><input type="text" id="addNote" class="note" placeholder="دوس هنا تختار أو تكتب" autocomplete="off"></div>
+      <div class="fld"><label for="addNote" style="font-size:14px;font-weight:500">ملحوظة (لو فيه)</label><input type="text" id="addNote" class="note" placeholder="دوس هنا تختار أو تكتب" autocomplete="off" value="${esc(dv("addNote"))}" data-draft></div>
       <p class="err" id="addErr" hidden></p>
       <div class="actions"><button class="btn primary" type="submit">حفظ الشخص</button><button class="btn" type="button" data-act="add-cancel">إلغاء</button></div>
     </form>`,
@@ -1743,13 +2133,20 @@ async function submitAdd(){
   if(f.empty !== t.empty) return fail(f.empty ? "ناقص ميعاد الحضور." : "ناقص ميعاد الانصراف.");
   const rec = {}; if(!f.empty){ rec.f = f.v; rec.t = t.v; const c = calcDay(date, rec.f, rec.t, isHoliday(date)); if(c.err) return fail(c.err); }
   if(note) rec.n = note;
+  let prof = null;
+  if(window.ME_API){ const r = readProfForm("pfa", REC_FIELDS, true, null); if(r.err) return fail(r.err); prof = r.data; }
   const wid = newId(), order = Math.max(0, ...Object.values(S.workers).map(w => w.order || 0)) + 1;
   const added = date < todayStr() ? date : todayStr();
   const ok = await safeWrite(async () => {
     await DB.doc("workers/" + wid).set({name, job, order, addedAt: added, removedAt: null, hist: {}});
     if(Object.keys(rec).length){ const ym = ymOf(date); await upsert(`att/${wid}__${ym}`, {days: {[date.slice(8)]: rec}}, {wid, ym}); }
   }, `اتضاف ${name}`);
-  if(ok){ S.adding = false; S.tab = "people"; S.people.half = halfKeyOf(date); S.people.wid = wid; render(); window.scrollTo(0, 0); }
+  if(ok && prof){
+    if(!queueProf(wid, name, prof)) toast("الشخص اتضاف، بس الصور ما اتحفظتش على الموبايل (المساحة مليانة). كمّل بياناته من صفحته.");
+    if(S.prof.stat) S.prof.stat[wid] = PROF_ALL.slice();
+    flushProfQ();
+  }
+  if(ok){ clearDraft("add"); clearDraft("pfa"); S.adding = false; S.tab = "people"; S.people.half = halfKeyOf(date); S.people.wid = wid; render(); window.scrollTo(0, 0); }
 }
 
 /* ===================== تاب التقفيل (المدير) ===================== */
@@ -1976,8 +2373,17 @@ view().addEventListener("click", async e => {
   if(a === "quick"){ const row = t.closest(".rr"); if(row) quickFill(row, t.dataset.kind); }
   else if(a === "add"){ S.adding = true; render(); window.scrollTo(0, 0); }
   else if(a === "add-cancel"){ goBack(); }
+  else if(a === "prof-edit"){ S.prof.edit = t.dataset.wid; clearDraft("pfe"); render(); window.scrollTo(0, 0); }
+  else if(a === "prof-cancel"){ goBack(); }
+  else if(a === "prof-open"){ S.tab = "data"; S.prof.wid = t.dataset.wid; S.prof.edit = null; S.people.wid = null; render(); window.scrollTo(0, 0); }
+  else if(a === "prof-filter"){ S.prof.filter = t.dataset.v; render(); }
+  else if(a === "prof-img"){ loadProfImg(t.dataset.wid, t.dataset.side); }
+  else if(a === "prof-xlsx"){ t.disabled = true; try{ await exportProfXlsx(); }catch(x){ console.error(x); toast("الملف ما اتعملش، جرّب تاني."); } finally { t.disabled = false; } }
+  else if(a === "copy"){ try{ await navigator.clipboard.writeText(t.dataset.v); toast("اتنسخ"); }catch(x){ toast("انسخه بإيدك: " + t.dataset.v); } }
   else if(a === "wk-prev" || a === "wk-next"){ const w = S.workers[S.wk.wid]; S.wk.per = wkStep(w, S.wk.per || wkCurrent(w), a === "wk-prev" ? -1 : 1); render(); window.scrollTo(0, 0); }
   else if(a === "wk-policy"){ S.wk.policy = true; render(); window.scrollTo(0, 0); }
+  else if(a === "wk-photo"){ S.wk.photo = true; render(); window.scrollTo(0, 0); }
+  else if(a === "wk-photo-no"){ goBack(); }
   else if(a === "appr"){ const {ym, half} = curBook(), key = half === 1 ? "p1" : "p2"; await safeWrite(() => upsert(`appr/${ym}`, {[key]: t.dataset.v === "1" ? true : null}, {}), t.dataset.v === "1" ? "اتعتمدت: العمال هيشوفوا المستحق" : "الاعتماد اتلغى"); }
   else if(a === "pin"){ const wid = t.dataset.wid; if(S.pins && S.pins[wid]){ S.pinAsk = wid; render(); } else makePin(wid); }
   else if(a === "pin-yes"){ makePin(t.dataset.wid); }
@@ -2028,10 +2434,17 @@ view().addEventListener("dblclick", e => {
   const td = e.target.closest("table.g td[data-ref]"); if(!td) return;
   const fi = $("#fIn"); if(fi){ fi.focus(); fi.setSelectionRange(fi.value.length, fi.value.length); }
 });
-view().addEventListener("submit", e => { if(e.target.id === "addForm"){ e.preventDefault(); submitAdd(); } });
+view().addEventListener("submit", e => {
+  if(e.target.id === "addForm"){ e.preventDefault(); submitAdd(); }
+  else if(e.target.id === "profEditForm"){ e.preventDefault(); submitProfEdit(); }
+  else if(e.target.id === "profWForm"){ e.preventDefault(); submitWorkerProf(); }
+  else if(e.target.id === "profPForm"){ e.preventDefault(); submitWorkerPhoto(); }
+});
 view().addEventListener("input", e => {
   const el = e.target;
   if(el.id === "q"){ S.q = el.value; const pos = el.selectionStart; render(); const s = $("#q"); if(s){ s.focus(); s.setSelectionRange(pos, pos); } return; }
+  if(el.id === "pq"){ S.prof.q = el.value; const pos = el.selectionStart; render(); const s = $("#pq"); if(s){ s.focus(); s.setSelectionRange(pos, pos); } return; }
+  if(el.hasAttribute && el.hasAttribute("data-draft") && el.type !== "radio") DRAFT[el.id] = el.value;
   if(el.classList.contains("hh") || el.classList.contains("mm")) el.value = el.value.replace(/[^\d]/g, "").slice(0, 2);
   // الساعة لما تتكتب رقمين (أو رقم أكبر من 2) نروح للدقايق على طول
   if(el.classList.contains("hh") && (/^\d{2}$/.test(el.value) || /^[3-9]$/.test(el.value)) && document.activeElement === el){
@@ -2041,6 +2454,14 @@ view().addEventListener("input", e => {
 view().addEventListener("change", e => {
   const el = e.target;
   if(el.id === "dayPick"){ if(el.value){ S.day = el.value; render(); } return; }
+  if(el.hasAttribute && el.hasAttribute("data-draft")){ DRAFT[el.type === "radio" ? el.name : el.id] = el.value; return; }
+  if(el.dataset && el.dataset.pimg){
+    const key = el.dataset.pimg, f = el.files && el.files[0], box = el.closest(".idpick"); if(!f || !box) return;
+    box.innerHTML = "بيجهّز الصورة…";
+    shrinkImage(f).then(b => { PIMG[key] = b; }).catch(() => toast("الصورة ما اتقريتش، صوّرها تاني."))
+      .finally(() => { if(box.isConnected) box.innerHTML = imgPickInner(key, key.slice(-1)); });
+    return;
+  }
   if(el.id === "wsType"){ const ym = curBook().ym; safeWrite(() => DB.doc("workers/" + el.dataset.wid).update({hist: {type: {[ym]: el.value}}}), "نوع العامل اتغير من الشهر ده"); return; }
   const row = el.closest(".rr");
   if(row){ if(el.classList.contains("hh")) padHourInput(el); if(el.classList.contains("mm") && /^\d$/.test(el.value.trim())) el.value = "0" + el.value.trim(); saveDayRow(row); }
